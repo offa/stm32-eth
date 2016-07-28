@@ -5,6 +5,7 @@ find_package(CppUTest REQUIRED)
 
 include_directories(SYSTEM ${CppUTest_INCLUDE_DIR})
 
+add_subdirectory("mock")
 
 add_library(testmain OBJECT TestMain.cpp)
 
@@ -26,12 +27,14 @@ endmacro()
 
 list(APPEND SOCKETTEST_SRC SocketTest.cpp
                     $<TARGET_OBJECTS:socket>
+                    $<TARGET_OBJECTS:w5100device-mock>
                     )
 _add_test(SocketTest SOCKETTEST_SRC SOCKETTEST_LIB)
 
 
 list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
                         $<TARGET_OBJECTS:w5100device>
+                        $<TARGET_OBJECTS:spi-mock>
                         )
 _add_test(W5100DeviceTest W5100TEST_SRC W5100TEST_LIB)
 

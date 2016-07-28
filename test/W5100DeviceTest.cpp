@@ -19,86 +19,16 @@
  */
 
 #include "W5100Device.h"
+#include "mock/W5100DeviceSpy.h"
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
-namespace eth
-{
-    uint8_t Spi::transfer(uint8_t data)
-    {
-        return mock("Spi").actualCall("transfer").withParameter("data", data).returnIntValueOrDefault(0xff);
-    }
-
-    void Spi::setSlaveSelect()
-    {
-        mock("Spi").actualCall("setSlaveSelect");
-    }
-
-    void Spi::resetSlaveSelect()
-    {
-        mock("Spi").actualCall("resetSlaveSelect");
-    }
-
-    Spi spi;
-
-}
-
-class W5100DeviceSpy : public eth::W5100Device
-{
-public:
-
-    uint16_t spy_readSocketTransmitFreeSizeRegister(eth::Socket s)
-    {
-        return readSocketTransmitFreeSizeRegister(s);
-    }
-
-    void spy_writeGatewayAddressRegister(uint8_t* addr)
-    {
-        writeGatewayAddressRegister(addr);
-    }
-
-    void spy_writeSubnetMaskRegister(uint8_t* addr)
-    {
-        writeSubnetMaskRegister(addr);
-    }
-
-    void spy_writeSourceMacAddressRegister(uint8_t* addr)
-    {
-        writeSourceMacAddressRegister(addr);
-    }
-
-    void spy_writeSourceIpRegister(uint8_t* addr)
-    {
-        writeSourceIpRegister(addr);
-    }
-
-    uint16_t spy_readSocketTransmitWritePointer(eth::Socket s)
-    {
-        return readSocketTransmitWritePointer(s);
-    }
-
-    void spy_writeSocketTransmitWritePointer(eth::Socket s, uint16_t value)
-    {
-        writeSocketTransmitWritePointer(s, value);
-    }
-
-    void spy_writeTransmitMemorySizeRegister(uint8_t value)
-    {
-        writeTransmitMemorySizeRegister(value);
-    }
-
-    void spy_writeReceiveMemorySizeRegister(uint8_t value)
-    {
-        writeReceiveMemorySizeRegister(value);
-    }
-
-};
 
 TEST_GROUP(W5100DeviceTest)
 {
     void setup() override
     {
-        device = std::make_unique<W5100DeviceSpy>();
+        device = std::make_unique<test::W5100DeviceSpy>();
         mock().strictOrder();
     }
 
@@ -141,7 +71,7 @@ TEST_GROUP(W5100DeviceTest)
     }
 
 
-    std::unique_ptr<W5100DeviceSpy> device;
+    std::unique_ptr<test::W5100DeviceSpy> device;
     static constexpr eth::Socket socket = 0;
     static constexpr uint16_t CH_BASE = 0x0400;
     static constexpr uint16_t CH_SIZE = 0x0100;
