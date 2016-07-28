@@ -18,18 +18,21 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKETTYPE_H
-#define SOCKETTYPE_H
-
-#include <stdint.h>
-
 namespace eth
 {
 
-    using Socket = uint8_t;
-
-    static constexpr uint8_t supportedSockets = 4;
+    enum class SocketCommand
+    {
+        open = 0x01,
+        listen = 0x02,
+        connect = 0x04,
+        disconnect = 0x08,
+        close = 0x10,
+        send = 0x20,
+        sendMac = 0x21,
+        sendKeep = 0x22,
+        recv = 0x40
+    };
 
 }
 
-#endif /* SOCKETTYPE_H */

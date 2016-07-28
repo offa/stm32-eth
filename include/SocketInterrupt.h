@@ -18,20 +18,16 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKET_H
-#define SOCKET_H
-
-#include <stdint.h>
-#include "SocketHandle.h"
-
 namespace eth
 {
 
-    void close(Socket s);
-    uint8_t socket(Socket s, uint8_t protocol, uint16_t port, uint8_t flag);
-    uint8_t listen(Socket s);
-    uint16_t send(Socket s, const uint8_t* buf, uint16_t len);
+    enum class SocketInterrupt
+    {
+        sendOk = 0x10,
+        timeout = 0x08,
+        recv = 0x04,
+        disconnect = 0x02,
+        connect = 0x01
+    };
 
 }
-
-#endif /* SOCKET_H */

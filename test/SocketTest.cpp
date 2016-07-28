@@ -19,6 +19,10 @@
  */
 
 #include "Socket.h"
+#include "SocketMode.h"
+#include "SocketStatus.h"
+#include "SocketCommand.h"
+#include "SocketInterrupt.h"
 #include "W5100Device.h"
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>

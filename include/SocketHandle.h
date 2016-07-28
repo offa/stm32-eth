@@ -18,20 +18,18 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKET_H
-#define SOCKET_H
+#ifndef SOCKETHANDLE_H
+#define SOCKETHANDLE_H
 
 #include <stdint.h>
-#include "SocketHandle.h"
 
 namespace eth
 {
 
-    void close(Socket s);
-    uint8_t socket(Socket s, uint8_t protocol, uint16_t port, uint8_t flag);
-    uint8_t listen(Socket s);
-    uint16_t send(Socket s, const uint8_t* buf, uint16_t len);
+    using Socket = uint8_t;
+
+    static constexpr uint8_t supportedSockets = 4;
 
 }
 
-#endif /* SOCKET_H */
+#endif /* SOCKETHANDLE_H */

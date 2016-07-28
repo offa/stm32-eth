@@ -23,7 +23,7 @@
 
 #include <stdint.h>
 #include "Spi.h"
-#include <SocketType.h>
+#include "SocketHandle.h"
 
 namespace eth
 {

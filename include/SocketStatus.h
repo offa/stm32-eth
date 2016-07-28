@@ -18,20 +18,27 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKET_H
-#define SOCKET_H
-
-#include <stdint.h>
-#include "SocketHandle.h"
-
 namespace eth
 {
 
-    void close(Socket s);
-    uint8_t socket(Socket s, uint8_t protocol, uint16_t port, uint8_t flag);
-    uint8_t listen(Socket s);
-    uint16_t send(Socket s, const uint8_t* buf, uint16_t len);
+    enum class SocketStatus
+    {
+        closed = 0x00,
+        init = 0x13,
+        listen = 0x14,
+        synSent = 0x15,
+        synRecv = 0x16,
+        established = 0x17,
+        finWait = 0x18,
+        closing = 0x1a,
+        timeWait = 0x1b,
+        closeWait = 0x1c,
+        lastAck = 0x1d,
+        udp = 0x22,
+        ipraw = 0x32,
+        macraw = 0x42,
+        pppoe = 0x5f
+    };
 
 }
 
-#endif /* SOCKET_H */
