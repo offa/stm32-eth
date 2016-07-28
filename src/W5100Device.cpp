@@ -138,36 +138,36 @@ namespace eth
 
     void W5100Device::write(uint16_t addr, uint8_t data)
     {
-        spi.setSS();
+        spi.setSlaveSelect();
         spi.transfer(0xf0);
         spi.transfer(addr >> 8);
         spi.transfer(addr & 0xff);
         spi.transfer(data);
-        spi.resetSS();
+        spi.resetSlaveSelect();
     }
 
     void W5100Device::write(uint16_t addr, const uint8_t* buffer, uint16_t size)
     {
         for( uint16_t i=0; i<size; ++i )
         {
-            spi.setSS();
+            spi.setSlaveSelect();
             spi.transfer(0xF0);
             spi.transfer(addr >> 8);
             spi.transfer(addr & 0xFF);
             ++addr;
             spi.transfer(buffer[i]);
-            spi.resetSS();
+            spi.resetSlaveSelect();
         }
     }
 
     uint8_t W5100Device::read(uint16_t addr)
     {
-        spi.setSS();
+        spi.setSlaveSelect();
         spi.transfer(0x0f);
         spi.transfer(addr >> 8);
         spi.transfer(addr & 0xff);
         uint8_t data = spi.transfer(0);
-        spi.resetSS();
+        spi.resetSlaveSelect();
 
         return data;
     }

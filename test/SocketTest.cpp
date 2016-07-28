@@ -40,16 +40,14 @@ namespace eth
         return mock("Spi").actualCall("transfer").withParameter("data", data).returnIntValueOrDefault(0xff);
     }
 
-    void Spi::setSS()
+    void Spi::setSlaveSelect()
     {
-        // CS low
-        mock("Spi").actualCall("setSS");
+        mock("Spi").actualCall("setSlaveSelect");
     }
 
-    void Spi::resetSS()
+    void Spi::resetSlaveSelect()
     {
-        // CS high
-        mock("Spi").actualCall("resetSS");
+        mock("Spi").actualCall("resetSlaveSelect");
     }
 
     W5100Device::W5100Device() { }

@@ -29,8 +29,8 @@ namespace eth
     struct Spi
     {
         uint8_t transfer(uint8_t data);
-        void setSS();
-        void resetSS();
+        void setSlaveSelect();
+        void resetSlaveSelect();
 
     };
 

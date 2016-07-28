@@ -29,16 +29,14 @@ namespace eth
         return mock("Spi").actualCall("transfer").withParameter("data", data).returnIntValueOrDefault(0xff);
     }
 
-    void Spi::setSS()
+    void Spi::setSlaveSelect()
     {
-        // CS LOW
-        mock("Spi").actualCall("setSS");
+        mock("Spi").actualCall("setSlaveSelect");
     }
 
-    void Spi::resetSS()
+    void Spi::resetSlaveSelect()
     {
-        // CS HIGH
-        mock("Spi").actualCall("resetSS");
+        mock("Spi").actualCall("resetSlaveSelect");
     }
 
     Spi spi;
@@ -112,12 +110,12 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectWrite(uint16_t addr, uint8_t data) const
     {
-        mock("Spi").expectOneCall("setSS");
+        mock("Spi").expectOneCall("setSlaveSelect");
         mock("Spi").expectOneCall("transfer").withParameter("data", 0xf0);
         mock("Spi").expectOneCall("transfer").withParameter("data", addr >> 8);
         mock("Spi").expectOneCall("transfer").withParameter("data", addr & 0xff);
         mock("Spi").expectOneCall("transfer").withParameter("data", data);
-        mock("Spi").expectOneCall("resetSS");
+        mock("Spi").expectOneCall("resetSlaveSelect");
     }
 
     void expectWrite(uint16_t addr, uint16_t data) const
@@ -128,12 +126,12 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectRead(uint16_t addr, uint8_t data) const
     {
-        mock("Spi").expectOneCall("setSS");
+        mock("Spi").expectOneCall("setSlaveSelect");
         mock("Spi").expectOneCall("transfer").withParameter("data", 0x0f);
         mock("Spi").expectOneCall("transfer").withParameter("data", addr >> 8);
         mock("Spi").expectOneCall("transfer").withParameter("data", addr & 0xff);
         mock("Spi").expectOneCall("transfer").withParameter("data", 0).andReturnValue(data);
-        mock("Spi").expectOneCall("resetSS");
+        mock("Spi").expectOneCall("resetSlaveSelect");
     }
 
     void expectRead(uint16_t addr, uint16_t data) const
