@@ -27,42 +27,47 @@
 
 namespace eth
 {
-    void close(SocketHandle s)
+
+    Socket::Socket(SocketHandle handle) : m_handle(handle)
     {
-        device.executeSocketCommand(s, static_cast<uint8_t>(SocketCommand::close));
-        device.writeSocketInterruptRegister(s, 0xff);
     }
 
-    uint8_t socket(SocketHandle s, uint8_t protocol, uint16_t port, uint8_t flag)
+    bool Socket::open(uint8_t protocol, uint16_t port, uint8_t flag)
     {
         if( protocol == static_cast<uint8_t>(SocketMode::tcp) )
         {
-            close(s);
-            device.writeSocketModeRegister(s, protocol | flag);
+            close();
+            device.writeSocketModeRegister(m_handle, protocol | flag);
 
             // TODO: Check port for != 0
-            device.writeSocketSourcePort(s, port);
-            device.executeSocketCommand(s, static_cast<uint8_t>(SocketCommand::open));
+            device.writeSocketSourcePort(m_handle, port);
+            device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::open));
             return 1;
         }
 
         return 0;
     }
 
-    uint8_t listen(SocketHandle s)
+    void Socket::close()
     {
-        if( device.readSocketStatusRegister(s) != static_cast<uint8_t>(SocketStatus::init) )
-        {
-            return 0;
-        }
-
-        device.executeSocketCommand(s, static_cast<uint8_t>(SocketCommand::listen));
-
-        return 1;
+        // TODO: Safe close in dtor
+        device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::close));
+        device.writeSocketInterruptRegister(m_handle, 0xff);
     }
 
+    bool Socket::listen()
+    {
+        if( device.readSocketStatusRegister(m_handle) != static_cast<uint8_t>(SocketStatus::init) )
+        {
+            return false;
+        }
 
-    uint16_t send(SocketHandle s, const uint8_t* buf, uint16_t len)
+        device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::listen));
+
+        return true;
+    }
+
+    uint16_t Socket::send(const uint8_t* buf, uint16_t len)
     {
         uint16_t ret = 0;
         uint16_t freeSize = 0;
@@ -79,8 +84,8 @@ namespace eth
 
         do
         {
-            freeSize = device.getTransmitFreeSize(s);
-            SocketStatus status = static_cast<SocketStatus>(device.readSocketStatusRegister(s));
+            freeSize = device.getTransmitFreeSize(m_handle);
+            SocketStatus status = static_cast<SocketStatus>(device.readSocketStatusRegister(m_handle));
 
             if( (status != SocketStatus::established) && (status != SocketStatus::closeWait) )
             {
@@ -91,22 +96,22 @@ namespace eth
         }
         while( freeSize < ret );
 
-        device.sendData(s, buf, ret);
-        device.executeSocketCommand(s, static_cast<uint8_t>(SocketCommand::send));
+        device.sendData(m_handle, buf, ret);
+        device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::send));
 
 
         constexpr uint8_t sendOk = static_cast<int>(SocketInterrupt::sendOk);
 
-        while( ( device.readSocketInterruptRegister(s) & sendOk ) != sendOk )
+        while( ( device.readSocketInterruptRegister(m_handle) & sendOk ) != sendOk )
         {
-            if( device.readSocketStatusRegister(s) == static_cast<uint8_t>(SocketStatus::closed) )
+            if( device.readSocketStatusRegister(m_handle) == static_cast<uint8_t>(SocketStatus::closed) )
             {
-                close(s);
+                close();
                 return 0;
             }
         }
 
-        device.writeSocketInterruptRegister(s, sendOk);
+        device.writeSocketInterruptRegister(m_handle, sendOk);
 
         return ret;
     }

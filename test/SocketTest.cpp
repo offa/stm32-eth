@@ -30,12 +30,15 @@
 using eth::SocketStatus;
 using eth::SocketCommand;
 using eth::SocketInterrupt;
+using eth::Socket;
 
 
 TEST_GROUP(SocketTest)
 {
     void setup() override
     {
+        constexpr auto handle = s;
+        socket = std::make_unique<Socket>(handle);
         mock().strictOrder();
     }
 
@@ -45,17 +48,18 @@ TEST_GROUP(SocketTest)
         mock().clear();
     }
 
-    void expectClose(eth::SocketHandle socket)
+    void expectClose(eth::SocketHandle socketHandle)
     {
         mock("W5100Device").expectOneCall("executeSocketCommand")
-            .withParameter("socket", socket)
+            .withParameter("socket", socketHandle)
             .withParameter("value", static_cast<int>(SocketCommand::close));
         mock("W5100Device").expectOneCall("writeSocketInterruptRegister")
-            .withParameter("socket", socket)
+            .withParameter("socket", socketHandle)
             .withParameter("value", 0xff);
     }
 
 
+    std::unique_ptr<Socket> socket;
     static constexpr eth::SocketHandle s = 0;
     static constexpr uint8_t protocol = static_cast<uint8_t>(eth::SocketMode::tcp);
     static constexpr uint16_t port = 1234;
@@ -63,28 +67,28 @@ TEST_GROUP(SocketTest)
     static constexpr uint8_t statusSendOk = static_cast<uint8_t>(SocketInterrupt::sendOk);
 };
 
-TEST(SocketTest, socketReturnsErrorOnInvalidProtocol)
+TEST(SocketTest, openReturnsErrorOnInvalidProtocol)
 {
     constexpr uint8_t invalidProtocol = 0xff;
-    CHECK_EQUAL(0, eth::socket(s, invalidProtocol, port, flag))
+    CHECK_FALSE(socket->open(invalidProtocol, port, flag));
 }
 
-TEST(SocketTest, socketReturnsSuccess)
+TEST(SocketTest, openReturnsSuccess)
 {
     mock("W5100Device").ignoreOtherCalls();
-    CHECK_EQUAL(1, eth::socket(s, protocol, port, flag))
+    CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
-TEST(SocketTest, socketResetsSocketFirst)
+TEST(SocketTest, openResetsSocketFirst)
 {
     expectClose(s);
     mock("W5100Device").expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
     mock("W5100Device").expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    CHECK_EQUAL(1, eth::socket(s, protocol, port, flag));
+    CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
-TEST(SocketTest, socketSetsProtocol)
+TEST(SocketTest, openSetsProtocol)
 {
     constexpr uint8_t value = protocol | flag;
     expectClose(s);
@@ -93,10 +97,10 @@ TEST(SocketTest, socketSetsProtocol)
         .withParameter("value", value);
     mock("W5100Device").expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    CHECK_EQUAL(1, eth::socket(s, protocol, port, flag));
+    CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
-TEST(SocketTest, socketSetsFlag)
+TEST(SocketTest, openSetsFlag)
 {
     constexpr uint8_t flagValue = 0x0a;
     constexpr uint8_t value = protocol | flagValue;
@@ -106,10 +110,10 @@ TEST(SocketTest, socketSetsFlag)
         .withParameter("value", value);
     mock("W5100Device").expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    CHECK_EQUAL(1, eth::socket(s, protocol, port, flagValue));
+    CHECK_TRUE(socket->open(protocol, port, flagValue));
 }
 
-TEST(SocketTest, socketSetsPort)
+TEST(SocketTest, openSetsPort)
 {
     expectClose(s);
     mock("W5100Device").expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
@@ -117,10 +121,10 @@ TEST(SocketTest, socketSetsPort)
         .withParameter("socket", s)
         .withParameter("value", port);
     mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    CHECK_EQUAL(1, eth::socket(s, protocol, port, flag));
+    CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
-TEST(SocketTest, socketOpensSocket)
+TEST(SocketTest, openOpensSocket)
 {
     expectClose(s);
     mock("W5100Device").expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
@@ -128,7 +132,7 @@ TEST(SocketTest, socketOpensSocket)
     mock("W5100Device").expectOneCall("executeSocketCommand")
         .withParameter("socket", s)
         .withParameter("value", static_cast<int>(SocketCommand::open));
-    CHECK_EQUAL(1, eth::socket(s, protocol, port, flag));
+    CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
 TEST(SocketTest, close)
@@ -139,7 +143,7 @@ TEST(SocketTest, close)
     mock("W5100Device").expectOneCall("writeSocketInterruptRegister")
         .withParameter("socket", s)
         .withParameter("value", 0xff);
-    eth::close(s);
+    socket->close();
 }
 
 TEST(SocketTest, listenReturnsErrorIfStatusNotInit)
@@ -147,7 +151,7 @@ TEST(SocketTest, listenReturnsErrorIfStatusNotInit)
     mock("W5100Device").expectOneCall("readSocketStatusRegister")
         .withParameter("socket", s)
         .andReturnValue(static_cast<int>(SocketStatus::closed));
-    CHECK_EQUAL(0, eth::listen(s));
+    CHECK_FALSE(socket->listen());
 }
 
 TEST(SocketTest, listenListens)
@@ -158,8 +162,7 @@ TEST(SocketTest, listenListens)
     mock("W5100Device").expectOneCall("executeSocketCommand")
         .withParameter("socket", s)
         .withParameter("value", static_cast<int>(SocketCommand::listen));
-    uint8_t rtn = eth::listen(s);
-    CHECK_EQUAL(1, rtn);
+    CHECK_TRUE(socket->listen());
 }
 
 TEST(SocketTest, sendReturnsBytesTransmitted)
@@ -172,7 +175,7 @@ TEST(SocketTest, sendReturnsBytesTransmitted)
     mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
     constexpr uint16_t len = 10;
     uint8_t buffer[len];
-    CHECK_EQUAL(len, eth::send(s, buffer, len));
+    CHECK_EQUAL(len, socket->send(buffer, len));
 }
 
 TEST(SocketTest, sendLimitsBufferSize)
@@ -186,7 +189,7 @@ TEST(SocketTest, sendLimitsBufferSize)
     mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
     constexpr uint16_t len = maxSendSize + 1;
     uint8_t buffer[len];
-    CHECK_EQUAL(maxSendSize, eth::send(s, buffer, len));
+    CHECK_EQUAL(maxSendSize, socket->send(buffer, len));
 }
 
 TEST(SocketTest, sendFreesizeAndStatusFlag)
@@ -206,7 +209,7 @@ TEST(SocketTest, sendFreesizeAndStatusFlag)
     mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
     mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
     mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
-    CHECK_EQUAL(size, eth::send(s, buffer, len));
+    CHECK_EQUAL(size, socket->send(buffer, len));
 }
 
 TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
@@ -225,8 +228,7 @@ TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
     mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
     mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
     mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
-    uint16_t rtn = eth::send(s, buffer, len);
-    CHECK_EQUAL(0, rtn);
+    CHECK_EQUAL(0, socket->send(buffer, len));
 }
 
 TEST(SocketTest, sendSendsDataAndCommand)
@@ -248,8 +250,7 @@ TEST(SocketTest, sendSendsDataAndCommand)
         .withParameter("value", static_cast<int>(SocketCommand::send));
     mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
     mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
-    uint16_t rtn = eth::send(s, buffer, len);
-    CHECK_EQUAL(len, rtn);
+    CHECK_EQUAL(len, socket->send(buffer, len));
 }
 
 TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
@@ -283,8 +284,7 @@ TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
         .andReturnValue(ready);
     mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
-    uint16_t rtn = eth::send(s, buffer, len);
-    CHECK_EQUAL(len, rtn);
+    CHECK_EQUAL(len, socket->send(buffer, len));
 }
 
 TEST(SocketTest, sendClosesConnectionIfClosedStatus)
@@ -309,8 +309,7 @@ TEST(SocketTest, sendClosesConnectionIfClosedStatus)
         .andReturnValue(static_cast<int>(SocketStatus::closed));
     expectClose(s);
 
-    uint16_t rtn = eth::send(s, buffer, len);
-    CHECK_EQUAL(0, rtn);
+    CHECK_EQUAL(0, socket->send(buffer, len));
 }
 
 TEST(SocketTest, sendSetsOkAfterSend)
@@ -333,7 +332,6 @@ TEST(SocketTest, sendSetsOkAfterSend)
         .withParameter("socket", s)
         .withParameter("value", statusSendOk);
 
-    uint16_t rtn = eth::send(s, buffer, len);
-    CHECK_EQUAL(len, rtn);
+    CHECK_EQUAL(len, socket->send(buffer, len));
 }
 
