@@ -48,7 +48,7 @@ namespace eth
     {
         writeSocketCommandRegister(s, value);
 
-        while( readSocketCommandRegister(s) )
+        while( readSocketCommandRegister(s) != 0 )
         {
             // Wait for completion
         }
