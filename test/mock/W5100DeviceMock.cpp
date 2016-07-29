@@ -55,7 +55,7 @@ namespace eth
     {
         return mock("W5100Device").actualCall("readSocketInterruptRegister")
                 .withParameter("socket", s)
-                .returnIntValue();
+                .returnUnsignedIntValue();
     }
 
     void W5100Device::executeSocketCommand(SocketHandle s, uint8_t value)
@@ -69,14 +69,14 @@ namespace eth
     {
         return mock("W5100Device").actualCall("readSocketStatusRegister")
                 .withParameter("socket", s)
-                .returnIntValue(); // TODO: unsigned?
+                .returnUnsignedIntValue();
     }
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
     {
         return mock("W5100Device").actualCall("getTransmitFreeSize")
                 .withParameter("socket", s)
-                .returnIntValue();
+                .returnUnsignedIntValue();
     }
 
     void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)

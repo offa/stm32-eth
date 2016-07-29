@@ -26,7 +26,9 @@ namespace eth
 
     uint8_t Spi::transfer(uint8_t data)
     {
-        return mock("Spi").actualCall("transfer").withParameter("data", data).returnIntValueOrDefault(0xff);
+        return mock("Spi").actualCall("transfer")
+                .withParameter("data", data)
+                .returnUnsignedIntValueOrDefault(0xff);
     }
 
     void Spi::setSlaveSelect()
