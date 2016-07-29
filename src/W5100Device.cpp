@@ -152,9 +152,9 @@ namespace eth
         for( uint16_t i=0; i<size; ++i )
         {
             spi.setSlaveSelect();
-            spi.transfer(0xF0);
+            spi.transfer(0xf0);
             spi.transfer(addr >> 8);
-            spi.transfer(addr & 0xFF);
+            spi.transfer(addr & 0xff);
             ++addr;
             spi.transfer(buffer[i]);
             spi.resetSlaveSelect();

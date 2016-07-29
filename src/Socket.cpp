@@ -24,6 +24,7 @@
 #include "SocketStatus.h"
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
+#include <algorithm>
 
 namespace eth
 {
@@ -69,18 +70,9 @@ namespace eth
 
     uint16_t Socket::send(const uint8_t* buf, uint16_t len)
     {
-        uint16_t ret = 0;
-        uint16_t freeSize = 0;
         constexpr uint16_t bufferSize = device.getTransmitBufferSize();
-
-        if( len > bufferSize )
-        {
-            ret = bufferSize;
-        }
-        else
-        {
-            ret = len;
-        }
+        uint16_t ret = std::min(bufferSize, len);
+        uint16_t freeSize = 0;
 
         do
         {
