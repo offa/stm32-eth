@@ -420,3 +420,4 @@ TEST(W5100DeviceTest, writeModeRegister)
 
     device->writeModeRegister(value);
 }
+

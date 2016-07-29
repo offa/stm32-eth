@@ -19,17 +19,19 @@
  */
 
 #include "W5100Device.h"
+#include <algorithm>
 
 namespace eth
 {
 
     W5100Device::W5100Device()
     {
-        for( int i=0; i<supportedSockets; ++i )
+        uint8_t index = 0;
+        std::generate(m_transmitBufferBaseAddress.begin(), m_transmitBufferBaseAddress.end(), [&]
         {
-            constexpr uint16_t transmitBufferMemoryBaseAddress = 0x4000;
-            m_transmitBufferBaseAddress[i] = transmitBufferMemoryBaseAddress + transmitBufferSize * i;
-        }
+            constexpr uint16_t baseAddress = 0x4000;
+            return baseAddress + transmitBufferSize * (index++);
+        });
     }
 
     void W5100Device::init()
