@@ -30,56 +30,56 @@ namespace eth
 
     // TODO: Check object
 
-    void W5100Device::writeSocketModeRegister(Socket s, uint8_t value)
+    void W5100Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
         mock("W5100Device").actualCall("writeSocketModeRegister")
                 .withParameter("socket", s)
                 .withParameter("value", value);
     }
 
-    void W5100Device::writeSocketSourcePort(Socket s, uint16_t value)
+    void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
         mock("W5100Device").actualCall("writeSocketSourcePort")
                 .withParameter("socket", s)
                 .withParameter("value", value);
     }
 
-    void W5100Device::writeSocketInterruptRegister(Socket s, uint8_t value)
+    void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
     {
         mock("W5100Device").actualCall("writeSocketInterruptRegister")
                 .withParameter("socket", s)
                 .withParameter("value", value);
     }
 
-    uint8_t W5100Device::readSocketInterruptRegister(Socket s)
+    uint8_t W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
         return mock("W5100Device").actualCall("readSocketInterruptRegister")
                 .withParameter("socket", s)
                 .returnIntValue();
     }
 
-    void W5100Device::executeSocketCommand(Socket s, uint8_t value)
+    void W5100Device::executeSocketCommand(SocketHandle s, uint8_t value)
     {
         mock("W5100Device").actualCall("executeSocketCommand")
                 .withParameter("socket", s)
                 .withParameter("value", value);
     }
 
-    uint8_t W5100Device::readSocketStatusRegister(Socket s)
+    uint8_t W5100Device::readSocketStatusRegister(SocketHandle s)
     {
         return mock("W5100Device").actualCall("readSocketStatusRegister")
                 .withParameter("socket", s)
                 .returnIntValue(); // TODO: unsigned?
     }
 
-    uint16_t W5100Device::getTransmitFreeSize(Socket s)
+    uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
     {
         return mock("W5100Device").actualCall("getTransmitFreeSize")
                 .withParameter("socket", s)
                 .returnIntValue();
     }
 
-    void W5100Device::sendData(Socket s, const uint8_t* buffer, uint16_t size)
+    void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
     {
         mock("W5100Device").actualCall("sendData")
                 .withParameter("socket", s)

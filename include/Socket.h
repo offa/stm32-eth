@@ -27,10 +27,10 @@
 namespace eth
 {
 
-    void close(Socket s);
-    uint8_t socket(Socket s, uint8_t protocol, uint16_t port, uint8_t flag);
-    uint8_t listen(Socket s);
-    uint16_t send(Socket s, const uint8_t* buf, uint16_t len);
+    void close(SocketHandle s);
+    uint8_t socket(SocketHandle s, uint8_t protocol, uint16_t port, uint8_t flag);
+    uint8_t listen(SocketHandle s);
+    uint16_t send(SocketHandle s, const uint8_t* buf, uint16_t len);
 
 }
 

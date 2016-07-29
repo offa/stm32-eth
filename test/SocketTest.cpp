@@ -45,7 +45,7 @@ TEST_GROUP(SocketTest)
         mock().clear();
     }
 
-    void expectClose(eth::Socket socket)
+    void expectClose(eth::SocketHandle socket)
     {
         mock("W5100Device").expectOneCall("executeSocketCommand")
             .withParameter("socket", socket)
@@ -56,7 +56,7 @@ TEST_GROUP(SocketTest)
     }
 
 
-    static constexpr eth::Socket s = 0;
+    static constexpr eth::SocketHandle s = 0;
     static constexpr uint8_t protocol = static_cast<uint8_t>(eth::SocketMode::tcp);
     static constexpr uint16_t port = 1234;
     static constexpr uint8_t flag = 0;

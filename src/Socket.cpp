@@ -27,13 +27,13 @@
 
 namespace eth
 {
-    void close(Socket s)
+    void close(SocketHandle s)
     {
         device.executeSocketCommand(s, static_cast<uint8_t>(SocketCommand::close));
         device.writeSocketInterruptRegister(s, 0xff);
     }
 
-    uint8_t socket(Socket s, uint8_t protocol, uint16_t port, uint8_t flag)
+    uint8_t socket(SocketHandle s, uint8_t protocol, uint16_t port, uint8_t flag)
     {
         if( protocol == static_cast<uint8_t>(SocketMode::tcp) )
         {
@@ -49,7 +49,7 @@ namespace eth
         return 0;
     }
 
-    uint8_t listen(Socket s)
+    uint8_t listen(SocketHandle s)
     {
         if( device.readSocketStatusRegister(s) != static_cast<uint8_t>(SocketStatus::init) )
         {
@@ -62,7 +62,7 @@ namespace eth
     }
 
 
-    uint16_t send(Socket s, const uint8_t* buf, uint16_t len)
+    uint16_t send(SocketHandle s, const uint8_t* buf, uint16_t len)
     {
         uint16_t ret = 0;
         uint16_t freeSize = 0;

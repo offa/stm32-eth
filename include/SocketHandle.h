@@ -26,7 +26,7 @@
 namespace eth
 {
 
-    using Socket = uint8_t;
+    using SocketHandle = uint8_t;
 
     static constexpr uint8_t supportedSockets = 4;
 

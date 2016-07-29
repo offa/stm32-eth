@@ -30,7 +30,7 @@ namespace test
     {
         public:
 
-            uint16_t spy_readSocketTransmitFreeSizeRegister(eth::Socket s)
+            uint16_t spy_readSocketTransmitFreeSizeRegister(eth::SocketHandle s)
             {
                 return readSocketTransmitFreeSizeRegister(s);
             }
@@ -55,12 +55,12 @@ namespace test
                 writeSourceIpRegister(addr);
             }
 
-            uint16_t spy_readSocketTransmitWritePointer(eth::Socket s)
+            uint16_t spy_readSocketTransmitWritePointer(eth::SocketHandle s)
             {
                 return readSocketTransmitWritePointer(s);
             }
 
-            void spy_writeSocketTransmitWritePointer(eth::Socket s, uint16_t value)
+            void spy_writeSocketTransmitWritePointer(eth::SocketHandle s, uint16_t value)
             {
                 writeSocketTransmitWritePointer(s, value);
             }

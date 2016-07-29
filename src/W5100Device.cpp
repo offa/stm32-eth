@@ -42,7 +42,7 @@ namespace eth
         writeReceiveMemorySizeRegister(memorySize);
     }
 
-    void W5100Device::executeSocketCommand(Socket s, uint8_t value)
+    void W5100Device::executeSocketCommand(SocketHandle s, uint8_t value)
     {
         writeSocketCommandRegister(s, value);
 
@@ -52,50 +52,50 @@ namespace eth
         }
     }
 
-    void W5100Device::writeSocketModeRegister(Socket s, uint8_t value)
+    void W5100Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
         constexpr uint16_t addr = 0x0000;
         write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value);
     }
 
-    void W5100Device::writeSocketSourcePort(Socket s, uint16_t value)
+    void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
         constexpr uint16_t addr = 0x0004;
         write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value >> 8);
         write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr + 1, value & 0xff);
     }
 
-    void W5100Device::writeSocketInterruptRegister(Socket s, uint8_t value)
+    void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
     {
         constexpr uint16_t addr = 0x0002;
         write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value);
     }
 
-    uint8_t W5100Device::readSocketInterruptRegister(Socket s)
+    uint8_t W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0002;
         return read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
     }
 
-    void W5100Device::writeSocketCommandRegister(Socket s, uint8_t value)
+    void W5100Device::writeSocketCommandRegister(SocketHandle s, uint8_t value)
     {
         constexpr uint16_t addr = 0x0001;
         write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value);
     }
 
-    uint8_t W5100Device::readSocketCommandRegister(Socket s)
+    uint8_t W5100Device::readSocketCommandRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0001;
         return read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
     }
 
-    uint8_t W5100Device::readSocketStatusRegister(Socket s)
+    uint8_t W5100Device::readSocketStatusRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0003;
         return read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
     }
 
-    uint16_t W5100Device::getTransmitFreeSize(Socket s)
+    uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
     {
         uint16_t val = 0;
         uint16_t val1 = 0;
@@ -114,7 +114,7 @@ namespace eth
         return val;
     }
 
-    void W5100Device::sendData(Socket s, const uint8_t* buffer, uint16_t size)
+    void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
     {
         uint16_t writePointer = readSocketTransmitWritePointer(s);
         uint16_t offset = writePointer & transmitBufferMask;
@@ -199,7 +199,7 @@ namespace eth
         writeSourceIpRegister(addr);
     }
 
-    uint16_t W5100Device::readSocketTransmitFreeSizeRegister(Socket s)
+    uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0020;
         uint16_t b1 = read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
@@ -211,7 +211,7 @@ namespace eth
         return b1;
     }
 
-    uint16_t W5100Device::readSocketTransmitWritePointer(Socket s)
+    uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0024;
         uint16_t b1 = read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
@@ -223,7 +223,7 @@ namespace eth
         return b1;
     }
 
-    void W5100Device::writeSocketTransmitWritePointer(Socket s, uint16_t value)
+    void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
         constexpr uint16_t addr = 0x0024;
         write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value >> 8);

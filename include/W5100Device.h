@@ -36,22 +36,22 @@ namespace eth
 
         void init();
 
-        void executeSocketCommand(Socket s, uint8_t value);
+        void executeSocketCommand(SocketHandle s, uint8_t value);
 
-        void writeSocketModeRegister(Socket s, uint8_t value);
-        void writeSocketSourcePort(Socket s, uint16_t value);
+        void writeSocketModeRegister(SocketHandle s, uint8_t value);
+        void writeSocketSourcePort(SocketHandle s, uint16_t value);
 
-        void writeSocketInterruptRegister(Socket s, uint8_t value);
-        uint8_t readSocketInterruptRegister(Socket s);
+        void writeSocketInterruptRegister(SocketHandle s, uint8_t value);
+        uint8_t readSocketInterruptRegister(SocketHandle s);
 
-        void writeSocketCommandRegister(Socket s, uint8_t value);
-        uint8_t readSocketCommandRegister(Socket s);
+        void writeSocketCommandRegister(SocketHandle s, uint8_t value);
+        uint8_t readSocketCommandRegister(SocketHandle s);
 
-        uint8_t readSocketStatusRegister(Socket s);
+        uint8_t readSocketStatusRegister(SocketHandle s);
 
-        uint16_t getTransmitFreeSize(Socket s);
+        uint16_t getTransmitFreeSize(SocketHandle s);
 
-        void sendData(Socket s, const uint8_t* buffer, uint16_t size);
+        void sendData(SocketHandle s, const uint8_t* buffer, uint16_t size);
 
 
         void write(uint16_t addr, uint8_t data);
@@ -73,10 +73,10 @@ namespace eth
 
     protected:
 
-        uint16_t readSocketTransmitFreeSizeRegister(Socket s);
+        uint16_t readSocketTransmitFreeSizeRegister(SocketHandle s);
 
-        uint16_t readSocketTransmitWritePointer(Socket s);
-        void writeSocketTransmitWritePointer(Socket s, uint16_t value);
+        uint16_t readSocketTransmitWritePointer(SocketHandle s);
+        void writeSocketTransmitWritePointer(SocketHandle s, uint16_t value);
 
         void writeTransmitMemorySizeRegister(uint8_t value);
         void writeReceiveMemorySizeRegister(uint8_t value);

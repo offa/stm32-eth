@@ -72,7 +72,7 @@ TEST_GROUP(W5100DeviceTest)
 
 
     std::unique_ptr<test::W5100DeviceSpy> device;
-    static constexpr eth::Socket socket = 0;
+    static constexpr eth::SocketHandle socket = 0;
     static constexpr uint16_t CH_BASE = 0x0400;
     static constexpr uint16_t CH_SIZE = 0x0100;
 };
