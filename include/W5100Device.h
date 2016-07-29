@@ -21,9 +21,11 @@
 #ifndef W5100DEVICE_H
 #define W5100DEVICE_H
 
-#include <stdint.h>
 #include "Spi.h"
 #include "SocketHandle.h"
+#include <array>
+#include <stdint.h>
+
 
 namespace eth
 {
@@ -89,7 +91,7 @@ namespace eth
 
     private:
 
-        uint16_t m_transmitBufferBaseAddress[supportedSockets];
+        std::array<uint16_t, supportedSockets> m_transmitBufferBaseAddress;
 
         static constexpr uint8_t opcodeWrite = 0xf0;
         static constexpr uint8_t opcodeRead = 0x0f;
