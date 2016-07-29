@@ -22,6 +22,7 @@
 #include "mock/W5100DeviceSpy.h"
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
+#include <vector>
 
 
 TEST_GROUP(W5100DeviceTest)
@@ -73,95 +74,97 @@ TEST_GROUP(W5100DeviceTest)
 
     std::unique_ptr<test::W5100DeviceSpy> device;
     static constexpr eth::SocketHandle socket = 0;
-    static constexpr uint16_t CH_BASE = 0x0400;
-    static constexpr uint16_t CH_SIZE = 0x0100;
+    static constexpr uint16_t socktBaseAddr = 0x0400;
+    static constexpr uint16_t socktChannelSize = 0x0100;
 };
 
 TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
 {
-    constexpr uint16_t addrMR = 0x0000;
+    constexpr uint16_t addressModeReg = 0x0000;
     constexpr uint8_t resetBit = 7;
     constexpr uint8_t valueReset = 1 << resetBit;
-    expectWrite(addrMR, valueReset);
+    expectWrite(addressModeReg, valueReset);
 
-    constexpr uint16_t addrRxSize = 0x001a;
-    constexpr uint16_t addrTxSize = 0x001b;
+    constexpr uint16_t addressRxSize = 0x001a;
+    constexpr uint16_t addressTxSize = 0x001b;
     constexpr uint8_t valueMemorySize = 0x55;
-    expectWrite(addrTxSize, valueMemorySize);
-    expectWrite(addrRxSize, valueMemorySize);
+    expectWrite(addressTxSize, valueMemorySize);
+    expectWrite(addressRxSize, valueMemorySize);
 
     device->init();
 }
 
 TEST(W5100DeviceTest, writeByte)
 {
-    constexpr uint16_t addr = 0xaabb;
+    constexpr uint16_t address = 0xaabb;
     constexpr uint8_t data = 0xef;
-    expectWrite(addr, data);
+    expectWrite(address, data);
 
-    device->write(addr, data);
+    device->write(address, data);
 }
 
 TEST(W5100DeviceTest, writeBuffer)
 {
-    constexpr uint16_t addr = 0xa1b2;
+    constexpr uint16_t address = 0xa1b2;
     constexpr uint16_t size = 50;
-    uint8_t data[size];
+    std::vector<uint8_t> data;
+    data.reserve(size);
+
     for( uint16_t i=0; i<size; ++i )
     {
-        data[i] = i;
-        expectWrite(addr + i, data[i]);
+        data.push_back(i);
+        expectWrite(address + i, data[i]);
     }
 
-    device->write(addr, data, size);
+    device->write(address, data.data(), data.size());
 }
 
 TEST(W5100DeviceTest, readByte)
 {
-    constexpr uint16_t addr = 0xccdd;
+    constexpr uint16_t address = 0xccdd;
     constexpr uint8_t data = 0xef;
-    expectRead(addr, data);
+    expectRead(address, data);
 
-    uint8_t result = device->read(addr);
+    uint8_t result = device->read(address);
     CHECK_EQUAL(data, result);
 }
 
 TEST(W5100DeviceTest, writeSocketModeRegister)
 {
-    constexpr uint16_t addr_ = 0x0000;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0000;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint8_t value = 0x17;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->writeSocketModeRegister(socket, value);
 }
 
 TEST(W5100DeviceTest, writeSocketSourcePort)
 {
-    constexpr uint16_t addr_ = 0x0004;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0004;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint16_t value = 0x1234;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->writeSocketSourcePort(socket, value);
 }
 
 TEST(W5100DeviceTest, writeSocketInterruptRegister)
 {
-    constexpr uint16_t addr_ = 0x0002;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0002;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint8_t value = 0x45;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->writeSocketInterruptRegister(socket, value);
 }
 
 TEST(W5100DeviceTest, readSocketInterruptRegister)
 {
-    constexpr uint16_t addr_ = 0x0002;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0002;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint8_t value = 0xb8;
-    expectRead(addr, value);
+    expectRead(address, value);
 
     uint8_t rtn = device->readSocketInterruptRegister(socket);
     CHECK_EQUAL(value, rtn);
@@ -169,20 +172,20 @@ TEST(W5100DeviceTest, readSocketInterruptRegister)
 
 TEST(W5100DeviceTest, writeSocketCommandRegister)
 {
-    constexpr uint16_t addr_ = 0x0001;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0001;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint8_t value = 0x5e;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->writeSocketCommandRegister(socket, value);
 }
 
 TEST(W5100DeviceTest, readSocketCommandRegister)
 {
-    constexpr uint16_t addr_ = 0x0001;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0001;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint8_t value = 0xa9;
-    expectRead(addr, value);
+    expectRead(address, value);
 
     uint8_t rtn = device->readSocketCommandRegister(socket);
     CHECK_EQUAL(value, rtn);
@@ -190,23 +193,24 @@ TEST(W5100DeviceTest, readSocketCommandRegister)
 
 TEST(W5100DeviceTest, executeSocketCommand)
 {
-    constexpr uint8_t cmd = 0x01;
-    constexpr uint16_t addr_ = 0x0001;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
-    expectWrite(addr, cmd);
-    expectRead(addr, static_cast<uint8_t>(0x01));
-    expectRead(addr, static_cast<uint8_t>(0x01));
-    expectRead(addr, static_cast<uint8_t>(0x00));
+    constexpr uint8_t cmd = 0x02;
+    constexpr uint8_t registerCleared = 0x00;
+    constexpr uint16_t addressOffset = 0x0001;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    expectWrite(address, cmd);
+    expectRead(address, static_cast<uint8_t>(0x01));
+    expectRead(address, static_cast<uint8_t>(0x01));
+    expectRead(address, static_cast<uint8_t>(registerCleared));
 
     device->executeSocketCommand(socket, cmd);
 }
 
 TEST(W5100DeviceTest, readSocketStatusRegister)
 {
-    constexpr uint16_t addr_ = 0x0003;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0003;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint8_t value = 0x55;
-    expectRead(addr, value);
+    expectRead(address, value);
 
     uint8_t rtn = device->readSocketStatusRegister(socket);
     CHECK_EQUAL(value, rtn);
@@ -214,10 +218,10 @@ TEST(W5100DeviceTest, readSocketStatusRegister)
 
 TEST(W5100DeviceTest, readSocketTransmitFreeSizeRegister)
 {
-    constexpr uint16_t addr_ = 0x0020;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0020;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint16_t value = 0x2345;
-    expectRead(addr, value);
+    expectRead(address, value);
 
     uint16_t rtn = device->spy_readSocketTransmitFreeSizeRegister(socket);
     CHECK_EQUAL(value, rtn);
@@ -225,13 +229,13 @@ TEST(W5100DeviceTest, readSocketTransmitFreeSizeRegister)
 
 TEST(W5100DeviceTest, getTransmitFreeSize)
 {
-    constexpr uint16_t addr_ = 0x0020;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0020;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint16_t value = 0x1234;
-    expectRead(addr, static_cast<uint16_t>(0xaaaa));
-    expectRead(addr, static_cast<uint16_t>(0xbbbb));
-    expectRead(addr, static_cast<uint16_t>(0x1234));
-    expectRead(addr, static_cast<uint16_t>(0x1234));
+    expectRead(address, static_cast<uint16_t>(0xaaaa));
+    expectRead(address, static_cast<uint16_t>(0xbbbb));
+    expectRead(address, static_cast<uint16_t>(0x1234));
+    expectRead(address, static_cast<uint16_t>(0x1234));
 
     uint16_t rtn = device->getTransmitFreeSize(socket);
     CHECK_EQUAL(value, rtn);
@@ -239,10 +243,10 @@ TEST(W5100DeviceTest, getTransmitFreeSize)
 
 TEST(W5100DeviceTest, readSocketTransmitWritePointer)
 {
-    constexpr uint16_t addr_ = 0x0024;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0024;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint16_t value = 0xeebb;
-    expectRead(addr, value);
+    expectRead(address, value);
 
     uint16_t rtn = device->spy_readSocketTransmitWritePointer(socket);
     CHECK_EQUAL(value, rtn);
@@ -250,10 +254,10 @@ TEST(W5100DeviceTest, readSocketTransmitWritePointer)
 
 TEST(W5100DeviceTest, writeSocketTransmitWritePointer)
 {
-    constexpr uint16_t addr_ = 0x0024;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0024;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint16_t value = 0xabcd;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->spy_writeSocketTransmitWritePointer(socket, value);
 }
@@ -262,161 +266,178 @@ TEST(W5100DeviceTest, sendData)
 {
     // TODO: Test circular buffer if wraped around
     // Read write register pos
-    constexpr uint16_t addr_ = 0x0024;
-    constexpr uint16_t addr = CH_BASE + socket * CH_SIZE + addr_;
+    constexpr uint16_t addressOffset = 0x0024;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint16_t value = 0x3355;
-    expectRead(addr, value);
+    expectRead(address, value);
 
-    constexpr uint16_t destAddr = 0x4355;
-
+    constexpr uint16_t destAddress = 0x4355;
     constexpr uint16_t size = 50;
-    uint8_t buffer[size];
+    std::vector<uint8_t> buffer;
+    buffer.reserve(size);
 
     for( uint16_t i=0; i<size; ++i )
     {
-        buffer[i] = i;
-        expectWrite(destAddr + i, buffer[i]);
+        buffer.push_back(i);
+        expectWrite(destAddress + i, buffer[i]);
     }
-    expectWrite(addr, static_cast<uint16_t>(value + size));
 
-    device->sendData(socket, buffer, size);
+    expectWrite(address, static_cast<uint16_t>(value + size));
+
+    device->sendData(socket, buffer.data(), buffer.size());
 }
 
 TEST(W5100DeviceTest, writeGatewayAddressRegister)
 {
-    constexpr uint16_t addr = 0x0001;
-    constexpr uint8_t size = 4;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x0001;
+    constexpr uint16_t size = 4;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->spy_writeGatewayAddressRegister(value);
+    device->spy_writeGatewayAddressRegister(value.data());
 }
 
 TEST(W5100DeviceTest, writeSubnetMaskRegister)
 {
-    constexpr uint16_t addr = 0x0005;
-    constexpr uint8_t size = 4;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x0005;
+    constexpr uint16_t size = 4;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->spy_writeSubnetMaskRegister(value);
+    device->spy_writeSubnetMaskRegister(value.data());
 }
 
 TEST(W5100DeviceTest, writeSourceMacAddressRegister)
 {
-    constexpr uint16_t addr = 0x0009;
-    constexpr uint8_t size = 6;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x0009;
+    constexpr uint16_t size = 6;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->spy_writeSourceMacAddressRegister(value);
+    device->spy_writeSourceMacAddressRegister(value.data());
 }
 
 TEST(W5100DeviceTest, writeSourceIpRegister)
 {
-    constexpr uint16_t addr = 0x000f;
-    constexpr uint8_t size = 4;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x000f;
+    constexpr uint16_t size = 4;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->spy_writeSourceIpRegister(value);
+    device->spy_writeSourceIpRegister(value.data());
 }
 
 TEST(W5100DeviceTest, setGatewayAddress)
 {
-    constexpr uint16_t addr = 0x0001;
-    constexpr uint8_t size = 4;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x0001;
+    constexpr uint16_t size = 4;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->setGatewayAddress(value);
+    device->setGatewayAddress(value.data());
 }
 
 TEST(W5100DeviceTest, setSubnetMask)
 {
-    constexpr uint16_t addr = 0x0005;
-    constexpr uint8_t size = 4;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x0005;
+    constexpr uint16_t size = 4;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->setSubnetMask(value);
+    device->setSubnetMask(value.data());
 }
 
 TEST(W5100DeviceTest, setMacAddress)
 {
-    constexpr uint16_t addr = 0x0009;
-    constexpr uint8_t size = 6;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x0009;
+    constexpr uint16_t size = 6;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->setMacAddress(value);
+    device->setMacAddress(value.data());
 }
 
 TEST(W5100DeviceTest, setIpAddress)
 {
-    constexpr uint16_t addr = 0x000f;
-    constexpr uint8_t size = 4;
-    uint8_t value[size];
-    for( uint8_t i=0; i<size; ++i )
+    constexpr uint16_t address = 0x000f;
+    constexpr uint16_t size = 4;
+    std::vector<uint8_t> value;
+    value.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
     {
-        value[i] = i;
-        expectWrite(addr + i , value[i]);
+        value.push_back(i);
+        expectWrite(address + i, value[i]);
     }
 
-    device->setIpAddress(value);
+    device->setIpAddress(value.data());
 }
 
 TEST(W5100DeviceTest, writeTransmitMemorySizeRegister)
 {
-    constexpr uint16_t addr = 0x001b;
+    constexpr uint16_t address = 0x001b;
     constexpr uint8_t value = 0xaa;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->spy_writeTransmitMemorySizeRegister(value);
 }
 
 TEST(W5100DeviceTest, writeReceiveMemorySizeRegister)
 {
-    constexpr uint16_t addr = 0x001a;
+    constexpr uint16_t address = 0x001a;
     constexpr uint8_t value = 0xbb;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->spy_writeReceiveMemorySizeRegister(value);
 }
 
 TEST(W5100DeviceTest, writeModeRegister)
 {
-    constexpr uint16_t addr = 0x0000;
+    constexpr uint16_t address = 0x0000;
     constexpr uint8_t value = 0x07;
-    expectWrite(addr, value);
+    expectWrite(address, value);
 
     device->writeModeRegister(value);
 }
