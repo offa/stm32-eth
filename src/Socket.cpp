@@ -66,10 +66,11 @@ namespace eth
     {
         uint16_t ret = 0;
         uint16_t freeSize = 0;
+        constexpr uint16_t bufferSize = device.getTransmitBufferSize();
 
-        if( len > device.transmitBufferSize )
+        if( len > bufferSize )
         {
-            ret = device.transmitBufferSize;
+            ret = bufferSize;
         }
         else
         {

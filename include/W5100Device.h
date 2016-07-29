@@ -65,8 +65,10 @@ namespace eth
         void setMacAddress(uint8_t* addr);
         void setIpAddress(uint8_t* addr);
 
-
-        static constexpr uint16_t transmitBufferSize = 2048;
+        static constexpr uint16_t getTransmitBufferSize()
+        {
+            return transmitBufferSize;
+        }
 
 
     protected:
@@ -92,6 +94,7 @@ namespace eth
         static constexpr uint16_t socketRegisterBaseAddress = 0x0400;
         static constexpr uint16_t socketChannelRegisterMapSize = 0x0100;
         static constexpr uint16_t transmitBufferMask = 0x07ff;
+        static constexpr uint16_t transmitBufferSize = 2048;
     };
 
 
