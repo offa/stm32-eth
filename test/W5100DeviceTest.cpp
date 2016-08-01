@@ -70,6 +70,13 @@ TEST_GROUP(W5100DeviceTest)
         expectRead(addr, static_cast<uint8_t>(data >> 8));
         expectRead(addr + 1, static_cast<uint8_t>(data & 0xff));
     }
+    
+    void checkWriteCalls(size_t expectedCalls) const
+    {
+        constexpr size_t transmissionsPerWrite = 4;
+        auto actual = mock("Spi").getData("transfer::count").getUnsignedIntValue();
+        CHECK_EQUAL(expectedCalls * transmissionsPerWrite, actual);
+    }
 
 
     std::unique_ptr<test::W5100DeviceSpy> device;
@@ -106,17 +113,38 @@ TEST(W5100DeviceTest, writeByte)
 TEST(W5100DeviceTest, writeBuffer)
 {
     constexpr uint16_t address = 0xa1b2;
-    constexpr uint16_t size = 50;
+    constexpr uint16_t size = 10;
     std::vector<uint8_t> data;
     data.reserve(size);
 
     for( uint16_t i=0; i<size; ++i )
     {
         data.push_back(i);
-        expectWrite(address + i, data[i]);
     }
 
+    mock("Spi").expectNCalls(size, "setSlaveSelect");
+    mock("Spi").ignoreOtherCalls();
+
     device->write(address, data.data(), data.size());
+    checkWriteCalls(size);
+}
+
+TEST(W5100DeviceTest, writeBufferLargeSize)
+{
+    constexpr uint16_t address = 0x9fc8;
+    const uint16_t size = device->getTransmitBufferSize() + 10;
+    std::vector<uint8_t> data;
+    data.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
+    {
+        data.push_back(i);
+    }
+    
+    mock("Spi").ignoreOtherCalls();
+
+    device->write(address, data.data(), data.size());
+    checkWriteCalls(size);
 }
 
 TEST(W5100DeviceTest, readByte)
@@ -264,15 +292,13 @@ TEST(W5100DeviceTest, writeSocketTransmitWritePointer)
 
 TEST(W5100DeviceTest, sendData)
 {
-    // TODO: Test circular buffer if wraped around
-    // Read write register pos
     constexpr uint16_t addressOffset = 0x0024;
     constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
     constexpr uint16_t value = 0x3355;
     expectRead(address, value);
 
     constexpr uint16_t destAddress = 0x4355;
-    constexpr uint16_t size = 50;
+    constexpr uint16_t size = 5;
     std::vector<uint8_t> buffer;
     buffer.reserve(size);
 
@@ -285,6 +311,23 @@ TEST(W5100DeviceTest, sendData)
     expectWrite(address, static_cast<uint16_t>(value + size));
 
     device->sendData(socket, buffer.data(), buffer.size());
+}
+
+TEST(W5100DeviceTest, sendDataCircularBufferWrap)
+{
+    const uint16_t size = device->getTransmitBufferSize() + 5;
+    std::vector<uint8_t> buffer;
+    buffer.reserve(size);
+
+    for( uint16_t i=0; i<size; ++i )
+    {
+        buffer.push_back(i);
+    }
+    
+    mock("Spi").ignoreOtherCalls();
+
+    device->sendData(socket, buffer.data(), buffer.size());
+    checkWriteCalls(sizeof(uint16_t) + size + sizeof(uint16_t));
 }
 
 TEST(W5100DeviceTest, writeGatewayAddressRegister)

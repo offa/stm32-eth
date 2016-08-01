@@ -125,7 +125,6 @@ namespace eth
 
         if( offset + size > bufferSize )
         {
-            // TODO: Test circular buffer wrap-around
             uint16_t transmitSize = bufferSize - offset;
             write(destAddress, buffer, transmitSize);
             write(m_transmitBufferBaseAddress[s], buffer + transmitSize, size - transmitSize);

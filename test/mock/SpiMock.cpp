@@ -23,9 +23,21 @@
 
 namespace eth
 {
+    namespace mockutil
+    {
+        static inline void incrementCalls(const ::SimpleString& name)
+        {
+            int count = mock("Spi").getData(name).getUnsignedIntValue();
+            ++count;
+            mock("Spi").setData(name, count);
+        }
+    }
+    
 
     uint8_t Spi::transfer(uint8_t data)
     {
+        mockutil::incrementCalls("transfer::count");
+        
         return mock("Spi").actualCall("transfer")
                 .withParameter("data", data)
                 .returnUnsignedIntValueOrDefault(0xff);
