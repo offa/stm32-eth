@@ -19,6 +19,7 @@
  */
 
 #include "W5100Device.h"
+#include "Spi.h"
 #include <algorithm>
 
 namespace eth
@@ -44,9 +45,9 @@ namespace eth
         writeReceiveMemorySizeRegister(memorySize);
     }
 
-    void W5100Device::executeSocketCommand(SocketHandle s, uint8_t value)
+    void W5100Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
     {
-        writeSocketCommandRegister(s, value);
+        writeSocketCommandRegister(s, static_cast<uint8_t>(cmd));
 
         while( readSocketCommandRegister(s) != 0 )
         {

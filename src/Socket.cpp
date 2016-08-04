@@ -42,7 +42,7 @@ namespace eth
 
             // TODO: Check port for != 0
             device.writeSocketSourcePort(m_handle, port);
-            device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::open));
+            device.executeSocketCommand(m_handle, SocketCommand::open);
             return 1;
         }
 
@@ -52,7 +52,7 @@ namespace eth
     void Socket::close()
     {
         // TODO: Safe close in dtor
-        device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::close));
+        device.executeSocketCommand(m_handle, SocketCommand::close);
         device.writeSocketInterruptRegister(m_handle, 0xff);
     }
 
@@ -63,7 +63,7 @@ namespace eth
             return false;
         }
 
-        device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::listen));
+        device.executeSocketCommand(m_handle, SocketCommand::listen);
 
         return true;
     }
@@ -89,7 +89,7 @@ namespace eth
         while( freeSize < ret );
 
         device.sendData(m_handle, buf, ret);
-        device.executeSocketCommand(m_handle, static_cast<uint8_t>(SocketCommand::send));
+        device.executeSocketCommand(m_handle, SocketCommand::send);
 
 
         constexpr uint8_t sendOk = static_cast<int>(SocketInterrupt::sendOk);

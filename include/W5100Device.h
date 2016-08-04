@@ -21,8 +21,8 @@
 #ifndef W5100DEVICE_H
 #define W5100DEVICE_H
 
-#include "Spi.h"
 #include "SocketHandle.h"
+#include "SocketCommand.h"
 #include <array>
 #include <stdint.h>
 
@@ -38,7 +38,7 @@ namespace eth
 
         void init();
 
-        void executeSocketCommand(SocketHandle s, uint8_t value);
+        void executeSocketCommand(SocketHandle s, SocketCommand cmd);
 
         void writeSocketModeRegister(SocketHandle s, uint8_t value);
         void writeSocketSourcePort(SocketHandle s, uint16_t value);

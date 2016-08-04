@@ -58,11 +58,11 @@ namespace eth
                 .returnUnsignedIntValue();
     }
 
-    void W5100Device::executeSocketCommand(SocketHandle s, uint8_t value)
+    void W5100Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
     {
         mock("W5100Device").actualCall("executeSocketCommand")
                 .withParameter("socket", s)
-                .withParameter("value", value);
+                .withParameter("value", static_cast<uint8_t>(cmd));
     }
 
     uint8_t W5100Device::readSocketStatusRegister(SocketHandle s)

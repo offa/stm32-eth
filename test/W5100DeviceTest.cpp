@@ -24,6 +24,7 @@
 #include <CppUTestExt/MockSupport.h>
 #include <vector>
 
+using eth::SocketCommand;
 
 TEST_GROUP(W5100DeviceTest)
 {
@@ -70,7 +71,7 @@ TEST_GROUP(W5100DeviceTest)
         expectRead(addr, static_cast<uint8_t>(data >> 8));
         expectRead(addr + 1, static_cast<uint8_t>(data & 0xff));
     }
-    
+
     void checkWriteCalls(size_t expectedCalls) const
     {
         constexpr size_t transmissionsPerWrite = 4;
@@ -140,7 +141,7 @@ TEST(W5100DeviceTest, writeBufferLargeSize)
     {
         data.push_back(i);
     }
-    
+
     mock("Spi").ignoreOtherCalls();
 
     device->write(address, data.data(), data.size());
@@ -221,11 +222,11 @@ TEST(W5100DeviceTest, readSocketCommandRegister)
 
 TEST(W5100DeviceTest, executeSocketCommand)
 {
-    constexpr uint8_t cmd = 0x02;
+    constexpr SocketCommand cmd = SocketCommand::connect;
     constexpr uint8_t registerCleared = 0x00;
     constexpr uint16_t addressOffset = 0x0001;
     constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
-    expectWrite(address, cmd);
+    expectWrite(address, static_cast<uint8_t>(cmd));
     expectRead(address, static_cast<uint8_t>(0x01));
     expectRead(address, static_cast<uint8_t>(0x01));
     expectRead(address, static_cast<uint8_t>(registerCleared));
@@ -323,7 +324,7 @@ TEST(W5100DeviceTest, sendDataCircularBufferWrap)
     {
         buffer.push_back(i);
     }
-    
+
     mock("Spi").ignoreOtherCalls();
 
     device->sendData(socket, buffer.data(), buffer.size());
