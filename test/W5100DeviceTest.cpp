@@ -20,9 +20,9 @@
 
 #include "W5100Device.h"
 #include "mock/W5100DeviceSpy.h"
+#include <vector>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
-#include <vector>
 
 using eth::SocketCommand;
 

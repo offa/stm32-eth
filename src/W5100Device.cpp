@@ -128,6 +128,7 @@ namespace eth
 
     void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
     {
+        constexpr uint16_t transmitBufferMask = 0x07ff;
         uint16_t writePointer = readSocketTransmitWritePointer(s);
         uint16_t offset = writePointer & transmitBufferMask;
         uint16_t destAddress = offset + m_transmitBufferBaseAddress[s];
@@ -166,9 +167,9 @@ namespace eth
             spi.transfer(opcodeWrite);
             spi.transfer(addr >> 8);
             spi.transfer(addr & 0xff);
-            ++addr;
             spi.transfer(buffer[i]);
             spi.resetSlaveSelect();
+            ++addr;
         }
     }
 
