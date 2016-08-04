@@ -161,16 +161,11 @@ namespace eth
 
     void W5100Device::write(uint16_t addr, const uint8_t* buffer, uint16_t size)
     {
-        for( uint16_t i=0; i<size; ++i )
+        std::for_each(buffer, buffer + size, [&](uint8_t data)
         {
-            spi.setSlaveSelect();
-            spi.transfer(opcodeWrite);
-            spi.transfer(addr >> 8);
-            spi.transfer(addr & 0xff);
-            spi.transfer(buffer[i]);
-            spi.resetSlaveSelect();
+            write(addr, data);
             ++addr;
-        }
+        });
     }
 
     uint8_t W5100Device::read(uint16_t addr)
