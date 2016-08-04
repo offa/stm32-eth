@@ -204,7 +204,6 @@ TEST(SocketTest, sendLimitsBufferSize)
 
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
 {
-    // TODO: Test loop
     constexpr uint16_t freeSize = defaultSize + 2;
     mock("W5100Device").expectOneCall("getTransmitFreeSize")
         .withParameter("socket", socketHandle)
