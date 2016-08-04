@@ -18,6 +18,9 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef SOCKETCOMMAND_H
+#define SOCKETCOMMAND_H
+
 namespace eth
 {
 
@@ -36,3 +39,4 @@ namespace eth
 
 }
 
+#endif /* SOCKETCOMMAND_H */
