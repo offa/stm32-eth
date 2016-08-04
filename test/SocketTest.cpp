@@ -50,13 +50,13 @@ TEST_GROUP(SocketTest)
         mock().clear();
     }
 
-    void expectClose(eth::SocketHandle socketHandle)
+    void expectClose(eth::SocketHandle handle)
     {
         mock("W5100Device").expectOneCall("executeSocketCommand")
-            .withParameter("socket", socketHandle)
+            .withParameter("socket", handle)
             .withParameter("value", static_cast<int>(SocketCommand::close));
         mock("W5100Device").expectOneCall("writeSocketInterruptRegister")
-            .withParameter("socket", socketHandle)
+            .withParameter("socket", handle)
             .withParameter("value", 0xff);
     }
 
