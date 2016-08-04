@@ -1,4 +1,4 @@
-# Stm32 Eth
+# [Stm32 Eth](https://github.com/offa/stm32-eth)
 
 [![Build Status](https://travis-ci.org/offa/stm32-eth.svg?branch=master)](https://travis-ci.org/offa/stm32-eth)
 [![GitHub release](https://img.shields.io/github/release/offa/stm32-eth.svg)](https://github.com/offa/stm32-eth/releases)
