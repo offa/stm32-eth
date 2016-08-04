@@ -25,6 +25,15 @@
 namespace eth
 {
 
+    static constexpr uint16_t getSocketAddress(SocketHandle s, uint16_t addressOffset)
+    {
+        constexpr uint16_t socketRegisterBaseAddress = 0x0400;
+        constexpr uint16_t socketChannelRegisterMapSize = 0x0100;
+
+        return socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addressOffset;
+    }
+
+
     W5100Device::W5100Device()
     {
         uint8_t index = 0;
@@ -58,44 +67,44 @@ namespace eth
     void W5100Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
         constexpr uint16_t addr = 0x0000;
-        write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value);
+        write(getSocketAddress(s, addr), value);
     }
 
     void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
         constexpr uint16_t addr = 0x0004;
-        write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value >> 8);
-        write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr + 1, value & 0xff);
+        write(getSocketAddress(s, addr), value >> 8);
+        write(getSocketAddress(s, addr + 1), value & 0xff);
     }
 
     void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
     {
         constexpr uint16_t addr = 0x0002;
-        write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value);
+        write(getSocketAddress(s, addr), value);
     }
 
     uint8_t W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0002;
-        return read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
+        return read(getSocketAddress(s, addr));
     }
 
     void W5100Device::writeSocketCommandRegister(SocketHandle s, uint8_t value)
     {
         constexpr uint16_t addr = 0x0001;
-        write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value);
+        write(getSocketAddress(s, addr), value);
     }
 
     uint8_t W5100Device::readSocketCommandRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0001;
-        return read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
+        return read(getSocketAddress(s, addr));
     }
 
     uint8_t W5100Device::readSocketStatusRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0003;
-        return read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
+        return read(getSocketAddress(s, addr));
     }
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
@@ -204,8 +213,8 @@ namespace eth
     uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0020;
-        uint16_t b1 = read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
-        uint16_t b2 = read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr + 1);
+        uint16_t b1 = read(getSocketAddress(s, addr));
+        uint16_t b2 = read(getSocketAddress(s, addr + 1));
         b1 = b1 << 8;
         b2 = b2 & 0xff;
         b1 = b1 | b2;
@@ -216,8 +225,8 @@ namespace eth
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0024;
-        uint16_t b1 = read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr);
-        uint16_t b2 = read(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr + 1);
+        uint16_t b1 = read(getSocketAddress(s, addr));
+        uint16_t b2 = read(getSocketAddress(s, addr + 1));
         b1 = b1 << 8;
         b2 = b2 & 0xff;
         b1 = b1 | b2;
@@ -228,8 +237,8 @@ namespace eth
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
         constexpr uint16_t addr = 0x0024;
-        write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr, value >> 8);
-        write(socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addr + 1, value & 0xff);
+        write(getSocketAddress(s, addr), value >> 8);
+        write(getSocketAddress(s, addr + 1), value & 0xff);
     }
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)

@@ -95,8 +95,6 @@ namespace eth
 
         static constexpr uint8_t opcodeWrite = 0xf0;
         static constexpr uint8_t opcodeRead = 0x0f;
-        static constexpr uint16_t socketRegisterBaseAddress = 0x0400;
-        static constexpr uint16_t socketChannelRegisterMapSize = 0x0100;
         static constexpr uint16_t transmitBufferMask = 0x07ff;
         static constexpr uint16_t transmitBufferSize = 2048;
     };
