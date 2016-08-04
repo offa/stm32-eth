@@ -11,3 +11,8 @@ elseif( CPP_STD_0x )
 else()
     message(WARNING "C++14 not supported by ${CMAKE_CXX_COMPILER}")
 endif()
+
+
+if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+endif()
