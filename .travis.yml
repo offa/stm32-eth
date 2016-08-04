@@ -1,0 +1,69 @@
+language: generic
+
+dist: trusty
+
+cache:
+    apt: true
+
+matrix:
+    include:
+    - env: CXX=g++-6 CC=gcc-6
+      addons:
+        apt:
+          packages:
+            - g++-6
+          sources: &sources
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise
+            - llvm-toolchain-precise-3.8
+            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-precise-3.6
+    - env: CXX=g++-5 CC=gcc-5
+      addons:
+        apt:
+          packages:
+            - g++-5
+          sources: *sources
+    - env: CXX=g++-4.9 CC=gcc-4.9
+      addons:
+        apt:
+          packages:
+            - g++-4.9
+          sources: *sources
+    - env: CXX=clang++-3.8 CC=clang-3.8
+      addons:
+        apt:
+          packages:
+            - clang-3.8
+          sources: *sources
+    - env: CXX=clang++-3.7 CC=clang-3.7
+      addons:
+        apt:
+          packages:
+            - clang-3.7
+          sources: *sources
+    - env: CXX=clang++-3.6 CC=clang-3.6
+      addons:
+        apt:
+          packages:
+            - clang-3.6
+          sources: *sources
+
+script:
+    - mkdir build && cd build
+    - cmake -DUNITTEST_VERBOSE=ON ..
+    - make
+    - make unittest
+
+before_install:
+    # Install CppUTest
+    - export CPPUTEST_VERSION=3.8
+    - export CPPUTEST=cpputest-${CPPUTEST_VERSION}
+    - wget https://github.com/cpputest/cpputest/releases/download/v${CPPUTEST_VERSION}/${CPPUTEST}.tar.gz
+    - tar -xzvf *.tar.gz
+    - cd ${CPPUTEST}
+    - mkdir _build && cd _build
+    - cmake -DC++11=ON -DTESTS=OFF ..
+    - make -j4 && sudo make install && cd ../..
+
+
