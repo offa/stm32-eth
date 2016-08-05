@@ -398,65 +398,53 @@ TEST(W5100DeviceTest, writeSourceIpRegister)
 TEST(W5100DeviceTest, setGatewayAddress)
 {
     constexpr uint16_t address = 0x0001;
-    constexpr uint16_t size = 4;
-    std::vector<uint8_t> value;
-    value.reserve(size);
+    std::array<uint8_t, 4> value = { 1, 2, 3, 4 };
 
-    for( uint16_t i=0; i<size; ++i )
+    for( uint16_t i=0; i<value.size(); ++i )
     {
-        value.push_back(i);
         expectWrite(address + i, value[i]);
     }
 
-    device->setGatewayAddress(value.data());
+    device->setGatewayAddress(value);
 }
 
 TEST(W5100DeviceTest, setSubnetMask)
 {
     constexpr uint16_t address = 0x0005;
-    constexpr uint16_t size = 4;
-    std::vector<uint8_t> value;
-    value.reserve(size);
+    std::array<uint8_t, 4> value = { 1, 2, 3, 4 };
 
-    for( uint16_t i=0; i<size; ++i )
+    for( uint16_t i=0; i<value.size(); ++i )
     {
-        value.push_back(i);
         expectWrite(address + i, value[i]);
     }
 
-    device->setSubnetMask(value.data());
+    device->setSubnetMask(value);
 }
 
 TEST(W5100DeviceTest, setMacAddress)
 {
     constexpr uint16_t address = 0x0009;
-    constexpr uint16_t size = 6;
-    std::vector<uint8_t> value;
-    value.reserve(size);
+    std::array<uint8_t, 6> value = { 1, 2, 3, 4, 5, 6 };
 
-    for( uint16_t i=0; i<size; ++i )
+    for( uint16_t i=0; i<value.size(); ++i )
     {
-        value.push_back(i);
         expectWrite(address + i, value[i]);
     }
 
-    device->setMacAddress(value.data());
+    device->setMacAddress(value);
 }
 
 TEST(W5100DeviceTest, setIpAddress)
 {
     constexpr uint16_t address = 0x000f;
-    constexpr uint16_t size = 4;
-    std::vector<uint8_t> value;
-    value.reserve(size);
+    std::array<uint8_t, 4> value = { 1, 2, 3, 4 };
 
-    for( uint16_t i=0; i<size; ++i )
+    for( uint16_t i=0; i<value.size(); ++i )
     {
-        value.push_back(i);
         expectWrite(address + i, value[i]);
     }
 
-    device->setIpAddress(value.data());
+    device->setIpAddress(value);
 }
 
 TEST(W5100DeviceTest, writeTransmitMemorySizeRegister)

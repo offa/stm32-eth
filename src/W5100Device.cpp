@@ -186,24 +186,24 @@ namespace eth
         write(addr, value);
     }
 
-    void W5100Device::setGatewayAddress(uint8_t* addr)
+    void W5100Device::setGatewayAddress(const std::array<uint8_t, 4>& addr)
     {
-        writeGatewayAddressRegister(addr);
+        writeGatewayAddressRegister(addr.data());
     }
 
-    void W5100Device::setSubnetMask(uint8_t* addr)
+    void W5100Device::setSubnetMask(const std::array<uint8_t, 4>& addr)
     {
-        writeSubnetMaskRegister(addr);
+        writeSubnetMaskRegister(addr.data());
     }
 
-    void W5100Device::setMacAddress(uint8_t* addr)
+    void W5100Device::setMacAddress(const std::array<uint8_t, 6>& addr)
     {
-        writeSourceMacAddressRegister(addr);
+        writeSourceMacAddressRegister(addr.data());
     }
 
-    void W5100Device::setIpAddress(uint8_t* addr)
+    void W5100Device::setIpAddress(const std::array<uint8_t, 4>& addr)
     {
-        writeSourceIpRegister(addr);
+        writeSourceIpRegister(addr.data());
     }
 
     uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
@@ -249,25 +249,25 @@ namespace eth
         write(addr, value);
     }
 
-    void W5100Device::writeGatewayAddressRegister(uint8_t* addr)
+    void W5100Device::writeGatewayAddressRegister(const uint8_t* addr)
     {
         constexpr uint16_t addr_ = 0x0001;
         write(addr_, addr, 4);
     }
 
-    void W5100Device::writeSubnetMaskRegister(uint8_t* addr)
+    void W5100Device::writeSubnetMaskRegister(const uint8_t* addr)
     {
         constexpr uint16_t addr_ = 0x0005;
         write(addr_, addr, 4);
     }
 
-    void W5100Device::writeSourceMacAddressRegister(uint8_t* addr)
+    void W5100Device::writeSourceMacAddressRegister(const uint8_t* addr)
     {
         constexpr uint16_t addr_ = 0x0009;
         write(addr_, addr, 6);
     }
 
-    void W5100Device::writeSourceIpRegister(uint8_t* addr)
+    void W5100Device::writeSourceIpRegister(const uint8_t* addr)
     {
         constexpr uint16_t addr_ = 0x000f;
         write(addr_, addr, 4);

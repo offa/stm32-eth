@@ -62,10 +62,10 @@ namespace eth
 
         void writeModeRegister(uint8_t value);
 
-        void setGatewayAddress(uint8_t* addr);
-        void setSubnetMask(uint8_t* addr);
-        void setMacAddress(uint8_t* addr);
-        void setIpAddress(uint8_t* addr);
+        void setGatewayAddress(const std::array<uint8_t, 4>& addr);
+        void setSubnetMask(const std::array<uint8_t, 4>& addr);
+        void setMacAddress(const std::array<uint8_t, 6>& addr);
+        void setIpAddress(const std::array<uint8_t, 4>& addr);
 
         static constexpr uint16_t getTransmitBufferSize()
         {
@@ -83,10 +83,10 @@ namespace eth
         void writeTransmitMemorySizeRegister(uint8_t value);
         void writeReceiveMemorySizeRegister(uint8_t value);
 
-        void writeGatewayAddressRegister(uint8_t* addr);
-        void writeSubnetMaskRegister(uint8_t* addr);
-        void writeSourceMacAddressRegister(uint8_t* addr);
-        void writeSourceIpRegister(uint8_t* addr);
+        void writeGatewayAddressRegister(const uint8_t* addr);
+        void writeSubnetMaskRegister(const uint8_t* addr);
+        void writeSourceMacAddressRegister(const uint8_t* addr);
+        void writeSourceIpRegister(const uint8_t* addr);
 
 
     private:
