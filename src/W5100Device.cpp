@@ -188,22 +188,22 @@ namespace eth
 
     void W5100Device::setGatewayAddress(const std::array<uint8_t, 4>& addr)
     {
-        writeGatewayAddressRegister(addr.data());
+        writeGatewayAddressRegister(addr);
     }
 
     void W5100Device::setSubnetMask(const std::array<uint8_t, 4>& addr)
     {
-        writeSubnetMaskRegister(addr.data());
+        writeSubnetMaskRegister(addr);
     }
 
     void W5100Device::setMacAddress(const std::array<uint8_t, 6>& addr)
     {
-        writeSourceMacAddressRegister(addr.data());
+        writeSourceMacAddressRegister(addr);
     }
 
     void W5100Device::setIpAddress(const std::array<uint8_t, 4>& addr)
     {
-        writeSourceIpRegister(addr.data());
+        writeSourceIpRegister(addr);
     }
 
     uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
@@ -249,28 +249,28 @@ namespace eth
         write(addr, value);
     }
 
-    void W5100Device::writeGatewayAddressRegister(const uint8_t* addr)
+    void W5100Device::writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr uint16_t addr_ = 0x0001;
-        write(addr_, addr, 4);
+        write(addr_, addr.data(), addr.size());
     }
 
-    void W5100Device::writeSubnetMaskRegister(const uint8_t* addr)
+    void W5100Device::writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr uint16_t addr_ = 0x0005;
-        write(addr_, addr, 4);
+        write(addr_, addr.data(), addr.size());
     }
 
-    void W5100Device::writeSourceMacAddressRegister(const uint8_t* addr)
+    void W5100Device::writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr)
     {
         constexpr uint16_t addr_ = 0x0009;
-        write(addr_, addr, 6);
+        write(addr_, addr.data(), addr.size());
     }
 
-    void W5100Device::writeSourceIpRegister(const uint8_t* addr)
+    void W5100Device::writeSourceIpRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr uint16_t addr_ = 0x000f;
-        write(addr_, addr, 4);
+        write(addr_, addr.data(), addr.size());
     }
 
     W5100Device device;

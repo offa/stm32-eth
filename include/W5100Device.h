@@ -83,10 +83,10 @@ namespace eth
         void writeTransmitMemorySizeRegister(uint8_t value);
         void writeReceiveMemorySizeRegister(uint8_t value);
 
-        void writeGatewayAddressRegister(const uint8_t* addr);
-        void writeSubnetMaskRegister(const uint8_t* addr);
-        void writeSourceMacAddressRegister(const uint8_t* addr);
-        void writeSourceIpRegister(const uint8_t* addr);
+        void writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr);
+        void writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr);
+        void writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr);
+        void writeSourceIpRegister(const std::array<uint8_t, 4>& addr);
 
 
     private:

@@ -35,26 +35,6 @@ namespace test
                 return readSocketTransmitFreeSizeRegister(s);
             }
 
-            void spy_writeGatewayAddressRegister(uint8_t* addr)
-            {
-                writeGatewayAddressRegister(addr);
-            }
-
-            void spy_writeSubnetMaskRegister(uint8_t* addr)
-            {
-                writeSubnetMaskRegister(addr);
-            }
-
-            void spy_writeSourceMacAddressRegister(uint8_t* addr)
-            {
-                writeSourceMacAddressRegister(addr);
-            }
-
-            void spy_writeSourceIpRegister(uint8_t* addr)
-            {
-                writeSourceIpRegister(addr);
-            }
-
             uint16_t spy_readSocketTransmitWritePointer(eth::SocketHandle s)
             {
                 return readSocketTransmitWritePointer(s);
