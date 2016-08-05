@@ -34,7 +34,6 @@ namespace eth
             std::enable_if_t<std::is_integral<T>::value && (pos < sizeof(T)), int> = 0>
         constexpr uint8_t get(T value)
         {
-            static_assert(pos < sizeof(T), "pos is out of range");
             constexpr auto shift = pos * 8;
             constexpr auto mask = ( 0xff << shift );
             return ( value & mask ) >> shift;
