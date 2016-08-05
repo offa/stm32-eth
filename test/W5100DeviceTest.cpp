@@ -21,6 +21,8 @@
 #include "W5100Device.h"
 #include "mock/W5100DeviceSpy.h"
 #include <vector>
+#include <algorithm>
+#include <numeric>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
@@ -56,6 +58,16 @@ TEST_GROUP(W5100DeviceTest)
         expectWrite(addr + 1, static_cast<uint8_t>(data & 0xff));
     }
 
+    template<class Container>
+    void expectWrite(uint16_t addr, const Container& data) const
+    {
+        std::for_each(data.begin(), data.end(), [&](uint8_t value)
+        {
+            expectWrite(addr, value);
+            ++addr;
+        });
+    }
+
     void expectRead(uint16_t addr, uint8_t data) const
     {
         mock("Spi").expectOneCall("setSlaveSelect");
@@ -77,6 +89,13 @@ TEST_GROUP(W5100DeviceTest)
         constexpr size_t transmissionsPerWrite = 4;
         auto actual = mock("Spi").getData("transfer::count").getUnsignedIntValue();
         CHECK_EQUAL(expectedCalls * transmissionsPerWrite, actual);
+    }
+
+    std::vector<uint8_t> createBuffer(size_t size) const
+    {
+        std::vector<uint8_t> buffer(size);
+        std::iota(buffer.begin(), buffer.end(), 0);
+        return buffer;
     }
 
 
@@ -115,13 +134,7 @@ TEST(W5100DeviceTest, writeBuffer)
 {
     constexpr uint16_t address = 0xa1b2;
     constexpr uint16_t size = 10;
-    std::vector<uint8_t> data;
-    data.reserve(size);
-
-    for( uint16_t i=0; i<size; ++i )
-    {
-        data.push_back(i);
-    }
+    auto data = createBuffer(size);
 
     mock("Spi").expectNCalls(size, "setSlaveSelect");
     mock("Spi").ignoreOtherCalls();
@@ -134,13 +147,7 @@ TEST(W5100DeviceTest, writeBufferLargeSize)
 {
     constexpr uint16_t address = 0x9fc8;
     const uint16_t size = device->getTransmitBufferSize() + 10;
-    std::vector<uint8_t> data;
-    data.reserve(size);
-
-    for( uint16_t i=0; i<size; ++i )
-    {
-        data.push_back(i);
-    }
+    auto data = createBuffer(size);
 
     mock("Spi").ignoreOtherCalls();
 
@@ -300,15 +307,8 @@ TEST(W5100DeviceTest, sendData)
 
     constexpr uint16_t destAddress = 0x4355;
     constexpr uint16_t size = 5;
-    std::vector<uint8_t> buffer;
-    buffer.reserve(size);
-
-    for( uint16_t i=0; i<size; ++i )
-    {
-        buffer.push_back(i);
-        expectWrite(destAddress + i, buffer[i]);
-    }
-
+    auto buffer = createBuffer(size);
+    expectWrite(destAddress, buffer);
     expectWrite(address, static_cast<uint16_t>(value + size));
 
     device->sendData(socket, buffer.data(), buffer.size());
@@ -317,14 +317,7 @@ TEST(W5100DeviceTest, sendData)
 TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 {
     const uint16_t size = device->getTransmitBufferSize() + 5;
-    std::vector<uint8_t> buffer;
-    buffer.reserve(size);
-
-    for( uint16_t i=0; i<size; ++i )
-    {
-        buffer.push_back(i);
-    }
-
+    auto buffer = createBuffer(size);
     mock("Spi").ignoreOtherCalls();
 
     device->sendData(socket, buffer.data(), buffer.size());
@@ -335,11 +328,7 @@ TEST(W5100DeviceTest, setGatewayAddress)
 {
     constexpr uint16_t address = 0x0001;
     std::array<uint8_t, 4> value = {{ 1, 2, 3, 4 }};
-
-    for( uint16_t i=0; i<value.size(); ++i )
-    {
-        expectWrite(address + i, value[i]);
-    }
+    expectWrite(address, value);
 
     device->setGatewayAddress(value);
 }
@@ -348,11 +337,7 @@ TEST(W5100DeviceTest, setSubnetMask)
 {
     constexpr uint16_t address = 0x0005;
     std::array<uint8_t, 4> value = {{ 1, 2, 3, 4 }};
-
-    for( uint16_t i=0; i<value.size(); ++i )
-    {
-        expectWrite(address + i, value[i]);
-    }
+    expectWrite(address, value);
 
     device->setSubnetMask(value);
 }
@@ -361,11 +346,7 @@ TEST(W5100DeviceTest, setMacAddress)
 {
     constexpr uint16_t address = 0x0009;
     std::array<uint8_t, 6> value = {{ 1, 2, 3, 4, 5, 6 }};
-
-    for( uint16_t i=0; i<value.size(); ++i )
-    {
-        expectWrite(address + i, value[i]);
-    }
+    expectWrite(address, value);
 
     device->setMacAddress(value);
 }
@@ -374,11 +355,7 @@ TEST(W5100DeviceTest, setIpAddress)
 {
     constexpr uint16_t address = 0x000f;
     std::array<uint8_t, 4> value = {{ 1, 2, 3, 4 }};
-
-    for( uint16_t i=0; i<value.size(); ++i )
-    {
-        expectWrite(address + i, value[i]);
-    }
+    expectWrite(address, value);
 
     device->setIpAddress(value);
 }

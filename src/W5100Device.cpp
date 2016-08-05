@@ -132,11 +132,10 @@ namespace eth
         uint16_t writePointer = readSocketTransmitWritePointer(s);
         uint16_t offset = writePointer & transmitBufferMask;
         uint16_t destAddress = offset + m_transmitBufferBaseAddress[s];
-        constexpr uint16_t bufferSize = transmitBufferSize;
 
-        if( offset + size > bufferSize )
+        if( offset + size > transmitBufferSize )
         {
-            uint16_t transmitSize = bufferSize - offset;
+            uint16_t transmitSize = transmitBufferSize - offset;
             write(destAddress, buffer, transmitSize);
             write(m_transmitBufferBaseAddress[s], buffer + transmitSize, size - transmitSize);
         }
