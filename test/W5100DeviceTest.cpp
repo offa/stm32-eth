@@ -143,18 +143,6 @@ TEST(W5100DeviceTest, writeBuffer)
     checkWriteCalls(size);
 }
 
-TEST(W5100DeviceTest, writeBufferLargeSize)
-{
-    constexpr uint16_t address = 0x9fc8;
-    const uint16_t size = device->getTransmitBufferSize() + 10;
-    auto data = createBuffer(size);
-
-    mock("Spi").ignoreOtherCalls();
-
-    device->write(address, data.data(), data.size());
-    checkWriteCalls(size);
-}
-
 TEST(W5100DeviceTest, readByte)
 {
     constexpr uint16_t address = 0xccdd;
