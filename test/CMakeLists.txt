@@ -38,6 +38,9 @@ list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
 _add_test(W5100DeviceTest W5100TEST_SRC)
 
 
+list(APPEND BYTETEST_SRC ByteTest.cpp)
+_add_test(ByteTest BYTETEST_SRC)
+
 
 set(TEST_FLAGS -c)
 
@@ -48,6 +51,7 @@ endif()
 
 add_custom_target(unittest SocketTest ${TEST_FLAGS}
                     COMMAND W5100DeviceTest ${TEST_FLAGS}
+                    COMMAND ByteTest ${TEST_FLAGS}
 
                     COMMENT "Running unittests\n\n"
                     VERBATIM

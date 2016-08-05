@@ -20,6 +20,7 @@
 
 #include "W5100Device.h"
 #include "Spi.h"
+#include "Byte.h"
 #include <algorithm>
 
 namespace eth
@@ -73,8 +74,8 @@ namespace eth
     void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
         constexpr uint16_t addr = 0x0004;
-        write(getSocketAddress(s, addr), value >> 8);
-        write(getSocketAddress(s, addr + 1), value & 0xff);
+        write(getSocketAddress(s, addr), byte::get<1>(value));
+        write(getSocketAddress(s, addr + 1), byte::get<0>(value));
     }
 
     void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
@@ -152,8 +153,8 @@ namespace eth
     {
         spi.setSlaveSelect();
         spi.transfer(opcodeWrite);
-        spi.transfer(addr >> 8);
-        spi.transfer(addr & 0xff);
+        spi.transfer(byte::get<1>(addr));
+        spi.transfer(byte::get<0>(addr));
         spi.transfer(data);
         spi.resetSlaveSelect();
     }
@@ -171,8 +172,8 @@ namespace eth
     {
         spi.setSlaveSelect();
         spi.transfer(opcodeRead);
-        spi.transfer(addr >> 8);
-        spi.transfer(addr & 0xff);
+        spi.transfer(byte::get<1>(addr));
+        spi.transfer(byte::get<0>(addr));
         uint8_t data = spi.transfer(0);
         spi.resetSlaveSelect();
 
@@ -232,8 +233,8 @@ namespace eth
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
         constexpr uint16_t addr = 0x0024;
-        write(getSocketAddress(s, addr), value >> 8);
-        write(getSocketAddress(s, addr + 1), value & 0xff);
+        write(getSocketAddress(s, addr), byte::get<1>(value));
+        write(getSocketAddress(s, addr + 1), byte::get<0>(value));
     }
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
