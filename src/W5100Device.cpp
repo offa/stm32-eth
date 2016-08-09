@@ -210,24 +210,18 @@ namespace eth
     {
         constexpr uint16_t addr = 0x0020;
         uint16_t b1 = read(getSocketAddress(s, addr));
-        uint16_t b2 = read(getSocketAddress(s, addr + 1));
-        b1 = b1 << 8;
-        b2 = b2 & 0xff;
-        b1 = b1 | b2;
+        uint16_t b0 = read(getSocketAddress(s, addr + 1));
 
-        return b1;
+        return byte::from<uint16_t>(b1, b0);
     }
 
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0024;
         uint16_t b1 = read(getSocketAddress(s, addr));
-        uint16_t b2 = read(getSocketAddress(s, addr + 1));
-        b1 = b1 << 8;
-        b2 = b2 & 0xff;
-        b1 = b1 | b2;
+        uint16_t b0 = read(getSocketAddress(s, addr + 1));
 
-        return b1;
+        return byte::from<uint16_t>(b1, b0);
     }
 
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)

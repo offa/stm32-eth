@@ -31,12 +31,32 @@ namespace eth
     {
 
         template<size_t pos, class T,
-            std::enable_if_t<std::is_integral<T>::value && (pos < sizeof(T)), int> = 0>
+            std::enable_if_t<std::is_integral<T>::value
+                                && ( pos < sizeof(T) ), int> = 0>
         constexpr uint8_t get(T value)
         {
             constexpr auto shift = pos * 8;
             constexpr auto mask = ( 0xff << shift );
             return ( value & mask ) >> shift;
+        }
+
+
+        template<class T,
+            std::enable_if_t<std::is_integral<T>::value
+                                && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
+        constexpr T from(uint8_t value)
+        {
+            return value;
+        }
+
+        template<class T, class... Ts,
+            std::enable_if_t<std::is_integral<T>::value
+                                && ( sizeof(T) >= (sizeof...(Ts) + sizeof(uint8_t)) ), int> = 0>
+        constexpr T from(uint8_t valueN, Ts... values)
+        {
+            constexpr auto shift = sizeof...(values) * 8;
+            auto lower = from<T>(values...);
+            return ( valueN << shift ) | lower ;
         }
 
     }

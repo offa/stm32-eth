@@ -56,3 +56,24 @@ TEST(ByteTest, getByteUint32)
     CHECK_EQUAL(0xab, byte::get<3>(value));
 }
 
+TEST(ByteTest, fromByteUint8)
+{
+    constexpr uint8_t b0 = 0xab;
+    CHECK_EQUAL(0xab, byte::from<uint8_t>(b0));
+}
+
+TEST(ByteTest, fromByteUint16)
+{
+    constexpr uint8_t b0 = 0xcd;
+    constexpr uint8_t b1 = 0xab;
+    CHECK_EQUAL(0xabcd, byte::from<uint16_t>(b1, b0));
+}
+
+TEST(ByteTest, fromByteUint32)
+{
+    constexpr uint8_t b0 = 0x01;
+    constexpr uint8_t b1 = 0xef;
+    constexpr uint8_t b2 = 0xcd;
+    constexpr uint8_t b3 = 0xab;
+    CHECK_EQUAL(0xabcdef01, byte::from<uint32_t>(b3, b2, b1, b0));
+}
