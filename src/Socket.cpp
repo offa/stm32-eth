@@ -81,9 +81,7 @@ namespace eth
 
             if( (status != SocketStatus::established) && (status != SocketStatus::closeWait) )
             {
-                // TODO: Return at this point?
-                ret = 0;
-                break;
+                return 0;
             }
         }
         while( freeSize < ret );

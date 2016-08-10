@@ -271,10 +271,6 @@ TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
     mock("W5100Device").expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::init));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
     CHECK_EQUAL(0, socket->send(buffer.data(), buffer.size()));
