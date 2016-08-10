@@ -37,7 +37,7 @@ namespace eth
         bool open(uint8_t protocol, uint16_t port, uint8_t flag);
         void close();
         bool listen();
-        uint16_t send(const uint8_t* buf, uint16_t len);
+        uint16_t send(const uint8_t* buffer, uint16_t length);
 
     private:
 

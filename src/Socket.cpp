@@ -43,10 +43,10 @@ namespace eth
             // TODO: Check port for != 0
             device.writeSocketSourcePort(m_handle, port);
             device.executeSocketCommand(m_handle, SocketCommand::open);
-            return 1;
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
     void Socket::close()
@@ -68,10 +68,10 @@ namespace eth
         return true;
     }
 
-    uint16_t Socket::send(const uint8_t* buf, uint16_t len)
+    uint16_t Socket::send(const uint8_t* buffer, uint16_t length)
     {
         constexpr uint16_t bufferSize = device.getTransmitBufferSize();
-        uint16_t ret = std::min(bufferSize, len);
+        uint16_t sendSize = std::min(bufferSize, length);
         uint16_t freeSize = 0;
 
         do
@@ -84,9 +84,9 @@ namespace eth
                 return 0;
             }
         }
-        while( freeSize < ret );
+        while( freeSize < sendSize );
 
-        device.sendData(m_handle, buf, ret);
+        device.sendData(m_handle, buffer, sendSize);
         device.executeSocketCommand(m_handle, SocketCommand::send);
 
 
@@ -103,7 +103,7 @@ namespace eth
 
         device.writeSocketInterruptRegister(m_handle, sendOk);
 
-        return ret;
+        return sendSize;
     }
 
 }
