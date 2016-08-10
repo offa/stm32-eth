@@ -35,6 +35,7 @@ namespace eth
     public:
 
         W5100Device();
+        W5100Device(W5100Device&&) = default;
 
         void init();
 
@@ -71,6 +72,8 @@ namespace eth
         {
             return transmitBufferSize;
         }
+
+        W5100Device& operator=(W5100Device&&) = default;
 
 
     protected:

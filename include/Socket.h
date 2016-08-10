@@ -32,12 +32,16 @@ namespace eth
     public:
 
         explicit Socket(SocketHandle handle);
+        Socket(Socket&&) = default;
 
 
         bool open(uint8_t protocol, uint16_t port, uint8_t flag);
         void close();
         bool listen();
         uint16_t send(const uint8_t* buffer, uint16_t length);
+
+        Socket& operator=(Socket&&) = default;
+
 
     private:
 
