@@ -18,6 +18,9 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef SOCKETSTATUS_H
+#define SOCKETSTATUS_H
+
 namespace eth
 {
 
@@ -42,3 +45,4 @@ namespace eth
 
 }
 
+#endif /* SOCKETSTATUS_H */

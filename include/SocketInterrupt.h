@@ -18,6 +18,9 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef SOCKETINTERRUPT_H
+#define SOCKETINTERRUPT_H
+
 namespace eth
 {
 
@@ -31,3 +34,5 @@ namespace eth
     };
 
 }
+
+#endif /* SOCKETINTERRUPT_H */
