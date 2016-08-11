@@ -27,6 +27,7 @@
 #include <CppUTestExt/MockSupport.h>
 
 using eth::SocketCommand;
+using eth::SocketStatus;
 
 TEST_GROUP(W5100DeviceTest)
 {
@@ -233,11 +234,11 @@ TEST(W5100DeviceTest, readSocketStatusRegister)
 {
     constexpr uint16_t addressOffset = 0x0003;
     constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
-    constexpr uint8_t value = 0x55;
-    expectRead(address, value);
+    constexpr SocketStatus status = SocketStatus::established;
+    expectRead(address, static_cast<uint8_t>(status));
 
-    uint8_t rtn = device->readSocketStatusRegister(socket);
-    CHECK_EQUAL(value, rtn);
+    auto rtn = device->readSocketStatusRegister(socket);
+    CHECK_EQUAL(static_cast<uint8_t>(status), static_cast<uint8_t>(rtn));
 }
 
 TEST(W5100DeviceTest, readSocketTransmitFreeSizeRegister)

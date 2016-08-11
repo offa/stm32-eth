@@ -102,10 +102,10 @@ namespace eth
         return static_cast<SocketCommand>(read(getSocketAddress(s, addr)));
     }
 
-    uint8_t W5100Device::readSocketStatusRegister(SocketHandle s)
+    SocketStatus W5100Device::readSocketStatusRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0003;
-        return read(getSocketAddress(s, addr));
+        return static_cast<SocketStatus>(read(getSocketAddress(s, addr)));
     }
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)

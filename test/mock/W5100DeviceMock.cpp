@@ -65,11 +65,11 @@ namespace eth
                 .withParameter("value", static_cast<uint8_t>(cmd));
     }
 
-    uint8_t W5100Device::readSocketStatusRegister(SocketHandle s)
+    SocketStatus W5100Device::readSocketStatusRegister(SocketHandle s)
     {
-        return mock("W5100Device").actualCall("readSocketStatusRegister")
+        return static_cast<SocketStatus>(mock("W5100Device").actualCall("readSocketStatusRegister")
                 .withParameter("socket", s)
-                .returnUnsignedIntValue();
+                .returnUnsignedIntValue());
     }
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)

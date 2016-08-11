@@ -23,6 +23,7 @@
 
 #include "SocketHandle.h"
 #include "SocketCommand.h"
+#include "SocketStatus.h"
 #include <array>
 #include <stdint.h>
 
@@ -50,7 +51,7 @@ namespace eth
         void writeSocketCommandRegister(SocketHandle s, SocketCommand value);
         SocketCommand readSocketCommandRegister(SocketHandle s);
 
-        uint8_t readSocketStatusRegister(SocketHandle s);
+        SocketStatus readSocketStatusRegister(SocketHandle s);
 
         uint16_t getTransmitFreeSize(SocketHandle s);
 
