@@ -23,11 +23,11 @@ namespace eth
 
     enum class SocketInterrupt
     {
-        sendOk = 0x10,
-        timeout = 0x08,
-        recv = 0x04,
+        connect = 0x01,
         disconnect = 0x02,
-        connect = 0x01
+        recv = 0x04,
+        timeout = 0x08,
+        sendOk = 0x10
     };
 
 }
