@@ -42,12 +42,12 @@ namespace eth
 
     static constexpr auto initAddresses(uint16_t bufferSize)
     {
-        return std::array<uint16_t, supportedSockets> {
+        return std::array<uint16_t, supportedSockets> {{
             getBufferAddress<0>(bufferSize),
             getBufferAddress<1>(bufferSize),
             getBufferAddress<2>(bufferSize),
             getBufferAddress<3>(bufferSize)
-        };
+        }};
     }
 
 
