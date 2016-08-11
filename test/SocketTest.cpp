@@ -19,7 +19,6 @@
  */
 
 #include "Socket.h"
-#include "SocketMode.h"
 #include "SocketStatus.h"
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
@@ -33,6 +32,7 @@ using eth::SocketStatus;
 using eth::SocketCommand;
 using eth::SocketInterrupt;
 using eth::Socket;
+using eth::Protocol;
 
 
 TEST_GROUP(SocketTest)
@@ -70,16 +70,16 @@ TEST_GROUP(SocketTest)
 
     std::unique_ptr<Socket> socket;
     static constexpr eth::SocketHandle socketHandle = 0;
-    static constexpr uint8_t protocol = static_cast<uint8_t>(eth::SocketMode::tcp);
     static constexpr uint16_t port = 1234;
+    static constexpr Protocol protocol = Protocol::tcp;
     static constexpr uint8_t flag = 0;
     static constexpr uint8_t statusSendOk = static_cast<uint8_t>(SocketInterrupt::sendOk);
     static constexpr size_t defaultSize = 10;
 };
 
-TEST(SocketTest, openReturnsErrorOnInvalidProtocol)
+TEST(SocketTest, openReturnsErrorOnUnsupportedProtocol)
 {
-    constexpr uint8_t invalidProtocol = 0xff;
+    constexpr Protocol invalidProtocol = Protocol::pppoe;
     CHECK_FALSE(socket->open(invalidProtocol, port, flag));
 }
 
@@ -100,7 +100,7 @@ TEST(SocketTest, openResetsSocketFirst)
 
 TEST(SocketTest, openSetsProtocol)
 {
-    constexpr uint8_t value = protocol | flag;
+    constexpr uint8_t value = static_cast<uint8_t>(protocol) | flag;
     expectClose(socketHandle);
     mock("W5100Device").expectOneCall("writeSocketModeRegister")
         .withParameter("socket", socketHandle)
@@ -113,7 +113,7 @@ TEST(SocketTest, openSetsProtocol)
 TEST(SocketTest, openSetsFlag)
 {
     constexpr uint8_t flagValue = 0x0a;
-    constexpr uint8_t value = protocol | flagValue;
+    constexpr uint8_t value = static_cast<uint8_t>(protocol) | flagValue;
     expectClose(socketHandle);
     mock("W5100Device").expectOneCall("writeSocketModeRegister")
         .withParameter("socket", socketHandle)

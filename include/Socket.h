@@ -21,8 +21,9 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#include <stdint.h>
 #include "SocketHandle.h"
+#include "Protocol.h"
+#include <stdint.h>
 
 namespace eth
 {
@@ -35,7 +36,7 @@ namespace eth
         Socket(Socket&&) = default;
 
 
-        bool open(uint8_t protocol, uint16_t port, uint8_t flag);
+        bool open(Protocol protocol, uint16_t port, uint8_t flag);
         void close();
         bool listen();
         uint16_t send(const uint8_t* buffer, uint16_t length);

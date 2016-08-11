@@ -18,21 +18,21 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKETMODE_H
-#define SOCKETMODE_H
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
 
 namespace eth
 {
 
-    enum class SocketMode
+    enum class Protocol
     {
         tcp = 0x01,
         udp = 0x02,
-        ipraw = 0x03,
-        macraw = 0x04,
+        ipRaw = 0x03,
+        macRaw = 0x04,
         pppoe = 0x05
     };
 
 }
 
-#endif /* SOCKETMODE_H */
+#endif /* PROTOCOL_H */

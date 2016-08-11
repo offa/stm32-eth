@@ -20,7 +20,6 @@
 
 #include "Socket.h"
 #include "W5100Device.h"
-#include "SocketMode.h"
 #include "SocketStatus.h"
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
@@ -33,12 +32,12 @@ namespace eth
     {
     }
 
-    bool Socket::open(uint8_t protocol, uint16_t port, uint8_t flag)
+    bool Socket::open(Protocol protocol, uint16_t port, uint8_t flag)
     {
-        if( protocol == static_cast<uint8_t>(SocketMode::tcp) )
+        if( protocol == Protocol::tcp )
         {
             close();
-            device.writeSocketModeRegister(m_handle, protocol | flag);
+            device.writeSocketModeRegister(m_handle, static_cast<uint8_t>(protocol) | flag);
 
             // TODO: Check port for != 0
             device.writeSocketSourcePort(m_handle, port);
