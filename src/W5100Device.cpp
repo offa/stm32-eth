@@ -30,19 +30,29 @@ namespace eth
     {
         constexpr uint16_t socketRegisterBaseAddress = 0x0400;
         constexpr uint16_t socketChannelRegisterMapSize = 0x0100;
-
         return socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addressOffset;
     }
 
-
-    W5100Device::W5100Device()
+    template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
+    static constexpr uint16_t getBufferAddress(uint16_t bufferSize)
     {
-        uint8_t index = 0;
-        std::generate(m_transmitBufferBaseAddress.begin(), m_transmitBufferBaseAddress.end(), [&]
-        {
-            constexpr uint16_t baseAddress = 0x4000;
-            return baseAddress + transmitBufferSize * (index++);
-        });
+        constexpr uint16_t baseAddress = 0x4000;
+        return baseAddress + bufferSize * index;
+    }
+
+    static constexpr auto initAddresses(uint16_t bufferSize)
+    {
+        return std::array<uint16_t, supportedSockets> {
+            getBufferAddress<0>(bufferSize),
+            getBufferAddress<1>(bufferSize),
+            getBufferAddress<2>(bufferSize),
+            getBufferAddress<3>(bufferSize)
+        };
+    }
+
+
+    W5100Device::W5100Device() : m_transmitBufferBaseAddress(initAddresses(transmitBufferSize))
+    {
     }
 
     void W5100Device::init()
