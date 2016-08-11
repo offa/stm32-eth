@@ -47,8 +47,7 @@ namespace eth
 
     void W5100Device::init()
     {
-        constexpr uint8_t resetBit = 7;
-        writeModeRegister(1 << resetBit);
+        writeModeRegister(Mode::reset);
 
         constexpr uint8_t memorySize = 0x55;
         writeTransmitMemorySizeRegister(memorySize);
@@ -180,10 +179,10 @@ namespace eth
         return data;
     }
 
-    void W5100Device::writeModeRegister(uint8_t value)
+    void W5100Device::writeModeRegister(Mode value)
     {
         constexpr uint16_t addr = 0x0000;
-        write(addr, value);
+        write(addr, static_cast<uint8_t>(value));
     }
 
     void W5100Device::setGatewayAddress(const std::array<uint8_t, 4>& addr)

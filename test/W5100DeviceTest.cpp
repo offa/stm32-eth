@@ -28,6 +28,7 @@
 
 using eth::SocketCommand;
 using eth::SocketStatus;
+using eth::Mode;
 
 TEST_GROUP(W5100DeviceTest)
 {
@@ -370,9 +371,9 @@ TEST(W5100DeviceTest, writeReceiveMemorySizeRegister)
 TEST(W5100DeviceTest, writeModeRegister)
 {
     constexpr uint16_t address = 0x0000;
-    constexpr uint8_t value = 0x07;
-    expectWrite(address, value);
+    constexpr Mode mode = Mode::autoIncrement;
+    expectWrite(address, static_cast<uint8_t>(mode));
 
-    device->writeModeRegister(value);
+    device->writeModeRegister(mode);
 }
 

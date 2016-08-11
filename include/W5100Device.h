@@ -24,9 +24,9 @@
 #include "SocketHandle.h"
 #include "SocketCommand.h"
 #include "SocketStatus.h"
+#include "Mode.h"
 #include <array>
 #include <stdint.h>
-
 
 namespace eth
 {
@@ -62,7 +62,7 @@ namespace eth
         void write(uint16_t addr, const uint8_t* buffer, uint16_t size);
         uint8_t read(uint16_t addr);
 
-        void writeModeRegister(uint8_t value);
+        void writeModeRegister(Mode value);
 
         void setGatewayAddress(const std::array<uint8_t, 4>& addr);
         void setSubnetMask(const std::array<uint8_t, 4>& addr);
