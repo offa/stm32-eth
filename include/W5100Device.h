@@ -47,8 +47,8 @@ namespace eth
         void writeSocketInterruptRegister(SocketHandle s, uint8_t value);
         uint8_t readSocketInterruptRegister(SocketHandle s);
 
-        void writeSocketCommandRegister(SocketHandle s, uint8_t value);
-        uint8_t readSocketCommandRegister(SocketHandle s);
+        void writeSocketCommandRegister(SocketHandle s, SocketCommand value);
+        SocketCommand readSocketCommandRegister(SocketHandle s);
 
         uint8_t readSocketStatusRegister(SocketHandle s);
 

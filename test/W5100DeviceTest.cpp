@@ -198,21 +198,21 @@ TEST(W5100DeviceTest, writeSocketCommandRegister)
 {
     constexpr uint16_t addressOffset = 0x0001;
     constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
-    constexpr uint8_t value = 0x5e;
-    expectWrite(address, value);
+    constexpr SocketCommand cmd = SocketCommand::listen;
+    expectWrite(address, static_cast<uint8_t>(cmd));
 
-    device->writeSocketCommandRegister(socket, value);
+    device->writeSocketCommandRegister(socket, cmd);
 }
 
 TEST(W5100DeviceTest, readSocketCommandRegister)
 {
     constexpr uint16_t addressOffset = 0x0001;
     constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
-    constexpr uint8_t value = 0xa9;
-    expectRead(address, value);
+    constexpr SocketCommand cmd = SocketCommand::connect;
+    expectRead(address, static_cast<uint8_t>(cmd));
 
-    uint8_t rtn = device->readSocketCommandRegister(socket);
-    CHECK_EQUAL(value, rtn);
+    auto rtn = device->readSocketCommandRegister(socket);
+    CHECK_EQUAL(static_cast<uint8_t>(cmd), static_cast<uint8_t>(rtn));
 }
 
 TEST(W5100DeviceTest, executeSocketCommand)

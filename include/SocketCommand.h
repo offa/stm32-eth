@@ -26,6 +26,7 @@ namespace eth
 
     enum class SocketCommand
     {
+        commandExecuted = 0x00,
         open = 0x01,
         listen = 0x02,
         connect = 0x04,

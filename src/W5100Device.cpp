@@ -57,9 +57,9 @@ namespace eth
 
     void W5100Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
     {
-        writeSocketCommandRegister(s, static_cast<uint8_t>(cmd));
+        writeSocketCommandRegister(s, cmd);
 
-        while( readSocketCommandRegister(s) != 0 )
+        while( readSocketCommandRegister(s) != SocketCommand::commandExecuted )
         {
             // Wait for completion
         }
@@ -90,16 +90,16 @@ namespace eth
         return read(getSocketAddress(s, addr));
     }
 
-    void W5100Device::writeSocketCommandRegister(SocketHandle s, uint8_t value)
+    void W5100Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
     {
         constexpr uint16_t addr = 0x0001;
-        write(getSocketAddress(s, addr), value);
+        write(getSocketAddress(s, addr), static_cast<uint8_t>(value));
     }
 
-    uint8_t W5100Device::readSocketCommandRegister(SocketHandle s)
+    SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0001;
-        return read(getSocketAddress(s, addr));
+        return static_cast<SocketCommand>(read(getSocketAddress(s, addr)));
     }
 
     uint8_t W5100Device::readSocketStatusRegister(SocketHandle s)
