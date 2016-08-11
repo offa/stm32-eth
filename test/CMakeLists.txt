@@ -42,6 +42,10 @@ list(APPEND BYTETEST_SRC ByteTest.cpp)
 _add_test(ByteTest BYTETEST_SRC)
 
 
+list(APPEND REGISTERVALUETEST_SRC RegisterValueTest.cpp)
+_add_test(RegisterValueTest REGISTERVALUETEST_SRC)
+
+
 set(TEST_FLAGS -c)
 
 if( UNITTEST_VERBOSE )
@@ -52,6 +56,7 @@ endif()
 add_custom_target(unittest SocketTest ${TEST_FLAGS}
                     COMMAND W5100DeviceTest ${TEST_FLAGS}
                     COMMAND ByteTest ${TEST_FLAGS}
+                    COMMAND RegisterValueTest ${TEST_FLAGS}
 
                     COMMENT "Running unittests\n\n"
                     VERBATIM

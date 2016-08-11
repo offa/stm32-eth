@@ -89,9 +89,9 @@ namespace eth
         device.executeSocketCommand(m_handle, SocketCommand::send);
 
 
-        constexpr uint8_t sendOk = static_cast<int>(SocketInterrupt::sendOk);
+        constexpr uint8_t send = static_cast<int>(SocketInterrupt::send);
 
-        while( ( device.readSocketInterruptRegister(m_handle) & sendOk ) != sendOk )
+        while( ( device.readSocketInterruptRegister(m_handle) & send ) != send )
         {
             if( device.readSocketStatusRegister(m_handle) == SocketStatus::closed )
             {
@@ -100,7 +100,7 @@ namespace eth
             }
         }
 
-        device.writeSocketInterruptRegister(m_handle, sendOk);
+        device.writeSocketInterruptRegister(m_handle, send);
 
         return sendSize;
     }

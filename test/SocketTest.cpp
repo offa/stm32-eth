@@ -73,7 +73,7 @@ TEST_GROUP(SocketTest)
     static constexpr uint16_t port = 1234;
     static constexpr Protocol protocol = Protocol::tcp;
     static constexpr uint8_t flag = 0;
-    static constexpr uint8_t statusSendOk = static_cast<uint8_t>(SocketInterrupt::sendOk);
+    static constexpr uint8_t statusSendOk = static_cast<uint8_t>(SocketInterrupt::send);
     static constexpr size_t defaultSize = 10;
 };
 

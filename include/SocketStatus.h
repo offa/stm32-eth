@@ -38,8 +38,8 @@ namespace eth
         closeWait = 0x1c,
         lastAck = 0x1d,
         udp = 0x22,
-        ipraw = 0x32,
-        macraw = 0x42,
+        ipRaw = 0x32,
+        macRaw = 0x42,
         pppoe = 0x5f
     };
 

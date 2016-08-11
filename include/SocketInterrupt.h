@@ -28,9 +28,9 @@ namespace eth
     {
         connect = 0x01,
         disconnect = 0x02,
-        recv = 0x04,
+        receive = 0x04,
         timeout = 0x08,
-        sendOk = 0x10
+        send = 0x10
     };
 
 }
