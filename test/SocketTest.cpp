@@ -280,7 +280,7 @@ TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
 TEST(SocketTest, sendSendsDataAndCommand)
 {
     auto buffer = createBuffer(defaultSize);
-    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
     deviceMock.expectOneCall("readSocketStatusRegister").ignoreOtherParameters().andReturnValue(static_cast<int>(SocketStatus::established));
     deviceMock.expectOneCall("sendData")
         .withParameter("socket", socketHandle)
@@ -298,7 +298,7 @@ TEST(SocketTest, sendSendsDataAndCommand)
 TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
     deviceMock.expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
     deviceMock.expectOneCall("sendData").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -327,7 +327,7 @@ TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
 TEST(SocketTest, sendClosesConnectionIfClosedStatus)
 {
     auto buffer = createBuffer(defaultSize);
-    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
     deviceMock.expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
     deviceMock.expectOneCall("sendData").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -347,7 +347,7 @@ TEST(SocketTest, sendClosesConnectionIfClosedStatus)
 TEST(SocketTest, sendSetsOkAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
     deviceMock.expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
     deviceMock.expectOneCall("sendData").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
