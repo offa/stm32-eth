@@ -52,10 +52,10 @@ TEST_GROUP(SocketTest)
 
     void expectClose(eth::SocketHandle handle)
     {
-        mock("W5100Device").expectOneCall("executeSocketCommand")
+        deviceMock.expectOneCall("executeSocketCommand")
             .withParameter("socket", handle)
             .withParameter("value", static_cast<int>(SocketCommand::close));
-        mock("W5100Device").expectOneCall("writeSocketInterruptRegister")
+        deviceMock.expectOneCall("writeSocketInterruptRegister")
             .withParameter("socket", handle)
             .withParameter("value", 0xff);
     }
@@ -69,6 +69,7 @@ TEST_GROUP(SocketTest)
 
 
     std::unique_ptr<Socket> socket;
+    MockSupport& deviceMock = mock("W5100Device");
     static constexpr eth::SocketHandle socketHandle = 0;
     static constexpr uint16_t port = 1234;
     static constexpr Protocol protocol = Protocol::tcp;
@@ -85,16 +86,16 @@ TEST(SocketTest, openReturnsErrorOnUnsupportedProtocol)
 
 TEST(SocketTest, openReturnsSuccess)
 {
-    mock("W5100Device").ignoreOtherCalls();
+    deviceMock.ignoreOtherCalls();
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
 TEST(SocketTest, openResetsSocketFirst)
 {
     expectClose(socketHandle);
-    mock("W5100Device").expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
@@ -102,11 +103,11 @@ TEST(SocketTest, openSetsProtocol)
 {
     constexpr uint8_t value = static_cast<uint8_t>(protocol) | flag;
     expectClose(socketHandle);
-    mock("W5100Device").expectOneCall("writeSocketModeRegister")
+    deviceMock.expectOneCall("writeSocketModeRegister")
         .withParameter("socket", socketHandle)
         .withParameter("value", value);
-    mock("W5100Device").expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
@@ -115,31 +116,31 @@ TEST(SocketTest, openSetsFlag)
     constexpr uint8_t flagValue = 0x0a;
     constexpr uint8_t value = static_cast<uint8_t>(protocol) | flagValue;
     expectClose(socketHandle);
-    mock("W5100Device").expectOneCall("writeSocketModeRegister")
+    deviceMock.expectOneCall("writeSocketModeRegister")
         .withParameter("socket", socketHandle)
         .withParameter("value", value);
-    mock("W5100Device").expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     CHECK_TRUE(socket->open(protocol, port, flagValue));
 }
 
 TEST(SocketTest, openSetsPort)
 {
     expectClose(socketHandle);
-    mock("W5100Device").expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("writeSocketSourcePort")
+    deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketSourcePort")
         .withParameter("socket", socketHandle)
         .withParameter("value", port);
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
 TEST(SocketTest, openOpensSocket)
 {
     expectClose(socketHandle);
-    mock("W5100Device").expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand")
+    deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand")
         .withParameter("socket", socketHandle)
         .withParameter("value", static_cast<int>(SocketCommand::open));
     CHECK_TRUE(socket->open(protocol, port, flag));
@@ -147,10 +148,10 @@ TEST(SocketTest, openOpensSocket)
 
 TEST(SocketTest, close)
 {
-    mock("W5100Device").expectOneCall("executeSocketCommand")
+    deviceMock.expectOneCall("executeSocketCommand")
         .withParameter("socket", socketHandle)
         .withParameter("value", static_cast<int>(SocketCommand::close));
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister")
+    deviceMock.expectOneCall("writeSocketInterruptRegister")
         .withParameter("socket", socketHandle)
         .withParameter("value", 0xff);
     socket->close();
@@ -158,7 +159,7 @@ TEST(SocketTest, close)
 
 TEST(SocketTest, listenReturnsErrorIfStatusNotInit)
 {
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::closed));
     CHECK_FALSE(socket->listen());
@@ -166,10 +167,10 @@ TEST(SocketTest, listenReturnsErrorIfStatusNotInit)
 
 TEST(SocketTest, listenListens)
 {
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::init));
-    mock("W5100Device").expectOneCall("executeSocketCommand")
+    deviceMock.expectOneCall("executeSocketCommand")
         .withParameter("socket", socketHandle)
         .withParameter("value", static_cast<int>(SocketCommand::listen));
     CHECK_TRUE(socket->listen());
@@ -177,12 +178,12 @@ TEST(SocketTest, listenListens)
 
 TEST(SocketTest, sendReturnsBytesTransmitted)
 {
-    mock("W5100Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(100);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister").ignoreOtherParameters().andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister").ignoreOtherParameters().andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
@@ -191,12 +192,12 @@ TEST(SocketTest, sendReturnsBytesTransmitted)
 TEST(SocketTest, sendLimitsBufferSize)
 {
     constexpr uint16_t maxSendSize = 2048;
-    mock("W5100Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(maxSendSize);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister").ignoreOtherParameters().andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(maxSendSize);
+    deviceMock.expectOneCall("readSocketStatusRegister").ignoreOtherParameters().andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(maxSendSize + 1);
     CHECK_EQUAL(maxSendSize, socket->send(buffer.data(), buffer.size()));
@@ -205,16 +206,16 @@ TEST(SocketTest, sendLimitsBufferSize)
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
 {
     constexpr uint16_t freeSize = defaultSize + 2;
-    mock("W5100Device").expectOneCall("getTransmitFreeSize")
+    deviceMock.expectOneCall("getTransmitFreeSize")
         .withParameter("socket", socketHandle)
         .andReturnValue(freeSize);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
@@ -223,16 +224,16 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfCloseWait)
 {
     constexpr uint16_t freeSize = defaultSize + 2;
-    mock("W5100Device").expectOneCall("getTransmitFreeSize")
+    deviceMock.expectOneCall("getTransmitFreeSize")
         .withParameter("socket", socketHandle)
         .andReturnValue(freeSize);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::closeWait));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
@@ -241,22 +242,22 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfCloseWait)
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagNotEnoughFreeMemory)
 {
     constexpr uint16_t freeSize = defaultSize;
-    mock("W5100Device").expectOneCall("getTransmitFreeSize")
+    deviceMock.expectOneCall("getTransmitFreeSize")
         .withParameter("socket", socketHandle)
         .andReturnValue(freeSize - 2);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("getTransmitFreeSize")
+    deviceMock.expectOneCall("getTransmitFreeSize")
         .withParameter("socket", socketHandle)
         .andReturnValue(freeSize);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
@@ -265,10 +266,10 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagNotEnoughFreeMemory)
 TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
 {
     constexpr uint16_t freeSize = defaultSize + 2;
-    mock("W5100Device").expectOneCall("getTransmitFreeSize")
+    deviceMock.expectOneCall("getTransmitFreeSize")
         .withParameter("socket", socketHandle)
         .andReturnValue(freeSize);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::init));
 
@@ -279,17 +280,17 @@ TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
 TEST(SocketTest, sendSendsDataAndCommand)
 {
     auto buffer = createBuffer(defaultSize);
-    mock("W5100Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
-    mock("W5100Device").expectOneCall("readSocketStatusRegister").ignoreOtherParameters().andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData")
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("readSocketStatusRegister").ignoreOtherParameters().andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("sendData")
         .withParameter("socket", socketHandle)
         .withMemoryBufferParameter("buffer", buffer.data(), buffer.size())
         .withParameter("size", buffer.size());
-    mock("W5100Device").expectOneCall("executeSocketCommand")
+    deviceMock.expectOneCall("executeSocketCommand")
         .withParameter("socket", socketHandle)
         .withParameter("value", static_cast<int>(SocketCommand::send));
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
 }
@@ -297,28 +298,28 @@ TEST(SocketTest, sendSendsDataAndCommand)
 TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    mock("W5100Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
-    mock("W5100Device").expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     constexpr uint8_t ready = statusSendOk;
     constexpr uint8_t notReady = !ready;
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister")
+    deviceMock.expectOneCall("readSocketInterruptRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(notReady);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister")
+    deviceMock.expectOneCall("readSocketInterruptRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(notReady);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister")
+    deviceMock.expectOneCall("readSocketInterruptRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(ready);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
 }
@@ -326,16 +327,16 @@ TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
 TEST(SocketTest, sendClosesConnectionIfClosedStatus)
 {
     auto buffer = createBuffer(defaultSize);
-    mock("W5100Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
-    mock("W5100Device").expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     constexpr uint8_t ready = statusSendOk;
     constexpr uint8_t notReady = !ready;
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister")
+    deviceMock.expectOneCall("readSocketInterruptRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(notReady);
-    mock("W5100Device").expectOneCall("readSocketStatusRegister")
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::closed));
     expectClose(socketHandle);
@@ -346,15 +347,15 @@ TEST(SocketTest, sendClosesConnectionIfClosedStatus)
 TEST(SocketTest, sendSetsOkAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    mock("W5100Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
-    mock("W5100Device").expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("W5100Device").expectOneCall("sendData").ignoreOtherParameters();
-    mock("W5100Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<int>(buffer.size()));
+    deviceMock.expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("sendData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     constexpr uint8_t ready = statusSendOk;
-    mock("W5100Device").expectOneCall("readSocketInterruptRegister")
+    deviceMock.expectOneCall("readSocketInterruptRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(ready);
-    mock("W5100Device").expectOneCall("writeSocketInterruptRegister")
+    deviceMock.expectOneCall("writeSocketInterruptRegister")
         .withParameter("socket", socketHandle)
         .withParameter("value", statusSendOk);
 

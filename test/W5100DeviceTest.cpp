@@ -46,12 +46,12 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectWrite(uint16_t addr, uint8_t data) const
     {
-        mock("Spi").expectOneCall("setSlaveSelect");
-        mock("Spi").expectOneCall("transfer").withParameter("data", 0xf0);
-        mock("Spi").expectOneCall("transfer").withParameter("data", addr >> 8);
-        mock("Spi").expectOneCall("transfer").withParameter("data", addr & 0xff);
-        mock("Spi").expectOneCall("transfer").withParameter("data", data);
-        mock("Spi").expectOneCall("resetSlaveSelect");
+        spiMock.expectOneCall("setSlaveSelect");
+        spiMock.expectOneCall("transfer").withParameter("data", 0xf0);
+        spiMock.expectOneCall("transfer").withParameter("data", addr >> 8);
+        spiMock.expectOneCall("transfer").withParameter("data", addr & 0xff);
+        spiMock.expectOneCall("transfer").withParameter("data", data);
+        spiMock.expectOneCall("resetSlaveSelect");
     }
 
     void expectWrite(uint16_t addr, uint16_t data) const
@@ -72,12 +72,12 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectRead(uint16_t addr, uint8_t data) const
     {
-        mock("Spi").expectOneCall("setSlaveSelect");
-        mock("Spi").expectOneCall("transfer").withParameter("data", 0x0f);
-        mock("Spi").expectOneCall("transfer").withParameter("data", addr >> 8);
-        mock("Spi").expectOneCall("transfer").withParameter("data", addr & 0xff);
-        mock("Spi").expectOneCall("transfer").withParameter("data", 0).andReturnValue(data);
-        mock("Spi").expectOneCall("resetSlaveSelect");
+        spiMock.expectOneCall("setSlaveSelect");
+        spiMock.expectOneCall("transfer").withParameter("data", 0x0f);
+        spiMock.expectOneCall("transfer").withParameter("data", addr >> 8);
+        spiMock.expectOneCall("transfer").withParameter("data", addr & 0xff);
+        spiMock.expectOneCall("transfer").withParameter("data", 0).andReturnValue(data);
+        spiMock.expectOneCall("resetSlaveSelect");
     }
 
     void expectRead(uint16_t addr, uint16_t data) const
@@ -89,7 +89,7 @@ TEST_GROUP(W5100DeviceTest)
     void checkWriteCalls(size_t expectedCalls) const
     {
         constexpr size_t transmissionsPerWrite = 4;
-        auto actual = mock("Spi").getData("transfer::count").getUnsignedIntValue();
+        auto actual = spiMock.getData("transfer::count").getUnsignedIntValue();
         CHECK_EQUAL(expectedCalls * transmissionsPerWrite, actual);
     }
 
@@ -102,6 +102,7 @@ TEST_GROUP(W5100DeviceTest)
 
 
     std::unique_ptr<test::W5100DeviceSpy> device;
+    MockSupport& spiMock = mock("Spi");
     static constexpr eth::SocketHandle socket = 0;
     static constexpr uint16_t socktBaseAddr = 0x0400;
     static constexpr uint16_t socktChannelSize = 0x0100;
@@ -138,8 +139,8 @@ TEST(W5100DeviceTest, writeBuffer)
     constexpr uint16_t size = 10;
     auto data = createBuffer(size);
 
-    mock("Spi").expectNCalls(size, "setSlaveSelect");
-    mock("Spi").ignoreOtherCalls();
+    spiMock.expectNCalls(size, "setSlaveSelect");
+    spiMock.ignoreOtherCalls();
 
     device->write(address, data.data(), data.size());
     checkWriteCalls(size);
@@ -308,7 +309,7 @@ TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 {
     const uint16_t size = device->getTransmitBufferSize() + 5;
     auto buffer = createBuffer(size);
-    mock("Spi").ignoreOtherCalls();
+    spiMock.ignoreOtherCalls();
 
     device->sendData(socket, buffer.data(), buffer.size());
     checkWriteCalls(sizeof(uint16_t) + size + sizeof(uint16_t));
