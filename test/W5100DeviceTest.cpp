@@ -32,12 +32,12 @@ using eth::Mode;
 
 inline SimpleString StringFrom(eth::SocketStatus status)
 {
-    return SimpleString("0x") + HexStringFrom(static_cast<unsigned int>(status));
+    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(status));
 }
 
 inline SimpleString StringFrom(eth::SocketCommand cmd)
 {
-    return SimpleString("0x") + HexStringFrom(static_cast<unsigned int>(cmd));
+    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(cmd));
 }
 
 
