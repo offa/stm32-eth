@@ -30,6 +30,17 @@ using eth::SocketCommand;
 using eth::SocketStatus;
 using eth::Mode;
 
+inline SimpleString StringFrom(eth::SocketStatus status)
+{
+    return SimpleString("0x") + HexStringFrom(static_cast<unsigned int>(status));
+}
+
+inline SimpleString StringFrom(eth::SocketCommand cmd)
+{
+    return SimpleString("0x") + HexStringFrom(static_cast<unsigned int>(cmd));
+}
+
+
 TEST_GROUP(W5100DeviceTest)
 {
     void setup() override
@@ -215,7 +226,7 @@ TEST(W5100DeviceTest, readSocketCommandRegister)
     expectRead(address, static_cast<uint8_t>(cmd));
 
     auto rtn = device->readSocketCommandRegister(socket);
-    CHECK_EQUAL(static_cast<uint8_t>(cmd), static_cast<uint8_t>(rtn));
+    CHECK_EQUAL(cmd, rtn);
 }
 
 TEST(W5100DeviceTest, executeSocketCommand)
@@ -240,7 +251,7 @@ TEST(W5100DeviceTest, readSocketStatusRegister)
     expectRead(address, static_cast<uint8_t>(status));
 
     auto rtn = device->readSocketStatusRegister(socket);
-    CHECK_EQUAL(static_cast<uint8_t>(status), static_cast<uint8_t>(rtn));
+    CHECK_EQUAL(status, rtn);
 }
 
 TEST(W5100DeviceTest, readSocketTransmitFreeSizeRegister)
