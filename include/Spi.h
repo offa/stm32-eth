@@ -26,8 +26,10 @@
 namespace eth
 {
 
-    struct Spi
+    class Spi
     {
+    public:
+
         uint8_t transfer(uint8_t data);
         void setSlaveSelect();
         void resetSlaveSelect();
