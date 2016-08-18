@@ -19,7 +19,6 @@
  */
 
 #include "W5100Device.h"
-#include "mock/W5100DeviceSpy.h"
 #include <vector>
 #include <algorithm>
 #include <numeric>
@@ -45,7 +44,7 @@ TEST_GROUP(W5100DeviceTest)
 {
     void setup() override
     {
-        device = std::make_unique<test::W5100DeviceSpy>();
+        device = std::make_unique<eth::W5100Device>();
         mock().strictOrder();
     }
 
@@ -112,7 +111,7 @@ TEST_GROUP(W5100DeviceTest)
     }
 
 
-    std::unique_ptr<test::W5100DeviceSpy> device;
+    std::unique_ptr<eth::W5100Device> device;
     MockSupport& spiMock = mock("Spi");
     static constexpr eth::SocketHandle socket = 0;
     static constexpr uint16_t socktBaseAddr = 0x0400;
@@ -254,17 +253,6 @@ TEST(W5100DeviceTest, readSocketStatusRegister)
     CHECK_EQUAL(status, rtn);
 }
 
-TEST(W5100DeviceTest, readSocketTransmitFreeSizeRegister)
-{
-    constexpr uint16_t addressOffset = 0x0020;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
-    constexpr uint16_t value = 0x2345;
-    expectRead(address, value);
-
-    uint16_t rtn = device->spy_readSocketTransmitFreeSizeRegister(socket);
-    CHECK_EQUAL(value, rtn);
-}
-
 TEST(W5100DeviceTest, getTransmitFreeSize)
 {
     constexpr uint16_t addressOffset = 0x0020;
@@ -277,27 +265,6 @@ TEST(W5100DeviceTest, getTransmitFreeSize)
 
     uint16_t rtn = device->getTransmitFreeSize(socket);
     CHECK_EQUAL(value, rtn);
-}
-
-TEST(W5100DeviceTest, readSocketTransmitWritePointer)
-{
-    constexpr uint16_t addressOffset = 0x0024;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
-    constexpr uint16_t value = 0xeebb;
-    expectRead(address, value);
-
-    uint16_t rtn = device->spy_readSocketTransmitWritePointer(socket);
-    CHECK_EQUAL(value, rtn);
-}
-
-TEST(W5100DeviceTest, writeSocketTransmitWritePointer)
-{
-    constexpr uint16_t addressOffset = 0x0024;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
-    constexpr uint16_t value = 0xabcd;
-    expectWrite(address, value);
-
-    device->spy_writeSocketTransmitWritePointer(socket, value);
 }
 
 TEST(W5100DeviceTest, sendData)
@@ -360,24 +327,6 @@ TEST(W5100DeviceTest, setIpAddress)
     expectWrite(address, value);
 
     device->setIpAddress(value);
-}
-
-TEST(W5100DeviceTest, writeTransmitMemorySizeRegister)
-{
-    constexpr uint16_t address = 0x001b;
-    constexpr uint8_t value = 0xaa;
-    expectWrite(address, value);
-
-    device->spy_writeTransmitMemorySizeRegister(value);
-}
-
-TEST(W5100DeviceTest, writeReceiveMemorySizeRegister)
-{
-    constexpr uint16_t address = 0x001a;
-    constexpr uint8_t value = 0xbb;
-    expectWrite(address, value);
-
-    device->spy_writeReceiveMemorySizeRegister(value);
 }
 
 TEST(W5100DeviceTest, writeModeRegister)
