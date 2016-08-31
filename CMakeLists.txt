@@ -15,10 +15,10 @@ message(STATUS "Enable Coverage : ${COVERAGE}")
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(Compiler)
 include(Cpp14)
 
-add_definitions(-Wall -Wextra -pedantic -Werror -Wshadow)
-
+add_common_flag(-Wall -Wextra -pedantic -Werror -Wshadow)
 
 if( COVERAGE )
     include(Coverage)
@@ -33,5 +33,4 @@ if( UNITTEST )
     enable_testing()
     add_subdirectory("test")
 endif()
-
 
