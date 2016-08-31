@@ -19,47 +19,27 @@
  */
 
 #include "Spi.h"
-#include <CppUTestExt/MockSupport.h>
 
 namespace eth
 {
-    namespace mockutil
-    {
-        static inline void incrementCalls(const ::SimpleString& name)
-        {
-            int count = mock("Spi").getData(name).getUnsignedIntValue();
-            ++count;
-            mock("Spi").setData(name, count);
-        }
-    }
-
     void Spi::transmit(uint8_t data)
     {
-        mockutil::incrementCalls("transmit::count");
-
-        mock("Spi").actualCall("transmit")
-                .withParameter("data", data);
+        // TODO: Check returnvalue
+        HAL_SPI_Transmit(&m_handle, &data, sizeof(data), timeout);
     }
 
     uint8_t Spi::receive()
     {
-        mockutil::incrementCalls("receive::count");
-
-        return mock("Spi").actualCall("receive")
-                .returnUnsignedIntValue();
+        // TODO: Check returnvalue
+        uint8_t buffer;
+        HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
+        return buffer;
     }
 
-    void Spi::setSlaveSelect()
+    Spi::Handle& Spi::nativeHandle()
     {
-        mock("Spi").actualCall("setSlaveSelect");
+        return m_handle;
     }
-
-    void Spi::resetSlaveSelect()
-    {
-        mock("Spi").actualCall("resetSlaveSelect");
-    }
-
-
-    Spi spi;
 
 }
+

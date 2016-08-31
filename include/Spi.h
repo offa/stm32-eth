@@ -22,6 +22,8 @@
 #define SPI_H
 
 #include <stdint.h>
+#include <stm32f4xx_hal.h>
+#include <stm32f4xx_hal_spi.h>
 
 namespace eth
 {
@@ -30,10 +32,23 @@ namespace eth
     {
     public:
 
-        uint8_t transfer(uint8_t data);
+        using Handle= SPI_HandleTypeDef;
+
+        // TODO: Init method
+
+        void transmit(uint8_t data);
+        uint8_t receive();
+
         void setSlaveSelect();
         void resetSlaveSelect();
 
+        Handle& nativeHandle();
+
+
+   private:
+
+        Handle m_handle{};
+        static constexpr uint32_t timeout = ~0;
     };
 
     extern Spi spi;

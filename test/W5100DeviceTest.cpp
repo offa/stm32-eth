@@ -57,10 +57,10 @@ TEST_GROUP(W5100DeviceTest)
     void expectWrite(uint16_t addr, uint8_t data) const
     {
         spiMock.expectOneCall("setSlaveSelect");
-        spiMock.expectOneCall("transfer").withParameter("data", 0xf0);
-        spiMock.expectOneCall("transfer").withParameter("data", addr >> 8);
-        spiMock.expectOneCall("transfer").withParameter("data", addr & 0xff);
-        spiMock.expectOneCall("transfer").withParameter("data", data);
+        spiMock.expectOneCall("transmit").withParameter("data", 0xf0);
+        spiMock.expectOneCall("transmit").withParameter("data", addr >> 8);
+        spiMock.expectOneCall("transmit").withParameter("data", addr & 0xff);
+        spiMock.expectOneCall("transmit").withParameter("data", data);
         spiMock.expectOneCall("resetSlaveSelect");
     }
 
@@ -80,13 +80,22 @@ TEST_GROUP(W5100DeviceTest)
         });
     }
 
+    void checkWriteCalls(size_t expectedCalls, size_t writesByReads = 0) const
+    {
+        constexpr size_t transmissionsPerWrite = 4;
+        auto actual = spiMock.getData("transmit::count").getUnsignedIntValue();
+        const auto byReads = writesByReads * (transmissionsPerWrite - 1);
+        auto expected = (expectedCalls * transmissionsPerWrite) + byReads;
+        CHECK_EQUAL(expected, actual);
+    }
+
     void expectRead(uint16_t addr, uint8_t data) const
     {
         spiMock.expectOneCall("setSlaveSelect");
-        spiMock.expectOneCall("transfer").withParameter("data", 0x0f);
-        spiMock.expectOneCall("transfer").withParameter("data", addr >> 8);
-        spiMock.expectOneCall("transfer").withParameter("data", addr & 0xff);
-        spiMock.expectOneCall("transfer").withParameter("data", 0).andReturnValue(data);
+        spiMock.expectOneCall("transmit").withParameter("data", 0x0f);
+        spiMock.expectOneCall("transmit").withParameter("data", addr >> 8);
+        spiMock.expectOneCall("transmit").withParameter("data", addr & 0xff);
+        spiMock.expectOneCall("receive").andReturnValue(data);
         spiMock.expectOneCall("resetSlaveSelect");
     }
 
@@ -94,13 +103,6 @@ TEST_GROUP(W5100DeviceTest)
     {
         expectRead(addr, static_cast<uint8_t>(data >> 8));
         expectRead(addr + 1, static_cast<uint8_t>(data & 0xff));
-    }
-
-    void checkWriteCalls(size_t expectedCalls) const
-    {
-        constexpr size_t transmissionsPerWrite = 4;
-        auto actual = spiMock.getData("transfer::count").getUnsignedIntValue();
-        CHECK_EQUAL(expectedCalls * transmissionsPerWrite, actual);
     }
 
     std::vector<uint8_t> createBuffer(size_t size) const
@@ -285,12 +287,14 @@ TEST(W5100DeviceTest, sendData)
 
 TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 {
+    constexpr auto ptrWrites = sizeof(uint16_t);
+    constexpr auto ignoreReads = sizeof(uint16_t);
     const uint16_t size = device->getTransmitBufferSize() + 5;
     auto buffer = createBuffer(size);
     spiMock.ignoreOtherCalls();
 
     device->sendData(socket, buffer.data(), buffer.size());
-    checkWriteCalls(sizeof(uint16_t) + size + sizeof(uint16_t));
+    checkWriteCalls(size + ptrWrites, ignoreReads);
 }
 
 TEST(W5100DeviceTest, setGatewayAddress)

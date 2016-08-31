@@ -45,6 +45,12 @@ _add_test(ByteTest BYTETEST_SRC)
 list(APPEND REGISTERVALUETEST_SRC RegisterValueTest.cpp)
 _add_test(RegisterValueTest REGISTERVALUETEST_SRC)
 
+list(APPEND SPITEST_SRC SpiTest.cpp
+                        $<TARGET_OBJECTS:stm32hal-mock>
+                        $<TARGET_OBJECTS:spi>
+                        )
+_add_test(SpiTest SPITEST_SRC)
+
 
 set(TEST_FLAGS -c)
 
@@ -57,6 +63,7 @@ add_custom_target(unittest SocketTest ${TEST_FLAGS}
                     COMMAND W5100DeviceTest ${TEST_FLAGS}
                     COMMAND ByteTest ${TEST_FLAGS}
                     COMMAND RegisterValueTest ${TEST_FLAGS}
+                    COMMAND SpiTest ${TEST_FLAGS}
 
                     COMMENT "Running unittests\n\n"
                     VERBATIM

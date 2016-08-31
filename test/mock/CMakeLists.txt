@@ -1,3 +1,4 @@
 
 add_library(spi-mock OBJECT SpiMock.cpp)
 add_library(w5100device-mock OBJECT W5100DeviceMock.cpp)
+add_library(stm32hal-mock OBJECT Stm32HalMock.cpp)

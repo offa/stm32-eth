@@ -25,6 +25,12 @@ if( COVERAGE )
 endif()
 
 
+add_definitions(-DSTM32F407xx -DUSE_HAL_DRIVER -DHSE_VALUE=8000000)
+include_directories(SYSTEM "system/include"
+                            "system/include/stm32f4-hal"
+                            "system/include/cmsis"
+                            )
+
 include_directories("include")
 add_subdirectory("src")
 

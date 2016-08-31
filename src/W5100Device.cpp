@@ -154,10 +154,10 @@ namespace eth
     void W5100Device::write(uint16_t addr, uint8_t data)
     {
         spi.setSlaveSelect();
-        spi.transfer(opcodeWrite);
-        spi.transfer(byte::get<1>(addr));
-        spi.transfer(byte::get<0>(addr));
-        spi.transfer(data);
+        spi.transmit(opcodeWrite);
+        spi.transmit(byte::get<1>(addr));
+        spi.transmit(byte::get<0>(addr));
+        spi.transmit(data);
         spi.resetSlaveSelect();
     }
 
@@ -173,10 +173,10 @@ namespace eth
     uint8_t W5100Device::read(uint16_t addr)
     {
         spi.setSlaveSelect();
-        spi.transfer(opcodeRead);
-        spi.transfer(byte::get<1>(addr));
-        spi.transfer(byte::get<0>(addr));
-        uint8_t data = spi.transfer(0);
+        spi.transmit(opcodeRead);
+        spi.transmit(byte::get<1>(addr));
+        spi.transmit(byte::get<0>(addr));
+        auto data = spi.receive();
         spi.resetSlaveSelect();
 
         return data;
