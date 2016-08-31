@@ -44,3 +44,8 @@ It's also possible to use `make test` / `ctest` instead. For `unittest` it's pos
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+### Third party licenses
+
+The License does ***not*** apply to files of `system` directory. Files included in the `system` folder are licensed under different conditions – please refer to it's files for more details.
+
