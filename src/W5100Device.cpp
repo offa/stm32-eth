@@ -40,18 +40,11 @@ namespace eth
         return baseAddress + bufferSize * index;
     }
 
-    static constexpr auto initAddresses(uint16_t bufferSize)
-    {
-        return std::array<uint16_t, supportedSockets> {{
-            getBufferAddress<0>(bufferSize),
-            getBufferAddress<1>(bufferSize),
-            getBufferAddress<2>(bufferSize),
-            getBufferAddress<3>(bufferSize)
-        }};
-    }
 
-
-    W5100Device::W5100Device() : m_transmitBufferBaseAddress(initAddresses(transmitBufferSize))
+    W5100Device::W5100Device() : m_transmitBufferBaseAddress({{ getBufferAddress<0>(transmitBufferSize),
+                                                                getBufferAddress<1>(transmitBufferSize),
+                                                                getBufferAddress<2>(transmitBufferSize),
+                                                                getBufferAddress<3>(transmitBufferSize) }})
     {
     }
 
