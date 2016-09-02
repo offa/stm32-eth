@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stm32f4xx_hal.h>
-#include <stm32f4xx_hal_spi.h>
+#include "Platform.h"
 #include <CppUTestExt/MockSupport.h>
 
 HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout)

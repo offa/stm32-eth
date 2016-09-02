@@ -18,41 +18,19 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPI_H
-#define SPI_H
+#ifndef PLATFORM_H
+#define PLATFORM_H
 
-#include <stdint.h>
-#include "Platform.h"
-
-namespace eth
-{
-
-    class Spi
-    {
-    public:
-
-        using Handle = SPI_HandleTypeDef;
-
-        // TODO: Init method
-
-        void transmit(uint8_t data);
-        uint8_t receive();
-
-        void setSlaveSelect();
-        void resetSlaveSelect();
-
-        Handle& nativeHandle();
+#include <stm32f4xx_hal.h>
 
 
-   private:
+/*
+ * Workaround for macros defined by 'core_cm4.h' conflicting
+ * with identifiers used internally by the compiler (issue #1).
+ */
+#ifdef CM4_MACRO_WORKAROUND_NEEDED
+# undef __I
+# undef __O
+#endif /* CM4_MACRO_WORKAROUND_NEEDED */
 
-        Handle m_handle{};
-        static constexpr uint32_t timeout = ~0;
-    };
-
-    extern Spi spi;
-
-}
-
-#endif /* SPI_H */
-
+#endif /* PLATFORM_H */
