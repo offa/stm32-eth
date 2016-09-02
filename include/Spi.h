@@ -32,7 +32,7 @@ namespace eth
     {
     public:
 
-        using Handle= SPI_HandleTypeDef;
+        using Handle = SPI_HandleTypeDef;
 
         // TODO: Init method
 
