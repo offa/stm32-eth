@@ -12,7 +12,7 @@ Ethernet connectivity for *Stm32F4xx* Boards using W5100 devices.
 
  - [**CMake**](http://www.cmake.org/)
  - [**CppUTest**](https://github.com/cpputest/cpputest) – *(Optional)*
- - [**GNU ARM Embedded Toolchain**](https://launchpad.net/gcc-arm-embedded) – *ARM builds*
+ - [**GNU ARM Embedded Toolchain**](https://launchpad.net/gcc-arm-embedded)
 
 
 ## Testing
