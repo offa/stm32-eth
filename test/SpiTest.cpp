@@ -37,6 +37,7 @@ TEST_GROUP(SpiTest)
 
     std::unique_ptr<eth::Spi> spi;
     MockSupport& halSpi = mock("HAL_SPI");
+    MockSupport& halGpio = mock("HAL_GPIO");
     static constexpr uint32_t timeout = 0xffffffff;
 };
 
@@ -68,3 +69,24 @@ TEST(SpiTest, receiveReceivesByte)
     auto result = spi->receive();
     CHECK_EQUAL(data, result);
 }
+
+TEST(SpiTest, setSlaveSelectSetsPinLow)
+{
+    halGpio.expectOneCall("HAL_GPIO_WritePin")
+        .withPointerParameter("GPIOx", GPIOB)
+        .withParameter("GPIO_Pin", GPIO_PIN_12)
+        .withParameter("PinState", GPIO_PIN_RESET);
+
+    spi->setSlaveSelect();
+}
+
+TEST(SpiTest, resetSlaveSelectSetsPinHigh)
+{
+    halGpio.expectOneCall("HAL_GPIO_WritePin")
+        .withPointerParameter("GPIOx", GPIOB)
+        .withParameter("GPIO_Pin", GPIO_PIN_12)
+        .withParameter("PinState", GPIO_PIN_SET);
+
+    spi->resetSlaveSelect();
+}
+

@@ -44,3 +44,11 @@ HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint1
 
 }
 
+void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState)
+{
+    mock("HAL_GPIO").actualCall("HAL_GPIO_WritePin")
+        .withPointerParameter("GPIOx", GPIOx)
+        .withParameter("GPIO_Pin", GPIO_Pin)
+        .withParameter("PinState", PinState);
+}
+

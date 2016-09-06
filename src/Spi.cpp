@@ -36,6 +36,16 @@ namespace eth
         return buffer;
     }
 
+    void Spi::setSlaveSelect()
+    {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+    }
+
+    void Spi::resetSlaveSelect()
+    {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+    }
+
     Spi::Handle& Spi::nativeHandle()
     {
         return m_handle;
