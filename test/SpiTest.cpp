@@ -19,9 +19,9 @@
  */
 
 #include "Spi.h"
+#include "mock/Stm32HalComparator.h"
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
-#include "mock/Stm32HalComparator.h"
 
 void platform::stm32::spiClockEnable()
 {
