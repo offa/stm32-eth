@@ -13,19 +13,12 @@ message(STATUS "Verbose Unit Tests : ${UNITTEST_VERBOSE}")
 option(COVERAGE "Enable Coverage" OFF)
 message(STATUS "Enable Coverage : ${COVERAGE}")
 
-option(LTO "Enable Link Time Optimization (LTO)" ON)
-message(STATUS "Enable LTO : ${LTO}")
-
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(Compiler)
 include(Cpp14)
 
 add_common_flag(-Wall -Wextra -pedantic -Werror -Wshadow)
-
-if( LTO )
-    add_common_flag(-flto)
-endif()
 
 if( COVERAGE )
     include(Coverage)
