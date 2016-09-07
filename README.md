@@ -27,6 +27,20 @@ make unittest
 It's also possible to use `make test` / `ctest` instead. For `unittest` it's possible to switch verbosity by CMake option.
 
 
+## Pin assignment
+
+| Pin | Stm32 |
+|-----|-------|
+MOSI | PB15
+MISO | PB14
+SCK | PB13
+SS | PB12
+
+#### W5100
+
+Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
+
+
 ## License
 
 **GNU General Public License (GPL)**
