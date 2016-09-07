@@ -7,8 +7,8 @@ namespace platform
     {
         void spiClockEnable()
         {
-            __SPI2_CLK_ENABLE(); // TODO: Replace by current version
             __HAL_RCC_GPIOB_CLK_ENABLE();
+            __HAL_RCC_SPI2_CLK_ENABLE();
         }
     }
 }
