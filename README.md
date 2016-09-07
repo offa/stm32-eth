@@ -30,7 +30,7 @@ It's also possible to use `make test` / `ctest` instead. For `unittest` it's pos
 ## Pin assignment
 
 | Pin  | Stm32 |
-|------|-------|
+|:----:|:-----:|
 | MOSI | PB15  |
 | MISO | PB14  |
 | SCK  | PB13  |
