@@ -22,8 +22,8 @@
 #define STM32HALCOMPARATOR_H
 
 #include "Platform.h"
-#include <CppUTestExt/MockSupport.h>
 #include <sstream>
+#include <CppUTestExt/MockSupport.h>
 
 struct GpioInitComparator : public MockNamedValueComparator
 {
