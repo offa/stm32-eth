@@ -56,27 +56,21 @@ TEST_GROUP(SpiTest)
 
 TEST(SpiTest, initSetupsGpioPins)
 {
-    GPIO_InitTypeDef gpioInit;
-    gpioInit.Pin = GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
-    gpioInit.Mode = GPIO_MODE_AF_PP;
-    gpioInit.Pull = GPIO_NOPULL;
-    gpioInit.Speed = GPIO_SPEED_HIGH;
-    gpioInit.Alternate = GPIO_AF5_SPI2;
+    GPIO_InitTypeDef init{(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
+                            GPIO_MODE_AF_PP, GPIO_NOPULL,
+                            GPIO_SPEED_HIGH, GPIO_AF5_SPI2};
 
-    GPIO_InitTypeDef gpioInitSS;
-    gpioInitSS.Pin = GPIO_PIN_12;
-    gpioInitSS.Mode = GPIO_MODE_OUTPUT_PP;
-    gpioInitSS.Pull = GPIO_PULLUP;
-    gpioInitSS.Speed = GPIO_SPEED_LOW;
-    gpioInitSS.Alternate = GPIO_AF5_SPI2;
+    GPIO_InitTypeDef initSS{GPIO_PIN_12, GPIO_MODE_OUTPUT_PP,
+                            GPIO_PULLUP, GPIO_SPEED_LOW,
+                            GPIO_AF5_SPI2};
 
     mock("platform::stm32").expectOneCall("spiClockEnable");
     halGpio.expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
-        .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &gpioInit);
+        .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &init);
     halGpio.expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
-        .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &gpioInitSS);
+        .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &initSS);
     halSpi.expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
 
     spi->init();
@@ -84,18 +78,17 @@ TEST(SpiTest, initSetupsGpioPins)
 
 TEST(SpiTest, initSetupsSpi)
 {
-    SPI_InitTypeDef spiInit;
-    spiInit.Mode = SPI_MODE_MASTER;
-    spiInit.Direction = SPI_DIRECTION_2LINES;
-    spiInit.DataSize = SPI_DATASIZE_8BIT;
-    spiInit.CLKPolarity = SPI_POLARITY_LOW;
-    spiInit.CLKPhase = SPI_PHASE_1EDGE;
-    spiInit.NSS = SPI_NSS_SOFT;
-    spiInit.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-    spiInit.FirstBit = SPI_FIRSTBIT_MSB;
-    spiInit.TIMode = SPI_TIMODE_DISABLED;
-    spiInit.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
-    spiInit.CRCPolynomial = 0;
+    SPI_InitTypeDef spiInit{SPI_MODE_MASTER,
+                            SPI_DIRECTION_2LINES,
+                            SPI_DATASIZE_8BIT,
+                            SPI_POLARITY_LOW,
+                            SPI_PHASE_1EDGE,
+                            SPI_NSS_SOFT,
+                            SPI_BAUDRATEPRESCALER_4,
+                            SPI_FIRSTBIT_MSB,
+                            SPI_TIMODE_DISABLED,
+                            SPI_CRCCALCULATION_DISABLED,
+                            0};
 
     mock("platform::stm32").expectOneCall("spiClockEnable");
     halGpio.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();

@@ -27,34 +27,30 @@ namespace eth
     {
         platform::stm32::spiClockEnable();
 
-        GPIO_InitTypeDef gpioInit;
-        gpioInit.Pin = GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
-        gpioInit.Mode = GPIO_MODE_AF_PP;
-        gpioInit.Pull = GPIO_NOPULL;
-        gpioInit.Speed = GPIO_SPEED_HIGH;
-        gpioInit.Alternate = GPIO_AF5_SPI2;
-        HAL_GPIO_Init(GPIOB, &gpioInit);
+        GPIO_InitTypeDef gpioSpi{(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
+                                GPIO_MODE_AF_PP, GPIO_NOPULL,
+                                GPIO_SPEED_HIGH, GPIO_AF5_SPI2};
+        HAL_GPIO_Init(GPIOB, &gpioSpi);
 
-        GPIO_InitTypeDef gpioInitSS;
-        gpioInitSS.Pin = GPIO_PIN_12;
-        gpioInitSS.Mode = GPIO_MODE_OUTPUT_PP;
-        gpioInitSS.Pull = GPIO_PULLUP;
-        gpioInitSS.Speed = GPIO_SPEED_LOW;
-        gpioInitSS.Alternate = GPIO_AF5_SPI2;
-        HAL_GPIO_Init(GPIOB, &gpioInitSS);
+        GPIO_InitTypeDef gpioSS{GPIO_PIN_12, GPIO_MODE_OUTPUT_PP,
+                                GPIO_PULLUP, GPIO_SPEED_LOW,
+                                GPIO_AF5_SPI2};
+        HAL_GPIO_Init(GPIOB, &gpioSS);
 
+
+        constexpr SPI_InitTypeDef settings{SPI_MODE_MASTER,
+                                            SPI_DIRECTION_2LINES,
+                                            SPI_DATASIZE_8BIT,
+                                            SPI_POLARITY_LOW,
+                                            SPI_PHASE_1EDGE,
+                                            SPI_NSS_SOFT,
+                                            SPI_BAUDRATEPRESCALER_4,
+                                            SPI_FIRSTBIT_MSB,
+                                            SPI_TIMODE_DISABLED,
+                                            SPI_CRCCALCULATION_DISABLED,
+                                            0};
         m_handle.Instance = SPI2;
-        m_handle.Init.Mode = SPI_MODE_MASTER;
-        m_handle.Init.Direction = SPI_DIRECTION_2LINES;
-        m_handle.Init.DataSize = SPI_DATASIZE_8BIT;
-        m_handle.Init.CLKPolarity = SPI_POLARITY_LOW;
-        m_handle.Init.CLKPhase = SPI_PHASE_1EDGE;
-        m_handle.Init.NSS = SPI_NSS_SOFT;
-        m_handle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-        m_handle.Init.FirstBit = SPI_FIRSTBIT_MSB;
-        m_handle.Init.TIMode = SPI_TIMODE_DISABLED;
-        m_handle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
-        m_handle.Init.CRCPolynomial = 0;
+        m_handle.Init = settings;
 
         HAL_SPI_Init(&m_handle);
     }
