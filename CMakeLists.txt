@@ -18,6 +18,14 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(Compiler)
 include(Cpp14)
 
+if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+    add_common_flag(-DDEBUG
+                    -DUSE_FULL_ASSERT
+                    -DTRACE
+                    -DOS_USE_TRACE_SEMIHOSTING_DEBUG
+                    )
+endif()
+
 add_common_flag(-Wall -Wextra -pedantic -Werror -Wshadow)
 
 if( COVERAGE )
