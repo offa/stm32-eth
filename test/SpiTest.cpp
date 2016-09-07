@@ -21,25 +21,83 @@
 #include "Spi.h"
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
+#include "mock/Stm32HalComparator.h"
 
 TEST_GROUP(SpiTest)
 {
     void setup() override
     {
         spi = std::make_unique<eth::Spi>();
+        mock().strictOrder();
+
+        mock().installComparator("SPI_InitTypeDef", spiHandleCompare);
+        mock().installComparator("GPIO_InitTypeDef", gpioInitCompare);
     }
 
     void teardown() override
     {
         mock().checkExpectations();
         mock().clear();
+        mock().removeAllComparatorsAndCopiers();
     }
 
     std::unique_ptr<eth::Spi> spi;
     MockSupport& halSpi = mock("HAL_SPI");
     MockSupport& halGpio = mock("HAL_GPIO");
+    SpiHandleComparator spiHandleCompare;
+    GpioInitComparator gpioInitCompare;
     static constexpr uint32_t timeout = 0xffffffff;
 };
+
+TEST(SpiTest, initSetupsGpioPins)
+{
+    GPIO_InitTypeDef gpioInit;
+    gpioInit.Pin = GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+    gpioInit.Mode = GPIO_MODE_AF_PP;
+    gpioInit.Pull = GPIO_NOPULL;
+    gpioInit.Speed = GPIO_SPEED_HIGH;
+    gpioInit.Alternate = GPIO_AF5_SPI2;
+
+    GPIO_InitTypeDef gpioInitSS;
+    gpioInitSS.Pin = GPIO_PIN_12;
+    gpioInitSS.Mode = GPIO_MODE_OUTPUT_PP;
+    gpioInitSS.Pull = GPIO_PULLUP;
+    gpioInitSS.Speed = GPIO_SPEED_LOW;
+    gpioInitSS.Alternate = GPIO_AF5_SPI2;
+
+    halGpio.expectOneCall("HAL_GPIO_Init")
+        .withPointerParameter("GPIOx", GPIOB)
+        .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &gpioInit);
+    halGpio.expectOneCall("HAL_GPIO_Init")
+        .withPointerParameter("GPIOx", GPIOB)
+        .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &gpioInitSS);
+    halSpi.expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
+
+    spi->init();
+}
+
+TEST(SpiTest, initSetupsSpi)
+{
+    SPI_InitTypeDef spiInit;
+    spiInit.Mode = SPI_MODE_MASTER;
+    spiInit.Direction = SPI_DIRECTION_2LINES;
+    spiInit.DataSize = SPI_DATASIZE_8BIT;
+    spiInit.CLKPolarity = SPI_POLARITY_LOW;
+    spiInit.CLKPhase = SPI_PHASE_1EDGE;
+    spiInit.NSS = SPI_NSS_SOFT;
+    spiInit.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+    spiInit.FirstBit = SPI_FIRSTBIT_MSB;
+    spiInit.TIMode = SPI_TIMODE_DISABLED;
+    spiInit.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
+    spiInit.CRCPolynomial = 0;
+
+    halGpio.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
+    halSpi.expectOneCall("HAL_SPI_Init")
+        .withPointerParameter("hspi", &spi->nativeHandle())
+        .withPointerParameter("hspi.instance", SPI2)
+        .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit);
+    spi->init();
+}
 
 TEST(SpiTest, transmitTransmitsByte)
 {

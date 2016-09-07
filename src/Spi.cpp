@@ -22,6 +22,41 @@
 
 namespace eth
 {
+
+    void Spi::init()
+    {
+        GPIO_InitTypeDef gpioInit;
+        gpioInit.Pin = GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+        gpioInit.Mode = GPIO_MODE_AF_PP;
+        gpioInit.Pull = GPIO_NOPULL;
+        gpioInit.Speed = GPIO_SPEED_HIGH;
+        gpioInit.Alternate = GPIO_AF5_SPI2;
+        HAL_GPIO_Init(GPIOB, &gpioInit);
+
+        GPIO_InitTypeDef gpioInitSS;
+        gpioInitSS.Pin = GPIO_PIN_12;
+        gpioInitSS.Mode = GPIO_MODE_OUTPUT_PP;
+        gpioInitSS.Pull = GPIO_PULLUP;
+        gpioInitSS.Speed = GPIO_SPEED_LOW;
+        gpioInitSS.Alternate = GPIO_AF5_SPI2;
+        HAL_GPIO_Init(GPIOB, &gpioInitSS);
+
+        m_handle.Instance = SPI2;
+        m_handle.Init.Mode = SPI_MODE_MASTER;
+        m_handle.Init.Direction = SPI_DIRECTION_2LINES;
+        m_handle.Init.DataSize = SPI_DATASIZE_8BIT;
+        m_handle.Init.CLKPolarity = SPI_POLARITY_LOW;
+        m_handle.Init.CLKPhase = SPI_PHASE_1EDGE;
+        m_handle.Init.NSS = SPI_NSS_SOFT;
+        m_handle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+        m_handle.Init.FirstBit = SPI_FIRSTBIT_MSB;
+        m_handle.Init.TIMode = SPI_TIMODE_DISABLED;
+        m_handle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
+        m_handle.Init.CRCPolynomial = 0;
+
+        HAL_SPI_Init(&m_handle);
+    }
+
     void Spi::transmit(uint8_t data)
     {
         // TODO: Check returnvalue

@@ -33,7 +33,8 @@ namespace eth
 
         using Handle = SPI_HandleTypeDef;
 
-        // TODO: Init method
+
+        void init();
 
         void transmit(uint8_t data);
         uint8_t receive();
