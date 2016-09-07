@@ -57,5 +57,3 @@ script:
 
 before_install:
     - script/travis_install.sh
-
-
