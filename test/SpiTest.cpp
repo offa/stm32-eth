@@ -23,6 +23,11 @@
 #include <CppUTestExt/MockSupport.h>
 #include "mock/Stm32HalComparator.h"
 
+void platform::stm32::spiClockEnable()
+{
+    mock("platform::stm32").actualCall("spiClockEnable");
+}
+
 TEST_GROUP(SpiTest)
 {
     void setup() override
@@ -65,6 +70,7 @@ TEST(SpiTest, initSetupsGpioPins)
     gpioInitSS.Speed = GPIO_SPEED_LOW;
     gpioInitSS.Alternate = GPIO_AF5_SPI2;
 
+    mock("platform::stm32").expectOneCall("spiClockEnable");
     halGpio.expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &gpioInit);
@@ -91,6 +97,7 @@ TEST(SpiTest, initSetupsSpi)
     spiInit.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
     spiInit.CRCPolynomial = 0;
 
+    mock("platform::stm32").expectOneCall("spiClockEnable");
     halGpio.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
     halSpi.expectOneCall("HAL_SPI_Init")
         .withPointerParameter("hspi", &spi->nativeHandle())

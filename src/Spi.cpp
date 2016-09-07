@@ -25,6 +25,8 @@ namespace eth
 
     void Spi::init()
     {
+        platform::stm32::spiClockEnable();
+
         GPIO_InitTypeDef gpioInit;
         gpioInit.Pin = GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
         gpioInit.Mode = GPIO_MODE_AF_PP;

@@ -33,4 +33,13 @@
 # undef __O
 #endif /* CM4_MACRO_WORKAROUND_NEEDED */
 
+
+namespace platform
+{
+    namespace stm32
+    {
+        void spiClockEnable();
+    }
+}
+
 #endif /* PLATFORM_H */
