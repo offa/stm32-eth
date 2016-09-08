@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(stm32-eth VERSION 0.0.2)
+project(stm32-eth VERSION 0.0.3)
 message(STATUS "~~~ ${PROJECT_NAME} v${PROJECT_VERSION} ~~~")
 
 
