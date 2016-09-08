@@ -19,7 +19,7 @@ set(CMAKE_C_FLAGS "${FLAGS_COMMON} ${FLAGS_C}" CACHE STRING "C Compiler Flags")
 set(CMAKE_CXX_FLAGS "${FLAGS_COMMON} ${FLAGS_CXX}" CACHE STRING "C++ Compiler Flags")
 
 
-set(FLAGS_LINKER "-flto -nostartfiles -Xlinker --gc-sections --specs=nano.specs" CACHE INTERNAL "Linker flags")
+set(FLAGS_LINKER "-flto -nostartfiles -Xlinker --gc-sections --specs=nano.specs -T mem.ld -T libs.ld -T sections.ld -L${PROJECT_SOURCE_DIR}" CACHE INTERNAL "Linker flags")
 
 set(CMAKE_EXE_LINKER_FLAGS "${FLAGS_LINKER}" CACHE STRING "Linker flags")
 set(CMAKE_MODULE_LINKER_FLAGS "${FLAGS_LINKER}" CACHE STRING "Module Linker Flags")
