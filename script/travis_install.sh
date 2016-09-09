@@ -2,12 +2,7 @@
 
 set -ex
 
-if [ "$CXX" == "arm-none-eabi-g++" ]; then
-    ## Install Gcc (Arm)
-    sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa -y
-    sudo apt-get -qq update
-    sudo apt-get install -y gcc-arm-embedded
-else
+if [ "$CXX" != "arm-none-eabi-g++" ]; then
     ## Install CppUTest
     CPPUTEST_VERSION=3.8
     CPPUTEST=cpputest-${CPPUTEST_VERSION}

@@ -19,6 +19,7 @@ matrix:
             - llvm-toolchain-precise-3.8
             - llvm-toolchain-precise-3.7
             - llvm-toolchain-precise-3.6
+            - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
     - env: CXX=g++-5 CC=gcc-5
       addons:
         apt:
@@ -50,16 +51,19 @@ matrix:
       addons:
         apt:
           packages:
+            - gcc-arm-embedded
           sources: *sources
     - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=Release
       addons:
         apt:
           packages:
+            - gcc-arm-embedded
           sources: *sources
     - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
       addons:
         apt:
           packages:
+            - gcc-arm-embedded
           sources: *sources
 
 script:
