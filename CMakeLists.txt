@@ -38,6 +38,8 @@ include_directories(SYSTEM "system/include"
                             "system/include/stm32f4-hal"
                             "system/include/cmsis"
                             )
+add_subdirectory("system")
+
 
 include_directories("include")
 add_subdirectory("src")
