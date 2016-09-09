@@ -15,9 +15,9 @@ if [ "$CXX" != "arm-none-eabi-g++" ]; then
 
     wget https://github.com/cpputest/cpputest/releases/download/v${CPPUTEST_VERSION}/${CPPUTEST}.tar.gz
     tar -xzvf *.tar.gz
-    cd ${CPPUTEST}
+    pushd ${CPPUTEST}
     mkdir _build && cd _build
     cmake $BUILD_FLAGS ..
     make -j4 && sudo make install
-    cd ../..
+    popd
 fi
