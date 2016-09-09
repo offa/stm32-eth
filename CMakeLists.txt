@@ -20,10 +20,7 @@ include(Compiler)
 include(Cpp14)
 
 if(CMAKE_BUILD_TYPE MATCHES DEBUG)
-    add_common_flag(-DDEBUG
-                    -DUSE_FULL_ASSERT
-                    -DTRACE
-                    )
+    add_definitions(-DDEBUG -DUSE_FULL_ASSERT -DTRACE)
 endif()
 
 add_common_flag(-Wall -Wextra -pedantic -Werror -Wshadow)
