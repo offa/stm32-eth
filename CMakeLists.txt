@@ -38,7 +38,9 @@ include_directories(SYSTEM "system/include"
                             "system/include/stm32f4-hal"
                             "system/include/cmsis"
                             )
-add_subdirectory("system")
+if( CMAKE_CROSSCOMPILING )
+    add_subdirectory("system")
+endif()
 
 
 include_directories("include")
