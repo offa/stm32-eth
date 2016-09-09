@@ -15,9 +15,11 @@ macro(add_cxx_flag)
 endmacro()
 
 
+
 macro(add_hex_target _target)
     add_custom_target(${_target}.hex DEPENDS ${_target}
                                     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${_target}> ${_target}.hex
+                                    VERBATIM
                                     )
 endmacro()
 
@@ -25,8 +27,27 @@ endmacro()
 macro(add_bin_target _target)
     add_custom_target(${_target}.bin DEPENDS ${_target}
                                     COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${_target}> ${_target}.bin
+                                    VERBATIM
                                     )
 endmacro()
+
+
+find_program(SIZE_EXE size)
+
+macro(add_size_target _target)
+    if( NOT SIZE_EXE )
+        message(WARNING "'size' not found!")
+    else()
+        add_custom_target(${_target}.size DEPENDS ${_target}
+                                        COMMAND ${SIZE_EXE} --format=berkeley $<TARGET_FILE:${_target}>
+                                        VERBATIM
+                                        )
+    endif()
+
+endmacro()
+
+
+
 
 
 if( NOT CMAKE_CROSSCOMPILING )
