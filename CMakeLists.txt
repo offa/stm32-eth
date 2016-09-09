@@ -39,6 +39,7 @@ include_directories(SYSTEM "system/include"
                             "system/include/cmsis"
                             )
 if( CMAKE_CROSSCOMPILING )
+    set(CMAKE_EXECUTABLE_SUFFIX ".elf")
     add_subdirectory("system")
 endif()
 

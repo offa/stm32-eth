@@ -1,4 +1,5 @@
 
+
 macro(add_common_flag)
     foreach(_flag ${ARGN})
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_flag}")
@@ -6,12 +7,26 @@ macro(add_common_flag)
     endforeach()
 endmacro()
 
+
 macro(add_cxx_flag)
     foreach(_flag ${ARGN})
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_flag}")
     endforeach()
 endmacro()
 
+
+macro(add_hex_target _target)
+    add_custom_target(${_target}.hex DEPENDS ${_target}
+                                    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${_target}> ${_target}.hex
+                                    )
+endmacro()
+
+
+macro(add_bin_target _target)
+    add_custom_target(${_target}.bin DEPENDS ${_target}
+                                    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${_target}> ${_target}.bin
+                                    )
+endmacro()
 
 
 if( NOT CMAKE_CROSSCOMPILING )
