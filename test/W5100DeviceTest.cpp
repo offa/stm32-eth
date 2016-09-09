@@ -31,12 +31,12 @@ using eth::Mode;
 
 inline SimpleString StringFrom(eth::SocketStatus status)
 {
-    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(status));
+    return SimpleString("0x") + HexStringFrom(static_cast<std::underlying_type_t<decltype(status)>>(status));
 }
 
 inline SimpleString StringFrom(eth::SocketCommand cmd)
 {
-    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(cmd));
+    return SimpleString("0x") + HexStringFrom(static_cast<std::underlying_type_t<decltype(cmd)>>(cmd));
 }
 
 
