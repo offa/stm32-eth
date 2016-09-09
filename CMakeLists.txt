@@ -14,10 +14,21 @@ message(STATUS "Verbose Unit Tests : ${UNITTEST_VERBOSE}")
 option(COVERAGE "Enable Coverage" OFF)
 message(STATUS "Enable Coverage : ${COVERAGE}")
 
+option(LTO "Enable Link Time Optimization (LTO)" OFF)
+message(STATUS "Enable LTO : ${LTO}")
+
+
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(Compiler)
 include(Cpp14)
+
+
+if( LTO )
+    add_common_flag(-flto)
+    add_linker_flag(-flto)
+endif()
+
 
 if(CMAKE_BUILD_TYPE MATCHES DEBUG)
     add_definitions(-DDEBUG -DUSE_FULL_ASSERT -DTRACE)

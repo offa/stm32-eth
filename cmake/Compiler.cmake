@@ -15,6 +15,12 @@ macro(add_cxx_flag)
 endmacro()
 
 
+macro(add_linker_flag)
+    foreach(_flag ${ARGN})
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${_flag}")
+    endforeach()
+endmacro()
+
 
 macro(add_hex_target _target)
     add_custom_target(${_target}.hex DEPENDS ${_target}
