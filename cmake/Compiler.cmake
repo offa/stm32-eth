@@ -45,7 +45,7 @@ macro(add_size_target _target)
         message(WARNING "'size' not found!")
     else()
         add_custom_target(${_target}.size DEPENDS ${_target}
-                                        COMMAND ${SIZE_EXE} --format=berkeley $<TARGET_FILE:${_target}>
+                                        COMMAND ${SIZE_EXE} -t --format=berkeley $<TARGET_FILE:${_target}>
                                         VERBATIM
                                         )
     endif()
