@@ -1,7 +1,7 @@
 include(CMakeForceCompiler)
 
 set(CMAKE_SYSTEM_NAME Generic)
-set(CMAKE_SYSTEM_PROCESSOR arm)
+set(CMAKE_SYSTEM_PROCESSOR arm-cortex-m4)
 
 CMAKE_FORCE_C_COMPILER(arm-none-eabi-gcc GNU)
 CMAKE_FORCE_CXX_COMPILER(arm-none-eabi-g++ GNU)
@@ -19,3 +19,5 @@ set(FLAGS_LINKER "${FLAGS_COMMON} -nostartfiles -Xlinker --gc-sections --specs=n
 set(CMAKE_C_FLAGS "${FLAGS_COMMON} ${FLAGS_C}" CACHE STRING "C Compiler Flags")
 set(CMAKE_CXX_FLAGS "${FLAGS_COMMON} ${FLAGS_CXX}" CACHE STRING "C++ Compiler Flags")
 set(CMAKE_EXE_LINKER_FLAGS "${FLAGS_LINKER}" CACHE STRING "Linker flags")
+
+set(CMAKE_EXECUTABLE_SUFFIX ".elf")
