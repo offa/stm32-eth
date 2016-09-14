@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(stm32-eth VERSION 0.0.3)
 message(STATUS "~~~ ${PROJECT_NAME} v${PROJECT_VERSION} ~~~")
 
+message(STATUS "Target: ${CMAKE_SYSTEM_PROCESSOR} (${CMAKE_SYSTEM_NAME})")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 
 option(UNITTEST "Build Unit Tests" ON)
