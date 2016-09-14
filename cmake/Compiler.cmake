@@ -49,7 +49,6 @@ macro(add_size_target _target)
                                         VERBATIM
                                         )
     endif()
-
 endmacro()
 
 
@@ -57,10 +56,8 @@ endmacro()
 
 
 if( NOT CMAKE_CROSSCOMPILING )
-    set(CM4_MACRO_TEST "${CMAKE_MODULE_PATH}/Cm4MacroTest.cpp")
-
     try_compile(CM4_MACRO_WORKS "${CMAKE_BINARY_DIR}/temp"
-                                ${CM4_MACRO_TEST}
+                                "${CMAKE_MODULE_PATH}/Cm4MacroTest.cpp"
                                 COMPILE_DEFINITIONS -std=c++14
                                 )
 
