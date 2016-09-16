@@ -41,7 +41,7 @@ Both *ELF*- and *HEX*-files can be flashed by using *OpenOCD*:
 1. `openocd -f stm32f4discovery.cfg`
 1. `telnet localhost 4444`
  1. `reset halt`
- 1. `flash write_image erase {{{hex / elf file}}}`
+ 1. `flash write_image erase <filename.[elf|hex]>`
  1. `reset run`
 
 
