@@ -31,12 +31,12 @@ Executing tests using CTest: `make test` or `ctest`. For `unittest` it's possibl
 
 ## Integration Test
 
-The Integration Test for *Stm32F4xx* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
+Integration Test for *Stm32F4xx* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
 
 
 ## Flashing (OpenOCD)
 
-Both *ELF*- and *HEX*-files can be flashed by using [***OpenOCD***](http://openocd.org/):
+Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.org/):
 
 1. `openocd -f stm32f4discovery.cfg`
 1. `telnet localhost 4444`
@@ -45,9 +45,9 @@ Both *ELF*- and *HEX*-files can be flashed by using [***OpenOCD***](http://openo
  1. `reset run`
 
 
-
-
 ## Pin assignment
+
+#### Stm32
 
 | Pin  | Stm32 |
 |:----:|:-----:|
