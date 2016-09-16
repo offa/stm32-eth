@@ -36,7 +36,7 @@ The Integration Test for *Stm32F4xx* are enabled by the `INTEGRATION_TEST` optio
 
 ## Flashing (OpenOCD)
 
-Both *ELF*- and *HEX*-files can be flashed by using *OpenOCD*:
+Both *ELF*- and *HEX*-files can be flashed by using [*OpenOCD*](http://openocd.org/):
 
 1. `openocd -f stm32f4discovery.cfg`
 1. `telnet localhost 4444`
