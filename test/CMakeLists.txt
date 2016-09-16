@@ -69,4 +69,3 @@ add_custom_target(unittest SocketTest ${TEST_FLAGS}
                     VERBATIM
                     )
 
-

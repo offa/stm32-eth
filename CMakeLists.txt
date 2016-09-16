@@ -18,6 +18,8 @@ message(STATUS "Enable Coverage : ${COVERAGE}")
 option(LTO "Enable Link Time Optimization (LTO)" OFF)
 message(STATUS "Enable LTO : ${LTO}")
 
+option(INTEGRATION_TEST "Build Integration Tests" OFF)
+message(STATUS "Build Integration Tests: ${INTEGRATION_TEST}")
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -47,7 +49,7 @@ include_directories(SYSTEM "system/include"
                             "system/include/stm32f4-hal"
                             "system/include/cmsis"
                             )
-if( CMAKE_CROSSCOMPILING )
+if( CMAKE_CROSSCOMPILING OR INTEGRATION_TEST )
     add_subdirectory("system")
 endif()
 
@@ -61,4 +63,7 @@ if( UNITTEST )
     add_subdirectory("test")
 endif()
 
+if( INTEGRATION_TEST )
+    add_subdirectory("test/integration")
+endif()
 
