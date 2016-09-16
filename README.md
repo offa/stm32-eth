@@ -24,7 +24,7 @@ make
 make unittest
 ```
 
-It's also possible to use `make test` / `ctest` instead. For `unittest` it's possible to switch verbosity by CMake option.
+Running tests using CTest: `make test` or `ctest`. For `unittest` it's possible to switch verbosity by CMake option.
 
 
 ## Pin assignment
