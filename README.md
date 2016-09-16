@@ -17,6 +17,8 @@ Ethernet connectivity for *Stm32F4xx* Boards using W5100 devices.
 
 ## Testing
 
+Build and execute Unit Tests:
+
 ```
 mkdir build && cd build
 cmake ..
@@ -24,7 +26,25 @@ make
 make unittest
 ```
 
-Running tests using CTest: `make test` or `ctest`. For `unittest` it's possible to switch verbosity by CMake option.
+Executing tests using CTest: `make test` or `ctest`. For `unittest` it's possible to switch verbosity by CMake option.
+
+
+## Integration Test
+
+The Integration Test for *Stm32F4xx* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
+
+
+## Flashing (OpenOCD)
+
+Both *ELF*- and *HEX*-files can be flashed by using *OpenOCD*:
+
+1. `openocd -f stm32f4discovery.cfg`
+1. `telnet localhost 4444`
+ 1. reset halt`
+ 1. `flash write_image erase {{{hex / elf file}}}`
+ 1. `reset run`
+
+
 
 
 ## Pin assignment
