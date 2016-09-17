@@ -58,6 +58,10 @@ if( UNITTEST_VERBOSE )
     set(TEST_FLAGS ${TEST_FLAGS} -v)
 endif()
 
+if( UNITTEST_JUNIT )
+    set(TEST_FLAGS ${TEST_FLAGS} -ojunit)
+endif()
+
 
 add_custom_target(unittest SocketTest ${TEST_FLAGS}
                     COMMAND W5100DeviceTest ${TEST_FLAGS}
