@@ -5,17 +5,20 @@ set(CppUTest_DEFINITIONS ${PKG_CppUTest_CFLAGS_OTHER})
 find_path(CppUTest_INCLUDE_DIR "CppUTest/TestHarness.h"
                                 HINTS ${PKG_CppUTest_INCLUDE_DIRS}
                                         "${CppUTest_DIR}/include"
+                                        ENV CppUTest_INCLUDE_DIR
                                 )
 
 find_library(CppUTest_LIBRARY NAMES CppUTest CppUTest
                                 HINTS ${PKG_CppUTest_LIBDIR}
                                         ${PKG_CppUTest_LIBRARY_DIRS}
                                         "${CppUTest_DIR}/lib"
+                                        ENV CppUTest_LIBRARY
                                 )
 find_library(CppUTest_Ext_LIBRARY NAMES CppUTestExt CppUTestExt
                                 HINTS ${PKG_CppUTest_LIBDIR}
                                         ${PKG_CppUTest_LIBRARY_DIRS}
                                         "${CppUTest_DIR}/lib"
+                                        ENV CppUTest_Ext_LIBRARY
                                 )
 
 
