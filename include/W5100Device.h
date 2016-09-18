@@ -77,7 +77,7 @@ namespace eth
         W5100Device& operator=(W5100Device&&) = default;
 
 
-    protected:
+    private:
 
         uint16_t readSocketTransmitFreeSizeRegister(SocketHandle s);
 
@@ -93,10 +93,7 @@ namespace eth
         void writeSourceIpRegister(const std::array<uint8_t, 4>& addr);
 
 
-    private:
-
         std::array<uint16_t, supportedSockets> m_transmitBufferBaseAddress;
-
         static constexpr uint8_t opcodeWrite = 0xf0;
         static constexpr uint8_t opcodeRead = 0x0f;
         static constexpr uint16_t transmitBufferSize = 2048;
