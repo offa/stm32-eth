@@ -44,7 +44,7 @@ namespace eth
         template<class T,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
-        constexpr T from(uint8_t value)
+        constexpr T to(uint8_t value)
         {
             return value;
         }
@@ -52,10 +52,10 @@ namespace eth
         template<class T, class... Ts,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= (sizeof...(Ts) + sizeof(uint8_t)) ), int> = 0>
-        constexpr T from(uint8_t valueN, Ts... values)
+        constexpr T to(uint8_t valueN, Ts... values)
         {
             constexpr auto shift = sizeof...(values) * 8;
-            auto lower = from<T>(values...);
+            auto lower = to<T>(values...);
             return ( valueN << shift ) | lower ;
         }
 
