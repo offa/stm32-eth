@@ -211,8 +211,8 @@ namespace eth
     uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0020;
-        uint16_t b1 = read(getSocketAddress(s, addr));
-        uint16_t b0 = read(getSocketAddress(s, addr + 1));
+        auto b1 = read(getSocketAddress(s, addr));
+        auto b0 = read(getSocketAddress(s, addr + 1));
 
         return byte::to<uint16_t>(b1, b0);
     }
@@ -220,8 +220,8 @@ namespace eth
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
         constexpr uint16_t addr = 0x0024;
-        uint16_t b1 = read(getSocketAddress(s, addr));
-        uint16_t b0 = read(getSocketAddress(s, addr + 1));
+        auto b1 = read(getSocketAddress(s, addr));
+        auto b0 = read(getSocketAddress(s, addr + 1));
 
         return byte::to<uint16_t>(b1, b0);
     }

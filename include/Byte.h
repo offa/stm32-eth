@@ -41,6 +41,16 @@ namespace eth
         }
 
 
+        template<class T, class U,
+            std::enable_if_t<std::is_integral<T>::value
+                                && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0,
+            std::enable_if_t<std::is_integral<U>::value
+                                && ( sizeof(U) != sizeof(uint8_t) ), int> = 0>
+        constexpr void to(U value)
+        {
+            static_assert(sizeof(value) == sizeof(uint8_t), "Invalid size");
+        }
+
         template<class T,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
