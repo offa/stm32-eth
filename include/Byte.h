@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BYTE_H
-#define BYTE_H
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -72,4 +71,3 @@ namespace eth
     }
 }
 
-#endif /* BYTE_H */

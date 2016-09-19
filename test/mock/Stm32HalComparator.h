@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STM32HALCOMPARATOR_H
-#define STM32HALCOMPARATOR_H
+#pragma once
 
 #include "Platform.h"
 #include <sstream>
@@ -100,4 +99,3 @@ struct SpiHandleComparator : public MockNamedValueComparator
     }
 };
 
-#endif /* STM32HALCOMPARATOR_H */

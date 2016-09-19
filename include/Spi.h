@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPI_H
-#define SPI_H
+#pragma once
 
 #include <stdint.h>
 #include "Platform.h"
@@ -54,6 +53,4 @@ namespace eth
     extern Spi spi;
 
 }
-
-#endif /* SPI_H */
 

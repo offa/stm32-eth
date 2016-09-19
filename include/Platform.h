@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#pragma once
 
 #include <stm32f4xx_hal.h>
 
@@ -42,4 +41,3 @@ namespace platform
     }
 }
 
-#endif /* PLATFORM_H */

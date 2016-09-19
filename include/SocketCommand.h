@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKETCOMMAND_H
-#define SOCKETCOMMAND_H
+#pragma once
 
 namespace eth
 {
@@ -40,4 +39,3 @@ namespace eth
 
 }
 
-#endif /* SOCKETCOMMAND_H */

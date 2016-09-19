@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MODE_H
-#define MODE_H
+#pragma once
 
 namespace eth
 {
@@ -35,4 +34,3 @@ namespace eth
 
 }
 
-#endif /* MODE_H */

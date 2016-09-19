@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKETHANDLE_H
-#define SOCKETHANDLE_H
+#pragma once
 
 #include <stdint.h>
 
@@ -32,4 +31,3 @@ namespace eth
 
 }
 
-#endif /* SOCKETHANDLE_H */

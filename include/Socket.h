@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKET_H
-#define SOCKET_H
+#pragma once
 
 #include "SocketHandle.h"
 #include "Protocol.h"
@@ -51,4 +50,3 @@ namespace eth
 
 }
 
-#endif /* SOCKET_H */

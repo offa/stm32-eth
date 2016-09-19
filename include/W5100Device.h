@@ -18,8 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef W5100DEVICE_H
-#define W5100DEVICE_H
+#pragma once
 
 #include "SocketHandle.h"
 #include "SocketCommand.h"
@@ -104,4 +103,3 @@ namespace eth
 
 }
 
-#endif /* W5100DEVICE_H */
