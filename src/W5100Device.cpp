@@ -219,18 +219,12 @@ namespace eth
 
     uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
     {
-        auto b1 = read(socketTransmitFreeSize(s));
-        auto b0 = read(socketTransmitFreeSize(s).address() + 1);
-
-        return byte::to<uint16_t>(b1, b0);
+        return readWord(socketTransmitFreeSize(s));
     }
 
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
-        auto b1 = read(socketTransmitWritePointer(s));
-        auto b0 = read(socketTransmitWritePointer(s).address() + 1);
-
-        return byte::to<uint16_t>(b1, b0);
+        return readWord(socketTransmitWritePointer(s));
     }
 
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
