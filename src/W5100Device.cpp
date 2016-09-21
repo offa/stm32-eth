@@ -137,52 +137,44 @@ namespace eth
         writeSocketTransmitWritePointer(s, writePointer);
     }
 
-    void W5100Device::write(uint16_t addr, uint8_t data)
+    void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
     {
+        const auto address = addr + offset;
         spi.setSlaveSelect();
         spi.transmit(opcodeWrite);
-        spi.transmit(byte::get<1>(addr));
-        spi.transmit(byte::get<0>(addr));
+        spi.transmit(byte::get<1>(address));
+        spi.transmit(byte::get<0>(address));
         spi.transmit(data);
         spi.resetSlaveSelect();
     }
 
-    void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
-    {
-        write(addr + offset, data);
-    }
-
     void W5100Device::write(W5100Register reg, uint8_t data)
     {
-        write(reg.address(), data);
+        write(reg.address(), 0, data);
     }
 
     void W5100Device::write(W5100Register reg, uint16_t data)
     {
-        write(reg.address(), byte::get<1>(data));
+        write(reg.address(), 0, byte::get<1>(data));
         write(reg.address(), 1, byte::get<0>(data));
     }
 
-    uint8_t W5100Device::read(uint16_t addr)
+    uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
     {
+        const auto address = addr + offset;
         spi.setSlaveSelect();
         spi.transmit(opcodeRead);
-        spi.transmit(byte::get<1>(addr));
-        spi.transmit(byte::get<0>(addr));
+        spi.transmit(byte::get<1>(address));
+        spi.transmit(byte::get<0>(address));
         auto data = spi.receive();
         spi.resetSlaveSelect();
 
         return data;
     }
 
-    uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
-    {
-        return read(addr + offset);
-    }
-
     uint8_t W5100Device::read(W5100Register reg)
     {
-        return read(reg.address());
+        return read(reg.address(), 0);
     }
 
     uint16_t W5100Device::readWord(W5100Register reg)

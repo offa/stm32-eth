@@ -64,12 +64,12 @@ namespace eth
         template<class Iterator>
         void write(W5100Register reg, Iterator begin, Iterator end)
         {
-            auto addr = reg.address();
+            uint16_t offset = 0;
 
             std::for_each(begin, end, [&](uint8_t data)
             {
-                write(addr, data);
-                ++addr;
+                write(reg.address(), offset, data);
+                ++offset;
             });
         }
 
@@ -93,9 +93,7 @@ namespace eth
 
     private:
 
-        void write(uint16_t addr, uint8_t data);
         void write(uint16_t addr, uint16_t offset, uint8_t data);
-        uint8_t read(uint16_t addr);
         uint8_t read(uint16_t addr, uint16_t offset);
 
         uint16_t readSocketTransmitFreeSizeRegister(SocketHandle s);
