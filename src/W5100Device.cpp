@@ -138,13 +138,13 @@ namespace eth
         if( offset + size > transmitBufferSize )
         {
             uint16_t transmitSize = transmitBufferSize - offset;
-            write(destAddress, buffer, std::next(buffer, transmitSize));
+            write(W5100Register(destAddress), buffer, std::next(buffer, transmitSize));
             auto pos = std::next(buffer, transmitSize);
-            write(m_transmitBufferBaseAddress[s], pos, std::next(pos, size - transmitSize));
+            write(W5100Register(m_transmitBufferBaseAddress[s]), pos, std::next(pos, size - transmitSize));
         }
         else
         {
-            write(destAddress, buffer, std::next(buffer, size));
+            write(W5100Register(destAddress), buffer, std::next(buffer, size));
         }
 
         writePointer += size;
@@ -239,25 +239,25 @@ namespace eth
     void W5100Device::writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr W5100Register reg(0x0001);
-        write(reg.address(), addr.begin(), addr.end());
+        write(reg, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr W5100Register reg(0x0005);
-        write(reg.address(), addr.begin(), addr.end());
+        write(reg, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr)
     {
         constexpr W5100Register reg(0x0009);
-        write(reg.address(), addr.begin(), addr.end());
+        write(reg, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceIpRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr W5100Register reg(0x000f);
-        write(reg.address(), addr.begin(), addr.end());
+        write(reg, addr.begin(), addr.end());
     }
 
     W5100Device device;

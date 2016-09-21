@@ -67,8 +67,10 @@ namespace eth
         }
 
         template<class Iterator>
-        void write(uint16_t addr, Iterator begin, Iterator end)
+        void write(W5100Register reg, Iterator begin, Iterator end)
         {
+            auto addr = reg.address();
+
             std::for_each(begin, end, [&](uint8_t data)
             {
                 write(addr, data);

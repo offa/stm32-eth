@@ -28,6 +28,7 @@
 using eth::SocketCommand;
 using eth::SocketStatus;
 using eth::Mode;
+using eth::W5100Register;
 
 inline SimpleString StringFrom(eth::SocketStatus status)
 {
@@ -147,27 +148,27 @@ TEST(W5100DeviceTest, writeByte)
 
 TEST(W5100DeviceTest, writeBuffer)
 {
-    constexpr uint16_t address = 0xa1b2;
+    constexpr W5100Register reg(0xa1b2);
     constexpr uint16_t size = 10;
     auto data = createBuffer(size);
 
     spiMock.expectNCalls(size, "setSlaveSelect");
     spiMock.ignoreOtherCalls();
 
-    device->write(address, data.begin(), data.end());
+    device->write(reg, data.begin(), data.end());
     checkWriteCalls(size);
 }
 
 TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 {
-    constexpr uint16_t address = 0xa1b2;
+    constexpr W5100Register reg(0xa1b2);
     constexpr uint16_t size = 10;
     auto data = createBuffer(size);
 
     spiMock.expectNCalls(size, "setSlaveSelect");
     spiMock.ignoreOtherCalls();
 
-    device->write(address, data.data(), std::next(data.data(), data.size()));
+    device->write(reg, data.data(), std::next(data.data(), data.size()));
     checkWriteCalls(size);
 }
 
