@@ -138,24 +138,6 @@ TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
     device->init();
 }
 
-TEST(W5100DeviceTest, writeByte)
-{
-    constexpr uint16_t address = 0xaabb;
-    constexpr uint8_t data = 0xef;
-    expectWrite(address, data);
-
-    device->write(address, data);
-}
-
-TEST(W5100DeviceTest, writeByteWithOffset)
-{
-    constexpr uint16_t address = 0xaabb;
-    constexpr uint8_t data = 0xef;
-    expectWrite(address + 10, data);
-
-    device->write(address, 10, data);
-}
-
 TEST(W5100DeviceTest, writeRegisterByte)
 {
     constexpr auto reg = makeRegister<uint8_t>(0xabcd);

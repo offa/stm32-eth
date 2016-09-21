@@ -58,10 +58,6 @@ namespace eth
 
         void sendData(SocketHandle s, const uint8_t* buffer, uint16_t size);
 
-
-        void write(uint16_t addr, uint8_t data);
-        void write(uint16_t addr, uint16_t offset, uint8_t data);
-
         void write(W5100Register reg, uint8_t data);
         void write(W5100Register reg, uint16_t data);
 
@@ -100,6 +96,9 @@ namespace eth
 
 
     private:
+
+        void write(uint16_t addr, uint8_t data);
+        void write(uint16_t addr, uint16_t offset, uint8_t data);
 
         uint16_t readSocketTransmitFreeSizeRegister(SocketHandle s);
 
