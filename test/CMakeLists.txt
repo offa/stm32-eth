@@ -32,6 +32,7 @@ _add_test(SocketTest SOCKETTEST_SRC)
 
 
 list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
+                        W5100RegisterTest.cpp
                         $<TARGET_OBJECTS:w5100device>
                         $<TARGET_OBJECTS:spi-mock>
                         )

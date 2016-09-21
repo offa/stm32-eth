@@ -19,6 +19,7 @@
  */
 
 #include "W5100Device.h"
+#include "W5100Register.h"
 #include "Spi.h"
 #include "Byte.h"
 
@@ -99,14 +100,14 @@ namespace eth
 
     SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)
     {
-        constexpr uint16_t addr = 0x0001;
-        return static_cast<SocketCommand>(read(getSocketAddress(s, addr)));
+        constexpr W5100Register reg(0x0001);
+        return static_cast<SocketCommand>(read(getSocketAddress(s, reg.address())));
     }
 
     SocketStatus W5100Device::readSocketStatusRegister(SocketHandle s)
     {
-        constexpr uint16_t addr = 0x0003;
-        return static_cast<SocketStatus>(read(getSocketAddress(s, addr)));
+        constexpr W5100Register reg(0x0003);
+        return static_cast<SocketStatus>(read(getSocketAddress(s, reg.address())));
     }
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
@@ -175,8 +176,8 @@ namespace eth
 
     void W5100Device::writeModeRegister(Mode value)
     {
-        constexpr uint16_t addr = 0x0000;
-        write(addr, static_cast<uint8_t>(value));
+        constexpr W5100Register reg(0x0000);
+        write(reg.address(), static_cast<uint8_t>(value));
     }
 
     void W5100Device::setGatewayAddress(const std::array<uint8_t, 4>& addr)
@@ -201,63 +202,63 @@ namespace eth
 
     uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
     {
-        constexpr uint16_t addr = 0x0020;
-        auto b1 = read(getSocketAddress(s, addr));
-        auto b0 = read(getSocketAddress(s, addr + 1));
+        constexpr W5100Register reg(0x0020);
+        auto b1 = read(getSocketAddress(s, reg.address()));
+        auto b0 = read(getSocketAddress(s, reg.address() + 1));
 
         return byte::to<uint16_t>(b1, b0);
     }
 
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
-        constexpr uint16_t addr = 0x0024;
-        auto b1 = read(getSocketAddress(s, addr));
-        auto b0 = read(getSocketAddress(s, addr + 1));
+        constexpr W5100Register reg(0x0024);
+        auto b1 = read(getSocketAddress(s, reg.address()));
+        auto b0 = read(getSocketAddress(s, reg.address() + 1));
 
         return byte::to<uint16_t>(b1, b0);
     }
 
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
-        constexpr uint16_t addr = 0x0024;
-        write(getSocketAddress(s, addr), byte::get<1>(value));
-        write(getSocketAddress(s, addr + 1), byte::get<0>(value));
+        constexpr W5100Register reg(0x0024);
+        write(getSocketAddress(s, reg.address()), byte::get<1>(value));
+        write(getSocketAddress(s, reg.address() + 1), byte::get<0>(value));
     }
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
     {
-        constexpr uint16_t addr = 0x001b;
-        write(addr, value);
+        constexpr W5100Register reg(0x001b);
+        write(reg.address(), value);
     }
 
     void W5100Device::writeReceiveMemorySizeRegister(uint8_t value)
     {
-        constexpr uint16_t addr = 0x001a;
-        write(addr, value);
+        constexpr W5100Register reg(0x001a);
+        write(reg.address(), value);
     }
 
     void W5100Device::writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr)
     {
-        constexpr uint16_t addr_ = 0x0001;
-        write(addr_, addr.begin(), addr.end());
+        constexpr W5100Register reg(0x0001);
+        write(reg.address(), addr.begin(), addr.end());
     }
 
     void W5100Device::writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr)
     {
-        constexpr uint16_t addr_ = 0x0005;
-        write(addr_, addr.begin(), addr.end());
+        constexpr W5100Register reg(0x0005);
+        write(reg.address(), addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr)
     {
-        constexpr uint16_t addr_ = 0x0009;
-        write(addr_, addr.begin(), addr.end());
+        constexpr W5100Register reg(0x0009);
+        write(reg.address(), addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceIpRegister(const std::array<uint8_t, 4>& addr)
     {
-        constexpr uint16_t addr_ = 0x000f;
-        write(addr_, addr.begin(), addr.end());
+        constexpr W5100Register reg(0x000f);
+        write(reg.address(), addr.begin(), addr.end());
     }
 
     W5100Device device;
