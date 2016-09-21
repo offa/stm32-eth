@@ -175,8 +175,7 @@ namespace eth
 
     void W5100Device::writeModeRegister(Mode value)
     {
-        constexpr W5100Register reg(0x0000);
-        write(reg, static_cast<uint8_t>(value));
+        write(mode, static_cast<uint8_t>(value));
     }
 
     void W5100Device::setGatewayAddress(const std::array<uint8_t, 4>& addr)
@@ -226,38 +225,32 @@ namespace eth
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
     {
-        constexpr W5100Register reg(0x001b);
-        write(reg, value);
+        write(transmitMemorySize, value);
     }
 
     void W5100Device::writeReceiveMemorySizeRegister(uint8_t value)
     {
-        constexpr W5100Register reg(0x001a);
-        write(reg, value);
+        write(receiveMemorySize, value);
     }
 
     void W5100Device::writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr)
     {
-        constexpr W5100Register reg(0x0001);
-        write(reg, addr.begin(), addr.end());
+        write(gatewayAddress, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr)
     {
-        constexpr W5100Register reg(0x0005);
-        write(reg, addr.begin(), addr.end());
+        write(subnetMask, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr)
     {
-        constexpr W5100Register reg(0x0009);
-        write(reg, addr.begin(), addr.end());
+        write(sourceMacAddress, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceIpRegister(const std::array<uint8_t, 4>& addr)
     {
-        constexpr W5100Register reg(0x000f);
-        write(reg, addr.begin(), addr.end());
+        write(sourceIpAddress, addr.begin(), addr.end());
     }
 
     W5100Device device;

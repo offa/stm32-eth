@@ -45,5 +45,14 @@ namespace eth
         const uint16_t m_address;
     };
 
+
+    constexpr W5100Register mode(0x0000);
+    constexpr W5100Register transmitMemorySize(0x001b);
+    constexpr W5100Register receiveMemorySize(0x001a);
+
+    constexpr W5100Register gatewayAddress(0x0001);
+    constexpr W5100Register subnetMask(0x0005);
+    constexpr W5100Register sourceMacAddress(0x0009);
+    constexpr W5100Register sourceIpAddress(0x000f);
 }
 
