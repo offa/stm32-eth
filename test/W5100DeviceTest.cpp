@@ -29,6 +29,7 @@ using eth::SocketCommand;
 using eth::SocketStatus;
 using eth::Mode;
 using eth::W5100Register;
+using eth::makeRegister;
 
 inline SimpleString StringFrom(eth::SocketStatus status)
 {
@@ -144,6 +145,33 @@ TEST(W5100DeviceTest, writeByte)
     expectWrite(address, data);
 
     device->write(address, data);
+}
+
+TEST(W5100DeviceTest, writeByteWithOffset)
+{
+    constexpr uint16_t address = 0xaabb;
+    constexpr uint8_t data = 0xef;
+    expectWrite(address + 10, data);
+
+    device->write(address, 10, data);
+}
+
+TEST(W5100DeviceTest, writeRegisterByte)
+{
+    constexpr auto reg = makeRegister<uint8_t>(0xabcd);
+    constexpr uint8_t data = 0xef;
+    expectWrite(0xabcd, data);
+
+    device->write(reg, data);
+}
+
+TEST(W5100DeviceTest, writeRegisterTwoByte)
+{
+    constexpr auto reg = makeRegister<uint16_t>(0xabcd);
+    constexpr uint16_t data = 0x0011;
+    expectWrite(0xabcd, data);
+
+    device->write(reg, data);
 }
 
 TEST(W5100DeviceTest, writeBuffer)

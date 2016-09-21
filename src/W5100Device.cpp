@@ -148,6 +148,22 @@ namespace eth
         spi.resetSlaveSelect();
     }
 
+    void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
+    {
+        write(addr + offset, data);
+    }
+
+    void W5100Device::write(W5100Register reg, uint8_t data)
+    {
+        write(reg.address(), data);
+    }
+
+    void W5100Device::write(W5100Register reg, uint16_t data)
+    {
+        write(reg.address(), byte::get<1>(data));
+        write(reg.address(), 1, byte::get<0>(data));
+    }
+
     uint8_t W5100Device::read(uint16_t addr)
     {
         spi.setSlaveSelect();

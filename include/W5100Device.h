@@ -60,11 +60,10 @@ namespace eth
 
 
         void write(uint16_t addr, uint8_t data);
+        void write(uint16_t addr, uint16_t offset, uint8_t data);
 
-        void write(W5100Register reg, uint8_t data)
-        {
-            write(reg.address(), data);
-        }
+        void write(W5100Register reg, uint8_t data);
+        void write(W5100Register reg, uint16_t data);
 
         template<class Iterator>
         void write(W5100Register reg, Iterator begin, Iterator end)
