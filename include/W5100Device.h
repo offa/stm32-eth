@@ -24,6 +24,7 @@
 #include "SocketCommand.h"
 #include "SocketStatus.h"
 #include "Mode.h"
+#include "W5100Register.h"
 #include <array>
 #include <algorithm>
 #include <stdint.h>
@@ -60,6 +61,11 @@ namespace eth
 
         void write(uint16_t addr, uint8_t data);
 
+        void write(W5100Register reg, uint8_t data)
+        {
+            write(reg.address(), data);
+        }
+
         template<class Iterator>
         void write(uint16_t addr, Iterator begin, Iterator end)
         {
@@ -70,8 +76,12 @@ namespace eth
             });
         }
 
-
         uint8_t read(uint16_t addr);
+
+        uint8_t read(W5100Register reg)
+        {
+            return read(reg.address());
+        }
 
         void writeModeRegister(Mode value);
 

@@ -19,7 +19,6 @@
  */
 
 #include "W5100Device.h"
-#include "W5100Register.h"
 #include "Spi.h"
 #include "Byte.h"
 
