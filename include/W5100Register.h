@@ -18,6 +18,8 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <stdint.h>
 
 namespace eth
