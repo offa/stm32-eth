@@ -73,12 +73,8 @@ namespace eth
             });
         }
 
-        uint8_t read(uint16_t addr);
-
-        uint8_t read(W5100Register reg)
-        {
-            return read(reg.address());
-        }
+        uint8_t read(W5100Register reg);
+        uint16_t readWord(W5100Register reg);
 
         void writeModeRegister(Mode value);
 
@@ -99,6 +95,8 @@ namespace eth
 
         void write(uint16_t addr, uint8_t data);
         void write(uint16_t addr, uint16_t offset, uint8_t data);
+        uint8_t read(uint16_t addr);
+        uint8_t read(uint16_t addr, uint16_t offset);
 
         uint16_t readSocketTransmitFreeSizeRegister(SocketHandle s);
 

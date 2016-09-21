@@ -175,6 +175,23 @@ namespace eth
         return data;
     }
 
+    uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
+    {
+        return read(addr + offset);
+    }
+
+    uint8_t W5100Device::read(W5100Register reg)
+    {
+        return read(reg.address());
+    }
+
+    uint16_t W5100Device::readWord(W5100Register reg)
+    {
+        auto b1 = read(reg);
+        auto b0 = read(reg.address(), 1);
+        return byte::to<uint16_t>(b1, b0);
+    }
+
     void W5100Device::writeModeRegister(Mode value)
     {
         write(mode, static_cast<uint8_t>(value));

@@ -182,13 +182,23 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
     checkWriteCalls(size);
 }
 
-TEST(W5100DeviceTest, readByte)
+TEST(W5100DeviceTest, readRegisterByte)
 {
-    constexpr uint16_t address = 0xccdd;
+    constexpr auto reg = makeRegister<uint8_t>(0xddee);
     constexpr uint8_t data = 0xef;
-    expectRead(address, data);
+    expectRead(0xddee, data);
 
-    uint8_t result = device->read(address);
+    uint8_t result = device->read(reg);
+    CHECK_EQUAL(data, result);
+}
+
+TEST(W5100DeviceTest, readRegisterTwoByte)
+{
+    constexpr auto reg = makeRegister<uint16_t>(0xddee);
+    constexpr uint16_t data = 0xef01;
+    expectRead(0xddee, data);
+
+    uint16_t result = device->readWord(reg);
     CHECK_EQUAL(data, result);
 }
 
