@@ -25,6 +25,7 @@
 #include "SocketStatus.h"
 #include "Mode.h"
 #include <array>
+#include <algorithm>
 #include <stdint.h>
 
 namespace eth
@@ -58,7 +59,18 @@ namespace eth
 
 
         void write(uint16_t addr, uint8_t data);
-        void write(uint16_t addr, const uint8_t* buffer, uint16_t size);
+
+        template<class Iterator>
+        void write(uint16_t addr, Iterator begin, Iterator end)
+        {
+            std::for_each(begin, end, [&](uint8_t data)
+            {
+                write(addr, data);
+                ++addr;
+            });
+        }
+
+
         uint8_t read(uint16_t addr);
 
         void writeModeRegister(Mode value);

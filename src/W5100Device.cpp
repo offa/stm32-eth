@@ -21,7 +21,6 @@
 #include "W5100Device.h"
 #include "Spi.h"
 #include "Byte.h"
-#include <algorithm>
 
 namespace eth
 {
@@ -139,12 +138,13 @@ namespace eth
         if( offset + size > transmitBufferSize )
         {
             uint16_t transmitSize = transmitBufferSize - offset;
-            write(destAddress, buffer, transmitSize);
-            write(m_transmitBufferBaseAddress[s], buffer + transmitSize, size - transmitSize);
+            write(destAddress, buffer, std::next(buffer, transmitSize));
+            auto pos = std::next(buffer, transmitSize);
+            write(m_transmitBufferBaseAddress[s], pos, std::next(pos, size - transmitSize));
         }
         else
         {
-            write(destAddress, buffer, size);
+            write(destAddress, buffer, std::next(buffer, size));
         }
 
         writePointer += size;
@@ -159,15 +159,6 @@ namespace eth
         spi.transmit(byte::get<0>(addr));
         spi.transmit(data);
         spi.resetSlaveSelect();
-    }
-
-    void W5100Device::write(uint16_t addr, const uint8_t* buffer, uint16_t size)
-    {
-        std::for_each(buffer, buffer + size, [&](uint8_t data)
-        {
-            write(addr, data);
-            ++addr;
-        });
     }
 
     uint8_t W5100Device::read(uint16_t addr)
@@ -248,25 +239,25 @@ namespace eth
     void W5100Device::writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr uint16_t addr_ = 0x0001;
-        write(addr_, addr.data(), addr.size());
+        write(addr_, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr uint16_t addr_ = 0x0005;
-        write(addr_, addr.data(), addr.size());
+        write(addr_, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr)
     {
         constexpr uint16_t addr_ = 0x0009;
-        write(addr_, addr.data(), addr.size());
+        write(addr_, addr.begin(), addr.end());
     }
 
     void W5100Device::writeSourceIpRegister(const std::array<uint8_t, 4>& addr)
     {
         constexpr uint16_t addr_ = 0x000f;
-        write(addr_, addr.data(), addr.size());
+        write(addr_, addr.begin(), addr.end());
     }
 
     W5100Device device;

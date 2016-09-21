@@ -154,7 +154,20 @@ TEST(W5100DeviceTest, writeBuffer)
     spiMock.expectNCalls(size, "setSlaveSelect");
     spiMock.ignoreOtherCalls();
 
-    device->write(address, data.data(), data.size());
+    device->write(address, data.begin(), data.end());
+    checkWriteCalls(size);
+}
+
+TEST(W5100DeviceTest, writeBufferByPointerAndSize)
+{
+    constexpr uint16_t address = 0xa1b2;
+    constexpr uint16_t size = 10;
+    auto data = createBuffer(size);
+
+    spiMock.expectNCalls(size, "setSlaveSelect");
+    spiMock.ignoreOtherCalls();
+
+    device->write(address, data.data(), std::next(data.data(), data.size()));
     checkWriteCalls(size);
 }
 
