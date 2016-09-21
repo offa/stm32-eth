@@ -23,7 +23,6 @@
 #include <CppUTest/TestHarness.h>
 
 using eth::W5100Register;
-using eth::SocketHandle;
 
 TEST_GROUP(W5100RegisterTest)
 {
@@ -39,7 +38,19 @@ TEST_GROUP(W5100RegisterTest)
 
 TEST(W5100RegisterTest, address)
 {
-    constexpr W5100Register reg(0xabcd);
+    constexpr W5100Register reg(0xabcd, sizeof(uint16_t));
     CHECK_EQUAL(0xabcd, reg.address());
 }
 
+TEST(W5100RegisterTest, size)
+{
+    constexpr W5100Register reg(0xabcd, sizeof(uint16_t));
+    CHECK_EQUAL(sizeof(uint16_t), reg.size());
+}
+
+TEST(W5100RegisterTest, makeRegister)
+{
+    constexpr auto reg = eth::makeRegister<uint32_t>(0xaabb);
+    CHECK_EQUAL(0xaabb, reg.address());
+    CHECK_EQUAL(sizeof(uint32_t), reg.size());
+}

@@ -124,13 +124,14 @@ namespace eth
         if( offset + size > transmitBufferSize )
         {
             uint16_t transmitSize = transmitBufferSize - offset;
-            write(W5100Register(destAddress), buffer, std::next(buffer, transmitSize));
+            write(W5100Register(destAddress, transmitSize), buffer, std::next(buffer, transmitSize));
             auto pos = std::next(buffer, transmitSize);
-            write(W5100Register(m_transmitBufferBaseAddress[s]), pos, std::next(pos, size - transmitSize));
+            auto remaining = size - transmitSize;
+            write(W5100Register(m_transmitBufferBaseAddress[s], remaining), pos, std::next(pos, remaining));
         }
         else
         {
-            write(W5100Register(destAddress), buffer, std::next(buffer, size));
+            write(W5100Register(destAddress, size), buffer, std::next(buffer, size));
         }
 
         writePointer += size;

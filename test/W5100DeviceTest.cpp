@@ -148,8 +148,8 @@ TEST(W5100DeviceTest, writeByte)
 
 TEST(W5100DeviceTest, writeBuffer)
 {
-    constexpr W5100Register reg(0xa1b2);
     constexpr uint16_t size = 10;
+    constexpr W5100Register reg(0xa1b2, size);
     auto data = createBuffer(size);
 
     spiMock.expectNCalls(size, "setSlaveSelect");
@@ -161,8 +161,8 @@ TEST(W5100DeviceTest, writeBuffer)
 
 TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 {
-    constexpr W5100Register reg(0xa1b2);
     constexpr uint16_t size = 10;
+    constexpr W5100Register reg(0xa1b2, size);
     auto data = createBuffer(size);
 
     spiMock.expectNCalls(size, "setSlaveSelect");
