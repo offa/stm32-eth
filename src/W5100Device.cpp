@@ -176,7 +176,7 @@ namespace eth
     void W5100Device::writeModeRegister(Mode value)
     {
         constexpr W5100Register reg(0x0000);
-        write(reg.address(), static_cast<uint8_t>(value));
+        write(reg, static_cast<uint8_t>(value));
     }
 
     void W5100Device::setGatewayAddress(const std::array<uint8_t, 4>& addr)
@@ -227,13 +227,13 @@ namespace eth
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
     {
         constexpr W5100Register reg(0x001b);
-        write(reg.address(), value);
+        write(reg, value);
     }
 
     void W5100Device::writeReceiveMemorySizeRegister(uint8_t value)
     {
         constexpr W5100Register reg(0x001a);
-        write(reg.address(), value);
+        write(reg, value);
     }
 
     void W5100Device::writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr)
