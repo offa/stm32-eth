@@ -66,8 +66,7 @@ namespace eth
 
     void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
-        write(socketSourcePort(s), byte::get<1>(value));
-        write(socketSourcePort(s).address() + 1, byte::get<0>(value));
+        write(socketSourcePort(s), value);
     }
 
     void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
@@ -219,8 +218,7 @@ namespace eth
 
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
-        write(socketTransmitWritePointer(s), byte::get<1>(value));
-        write(socketTransmitWritePointer(s).address() + 1, byte::get<0>(value));
+        write(socketTransmitWritePointer(s), value);
     }
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
