@@ -19,9 +19,11 @@
  */
 
 #include "W5100Register.h"
+#include "SocketHandle.h"
 #include <CppUTest/TestHarness.h>
 
 using eth::W5100Register;
+using eth::SocketHandle;
 
 TEST_GROUP(W5100RegisterTest)
 {
@@ -32,11 +34,12 @@ TEST_GROUP(W5100RegisterTest)
     void teardown() override
     {
     }
+
 };
 
 TEST(W5100RegisterTest, address)
 {
-    W5100Register reg(0xabcd);
+    constexpr W5100Register reg(0xabcd);
     CHECK_EQUAL(0xabcd, reg.address());
 }
 

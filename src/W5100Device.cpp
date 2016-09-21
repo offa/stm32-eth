@@ -25,13 +25,6 @@
 namespace eth
 {
 
-    static constexpr uint16_t getSocketAddress(SocketHandle s, uint16_t addressOffset)
-    {
-        constexpr uint16_t socketRegisterBaseAddress = 0x0400;
-        constexpr uint16_t socketChannelRegisterMapSize = 0x0100;
-        return socketRegisterBaseAddress + s * socketChannelRegisterMapSize + addressOffset;
-    }
-
     template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
     static constexpr uint16_t getBufferAddress(uint16_t bufferSize)
     {
@@ -68,45 +61,38 @@ namespace eth
 
     void W5100Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
-        constexpr uint16_t addr = 0x0000;
-        write(getSocketAddress(s, addr), value);
+        write(socketMode(s), value);
     }
 
     void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
-        constexpr uint16_t addr = 0x0004;
-        write(getSocketAddress(s, addr), byte::get<1>(value));
-        write(getSocketAddress(s, addr + 1), byte::get<0>(value));
+        write(socketSourcePort(s), byte::get<1>(value));
+        write(socketSourcePort(s).address() + 1, byte::get<0>(value));
     }
 
     void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
     {
-        constexpr uint16_t addr = 0x0002;
-        write(getSocketAddress(s, addr), value);
+        write(socketInterrupt(s), value);
     }
 
     uint8_t W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
-        constexpr uint16_t addr = 0x0002;
-        return read(getSocketAddress(s, addr));
+        return read(socketInterrupt(s));
     }
 
     void W5100Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
     {
-        constexpr uint16_t addr = 0x0001;
-        write(getSocketAddress(s, addr), static_cast<uint8_t>(value));
+        write(socketCommand(s), static_cast<uint8_t>(value));
     }
 
     SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)
     {
-        constexpr W5100Register reg(0x0001);
-        return static_cast<SocketCommand>(read(getSocketAddress(s, reg.address())));
+        return static_cast<SocketCommand>(read(socketCommand(s)));
     }
 
     SocketStatus W5100Device::readSocketStatusRegister(SocketHandle s)
     {
-        constexpr W5100Register reg(0x0003);
-        return static_cast<SocketStatus>(read(getSocketAddress(s, reg.address())));
+        return static_cast<SocketStatus>(read(socketStatus(s)));
     }
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
@@ -200,27 +186,24 @@ namespace eth
 
     uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
     {
-        constexpr W5100Register reg(0x0020);
-        auto b1 = read(getSocketAddress(s, reg.address()));
-        auto b0 = read(getSocketAddress(s, reg.address() + 1));
+        auto b1 = read(socketTransmitFreeSize(s));
+        auto b0 = read(socketTransmitFreeSize(s).address() + 1);
 
         return byte::to<uint16_t>(b1, b0);
     }
 
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
-        constexpr W5100Register reg(0x0024);
-        auto b1 = read(getSocketAddress(s, reg.address()));
-        auto b0 = read(getSocketAddress(s, reg.address() + 1));
+        auto b1 = read(socketTransmitWritePointer(s));
+        auto b0 = read(socketTransmitWritePointer(s).address() + 1);
 
         return byte::to<uint16_t>(b1, b0);
     }
 
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
-        constexpr W5100Register reg(0x0024);
-        write(getSocketAddress(s, reg.address()), byte::get<1>(value));
-        write(getSocketAddress(s, reg.address() + 1), byte::get<0>(value));
+        write(socketTransmitWritePointer(s), byte::get<1>(value));
+        write(socketTransmitWritePointer(s).address() + 1, byte::get<0>(value));
     }
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "SocketHandle.h"
 #include <stdint.h>
 
 namespace eth
@@ -54,5 +55,51 @@ namespace eth
     constexpr W5100Register subnetMask(0x0005);
     constexpr W5100Register sourceMacAddress(0x0009);
     constexpr W5100Register sourceIpAddress(0x000f);
+
+
+
+    static constexpr W5100Register socketAddr(SocketHandle s, uint16_t address)
+    {
+        constexpr uint16_t baseAddress = 0x0400;
+        constexpr uint16_t channelRegisterMapSize = 0x0100;
+        return W5100Register(baseAddress + s * channelRegisterMapSize + address);
+    }
+
+
+    constexpr W5100Register socketMode(SocketHandle s)
+    {
+        return socketAddr(s, 0x0000);
+    }
+
+    constexpr W5100Register socketSourcePort(SocketHandle s)
+    {
+        return socketAddr(s, 0x0004);
+    }
+
+    constexpr W5100Register socketInterrupt(SocketHandle s)
+    {
+        return socketAddr(s, 0x0002);
+    }
+
+    constexpr W5100Register socketCommand(SocketHandle s)
+    {
+        return socketAddr(s, 0x0001);
+    }
+
+    constexpr W5100Register socketStatus(SocketHandle s)
+    {
+        return socketAddr(s, 0x0003);
+    }
+
+    constexpr W5100Register socketTransmitFreeSize(SocketHandle s)
+    {
+        return socketAddr(s, 0x0020);
+    }
+
+    constexpr W5100Register socketTransmitWritePointer(SocketHandle s)
+    {
+        return socketAddr(s, 0x0024);
+    }
+
 }
 
