@@ -58,60 +58,12 @@ namespace eth
         return W5100Register(address, sizeof(T));
     }
 
-
-    constexpr W5100Register mode = makeRegister<uint8_t>(0x0000);
-    constexpr W5100Register transmitMemorySize = makeRegister<uint8_t>(0x001b);
-    constexpr W5100Register receiveMemorySize = makeRegister<uint8_t>(0x001a);
-
-    constexpr W5100Register gatewayAddress = makeRegister<uint8_t>(0x0001);
-    constexpr W5100Register subnetMask = makeRegister<uint8_t>(0x0005);
-    constexpr W5100Register sourceMacAddress = makeRegister<uint8_t>(0x0009);
-    constexpr W5100Register sourceIpAddress = makeRegister<uint8_t>(0x000f);
-
-
-
     template<class T>
     constexpr auto socketAddress(SocketHandle s, uint16_t address)
     {
         constexpr uint16_t baseAddress = 0x0400;
         constexpr uint16_t channelRegisterMapSize = 0x0100;
         return makeRegister<T>(baseAddress + s * channelRegisterMapSize + address);
-    }
-
-
-    constexpr W5100Register socketMode(SocketHandle s)
-    {
-        return socketAddress<uint8_t>(s, 0x0000);
-    }
-
-    constexpr W5100Register socketSourcePort(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0004);
-    }
-
-    constexpr W5100Register socketInterrupt(SocketHandle s)
-    {
-        return socketAddress<uint8_t>(s, 0x0002);
-    }
-
-    constexpr W5100Register socketCommand(SocketHandle s)
-    {
-        return socketAddress<uint8_t>(s, 0x0001);
-    }
-
-    constexpr W5100Register socketStatus(SocketHandle s)
-    {
-        return socketAddress<uint8_t>(s, 0x0003);
-    }
-
-    constexpr W5100Register socketTransmitFreeSize(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0020);
-    }
-
-    constexpr W5100Register socketTransmitWritePointer(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0024);
     }
 
 }
