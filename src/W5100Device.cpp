@@ -236,22 +236,22 @@ namespace eth
 
     void W5100Device::writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr)
     {
-        write(gatewayAddress, addr.begin(), addr.end());
+        write(gatewayAddress, addr.cbegin(), addr.cend());
     }
 
     void W5100Device::writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr)
     {
-        write(subnetMask, addr.begin(), addr.end());
+        write(subnetMask, addr.cbegin(), addr.cend());
     }
 
     void W5100Device::writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr)
     {
-        write(sourceMacAddress, addr.begin(), addr.end());
+        write(sourceMacAddress, addr.cbegin(), addr.cend());
     }
 
     void W5100Device::writeSourceIpRegister(const std::array<uint8_t, 4>& addr)
     {
-        write(sourceIpAddress, addr.begin(), addr.end());
+        write(sourceIpAddress, addr.cbegin(), addr.cend());
     }
 
     W5100Device device;
