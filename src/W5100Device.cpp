@@ -117,8 +117,8 @@ namespace eth
     {
         constexpr uint16_t transmitBufferMask = 0x07ff;
         uint16_t writePointer = readSocketTransmitWritePointer(s);
-        uint16_t offset = writePointer & transmitBufferMask;
-        uint16_t destAddress = offset + m_transmitBufferBaseAddress[s];
+        const uint16_t offset = writePointer & transmitBufferMask;
+        const uint16_t destAddress = offset + m_transmitBufferBaseAddress[s];
 
         if( offset + size > transmitBufferSize )
         {
@@ -166,7 +166,7 @@ namespace eth
         spi.transmit(opcodeRead);
         spi.transmit(byte::get<1>(address));
         spi.transmit(byte::get<0>(address));
-        auto data = spi.receive();
+        const auto data = spi.receive();
         spi.resetSlaveSelect();
 
         return data;
@@ -179,8 +179,8 @@ namespace eth
 
     uint16_t W5100Device::readWord(W5100Register reg)
     {
-        auto b1 = read(reg);
-        auto b0 = read(reg.address(), 1);
+        const auto b1 = read(reg);
+        const auto b0 = read(reg.address(), 1);
         return byte::to<uint16_t>(b1, b0);
     }
 
