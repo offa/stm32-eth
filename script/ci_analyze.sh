@@ -4,9 +4,6 @@ set -ex
 
 BUILD_DIR=build
 
-pwd
-ls
-
 cppcheck -v --error-exitcode=1 \
             --check-config \
             --check-library \
