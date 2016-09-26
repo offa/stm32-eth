@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
         }
 
 
-        while( eth::device.readSocketStatusRegister(handle) == eth::SocketStatus::listen )
+        while( socket.getStatus() == eth::SocketStatus::listen )
         {
             HAL_Delay(100);
         }
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
         while(true)
         {
-            if( eth::device.readSocketStatusRegister(handle) == eth::SocketStatus::established )
+            if( socket.getStatus() == eth::SocketStatus::established )
             {
                 const std::string msg = "*** Test *** Test *** Test ***\n\r";
                 auto n = socket.send(reinterpret_cast<const uint8_t*>(msg.c_str()), msg.size());

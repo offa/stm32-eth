@@ -20,36 +20,19 @@
 
 #pragma once
 
-#include "SocketHandle.h"
+
+#include "SocketCommand.h"
 #include "SocketStatus.h"
-#include "Protocol.h"
-#include <stdint.h>
+#include <CppUTest/TestHarness.h>
 
-namespace eth
+inline SimpleString StringFrom(eth::SocketStatus status)
 {
-
-    class Socket
-    {
-    public:
-
-        explicit Socket(SocketHandle handle);
-        Socket(Socket&&) = default;
-
-
-        bool open(Protocol protocol, uint16_t port, uint8_t flag);
-        void close();
-        bool listen();
-        uint16_t send(const uint8_t* buffer, uint16_t length);
-        SocketStatus getStatus() const;
-
-
-        Socket& operator=(Socket&&) = default;
-
-
-    private:
-
-        SocketHandle m_handle;
-    };
-
+    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(status));
 }
+
+inline SimpleString StringFrom(eth::SocketCommand cmd)
+{
+    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(cmd));
+}
+
 

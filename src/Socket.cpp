@@ -105,4 +105,9 @@ namespace eth
         return sendSize;
     }
 
+    SocketStatus Socket::getStatus() const
+    {
+        return device.readSocketStatusRegister(m_handle);
+    }
+
 }

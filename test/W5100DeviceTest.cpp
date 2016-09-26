@@ -19,6 +19,7 @@
  */
 
 #include "W5100Device.h"
+#include "TestHelper.h"
 #include <vector>
 #include <algorithm>
 #include <numeric>
@@ -30,17 +31,6 @@ using eth::SocketStatus;
 using eth::Mode;
 using eth::W5100Register;
 using eth::makeRegister;
-
-inline SimpleString StringFrom(eth::SocketStatus status)
-{
-    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(status));
-}
-
-inline SimpleString StringFrom(eth::SocketCommand cmd)
-{
-    return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(cmd));
-}
-
 
 TEST_GROUP(W5100DeviceTest)
 {

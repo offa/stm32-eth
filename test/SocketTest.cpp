@@ -23,17 +23,17 @@
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
 #include "W5100Device.h"
-#include <CppUTest/TestHarness.h>
-#include <CppUTestExt/MockSupport.h>
+#include "TestHelper.h"
 #include <vector>
 #include <numeric>
+#include <CppUTest/TestHarness.h>
+#include <CppUTestExt/MockSupport.h>
 
 using eth::SocketStatus;
 using eth::SocketCommand;
 using eth::SocketInterrupt;
 using eth::Socket;
 using eth::Protocol;
-
 
 TEST_GROUP(SocketTest)
 {
@@ -347,8 +347,12 @@ TEST(SocketTest, sendClosesConnectionIfClosedStatus)
 TEST(SocketTest, sendSetsOkAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
-    deviceMock.expectOneCall("readSocketStatusRegister").withParameter("socket", socketHandle).andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("getTransmitFreeSize")
+        .ignoreOtherParameters()
+        .andReturnValue(static_cast<unsigned int>(buffer.size()));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
     deviceMock.expectOneCall("sendData").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     constexpr uint8_t ready = statusSendOk;
@@ -362,3 +366,11 @@ TEST(SocketTest, sendSetsOkAfterSend)
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
 }
 
+TEST(SocketTest, getStatus)
+{
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::listen));
+    auto status = socket->getStatus();
+    CHECK_EQUAL(eth::SocketStatus::listen, status);
+}
