@@ -42,9 +42,9 @@ TEST_GROUP(SpiTest)
     }
 
     std::unique_ptr<eth::Spi> spi;
-    MockSupport& halSpi = mock("HAL_SPI");
-    MockSupport& halGpio = mock("HAL_GPIO");
-    MockSupport& platform = mock("platform::stm32");
+    MockSupport& halSpiMock = mock("HAL_SPI");
+    MockSupport& halGpioMock = mock("HAL_GPIO");
+    MockSupport& platformMock = mock("platform::stm32");
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
     static constexpr uint32_t timeout = 0xffffffff;
@@ -60,14 +60,14 @@ TEST(SpiTest, initSetupsGpioPins)
                             GPIO_PULLUP, GPIO_SPEED_LOW,
                             GPIO_AF5_SPI2};
 
-    platform.expectOneCall("spiClockEnable");
-    halGpio.expectOneCall("HAL_GPIO_Init")
+    platformMock.expectOneCall("spiClockEnable");
+    halGpioMock.expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &init);
-    halGpio.expectOneCall("HAL_GPIO_Init")
+    halGpioMock.expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &initSS);
-    halSpi.expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
+    halSpiMock.expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
 
     spi->init();
 }
@@ -86,9 +86,9 @@ TEST(SpiTest, initSetupsSpi)
                             SPI_CRCCALCULATION_DISABLED,
                             0};
 
-    platform.expectOneCall("spiClockEnable");
-    halGpio.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
-    halSpi.expectOneCall("HAL_SPI_Init")
+    platformMock.expectOneCall("spiClockEnable");
+    halGpioMock.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
+    halSpiMock.expectOneCall("HAL_SPI_Init")
         .withPointerParameter("hspi", &spi->nativeHandle())
         .withPointerParameter("hspi.instance", SPI2)
         .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit);
@@ -100,7 +100,7 @@ TEST(SpiTest, transmitTransmitsByte)
     const uint8_t data = 0xab;
     constexpr uint16_t size = sizeof(data);
 
-    halSpi.expectOneCall("HAL_SPI_Transmit")
+    halSpiMock.expectOneCall("HAL_SPI_Transmit")
         .withPointerParameter("hspi", &spi->nativeHandle())
         .withMemoryBufferParameter("pData", &data, size)
         .withParameter("Size", size)
@@ -114,7 +114,7 @@ TEST(SpiTest, receiveReceivesByte)
     const uint8_t data = 0xcd;
     constexpr uint16_t size = sizeof(data);
 
-    halSpi.expectOneCall("HAL_SPI_Receive")
+    halSpiMock.expectOneCall("HAL_SPI_Receive")
         .withPointerParameter("hspi", &spi->nativeHandle())
         .withOutputParameterReturning("pData", &data, size)
         .withParameter("Size", size)
@@ -126,7 +126,7 @@ TEST(SpiTest, receiveReceivesByte)
 
 TEST(SpiTest, setSlaveSelectSetsPinLow)
 {
-    halGpio.expectOneCall("HAL_GPIO_WritePin")
+    halGpioMock.expectOneCall("HAL_GPIO_WritePin")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameter("GPIO_Pin", GPIO_PIN_12)
         .withParameter("PinState", GPIO_PIN_RESET);
@@ -136,7 +136,7 @@ TEST(SpiTest, setSlaveSelectSetsPinLow)
 
 TEST(SpiTest, resetSlaveSelectSetsPinHigh)
 {
-    halGpio.expectOneCall("HAL_GPIO_WritePin")
+    halGpioMock.expectOneCall("HAL_GPIO_WritePin")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameter("GPIO_Pin", GPIO_PIN_12)
         .withParameter("PinState", GPIO_PIN_SET);
