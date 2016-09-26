@@ -57,7 +57,7 @@ namespace eth
 
     bool Socket::listen()
     {
-        if( device.readSocketStatusRegister(m_handle) != SocketStatus::init )
+        if( getStatus() != SocketStatus::init )
         {
             return false;
         }
@@ -76,7 +76,7 @@ namespace eth
         do
         {
             freeSize = device.getTransmitFreeSize(m_handle);
-            auto status = device.readSocketStatusRegister(m_handle);
+            auto status = getStatus();
 
             if( (status != SocketStatus::established) && (status != SocketStatus::closeWait) )
             {
@@ -93,7 +93,7 @@ namespace eth
 
         while( ( device.readSocketInterruptRegister(m_handle) & send ) != send )
         {
-            if( device.readSocketStatusRegister(m_handle) == SocketStatus::closed )
+            if( getStatus() == SocketStatus::closed )
             {
                 close();
                 return 0;
