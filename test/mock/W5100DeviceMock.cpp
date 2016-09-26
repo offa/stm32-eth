@@ -26,9 +26,9 @@ namespace eth
     W5100Device device;
 
 
-    W5100Device::W5100Device() { }
-
-    // TODO: Check object
+    W5100Device::W5100Device()
+    {
+    }
 
     void W5100Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
