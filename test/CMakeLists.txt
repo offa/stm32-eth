@@ -27,6 +27,7 @@ endmacro()
 list(APPEND SOCKETTEST_SRC SocketTest.cpp
                     $<TARGET_OBJECTS:socket>
                     $<TARGET_OBJECTS:w5100device-mock>
+                    $<TARGET_OBJECTS:platform-mock>
                     )
 _add_test(SocketTest SOCKETTEST_SRC)
 
@@ -49,6 +50,7 @@ _add_test(RegisterValueTest REGISTERVALUETEST_SRC)
 list(APPEND SPITEST_SRC SpiTest.cpp
                         $<TARGET_OBJECTS:stm32hal-mock>
                         $<TARGET_OBJECTS:spi>
+                        $<TARGET_OBJECTS:platform-mock>
                         )
 _add_test(SpiTest SPITEST_SRC)
 

@@ -35,21 +35,6 @@ using eth::SocketInterrupt;
 using eth::Socket;
 using eth::Protocol;
 
-// TODO: move to mock target
-namespace platform
-{
-    namespace stm32
-    {
-        void wait(uint32_t timeMs)
-        {
-            mock("Platform::stm32").actualCall("wait")
-                .withParameter("timeMs", timeMs);
-
-        }
-    }
-}
-
-
 TEST_GROUP(SocketTest)
 {
     void setup() override
@@ -85,6 +70,7 @@ TEST_GROUP(SocketTest)
 
     std::unique_ptr<Socket> socket;
     MockSupport& deviceMock = mock("W5100Device");
+    MockSupport& platformMock = mock("platform::stm32");
     static constexpr eth::SocketHandle socketHandle = 0;
     static constexpr uint16_t port = 1234;
     static constexpr Protocol protocol = Protocol::tcp;
@@ -200,14 +186,14 @@ TEST(SocketTest, acceptWaitsBetweenStatusCheck)
     deviceMock.expectOneCall("readSocketStatusRegister")
         .ignoreOtherParameters()
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    mock("Platform::stm32").expectOneCall("wait").withParameter("timeMs", waitTime);
+    platformMock.expectOneCall("wait").withParameter("timeMs", waitTime);
     socket->accept();
 }
 
 TEST(SocketTest, acceptWaitsForConnection)
 {
     constexpr int n = 3;
-    mock("Platform::stm32").expectNCalls(n, "wait").ignoreOtherParameters();
+    platformMock.expectNCalls(n, "wait").ignoreOtherParameters();
     deviceMock.expectNCalls(n, "readSocketStatusRegister")
         .ignoreOtherParameters()
         .andReturnValue(static_cast<int>(SocketStatus::listen));

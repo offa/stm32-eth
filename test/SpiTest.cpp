@@ -23,11 +23,6 @@
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
-void platform::stm32::spiClockEnable()
-{
-    mock("platform::stm32").actualCall("spiClockEnable");
-}
-
 TEST_GROUP(SpiTest)
 {
     void setup() override
@@ -49,6 +44,7 @@ TEST_GROUP(SpiTest)
     std::unique_ptr<eth::Spi> spi;
     MockSupport& halSpi = mock("HAL_SPI");
     MockSupport& halGpio = mock("HAL_GPIO");
+    MockSupport& platform = mock("platform::stm32");
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
     static constexpr uint32_t timeout = 0xffffffff;
@@ -64,7 +60,7 @@ TEST(SpiTest, initSetupsGpioPins)
                             GPIO_PULLUP, GPIO_SPEED_LOW,
                             GPIO_AF5_SPI2};
 
-    mock("platform::stm32").expectOneCall("spiClockEnable");
+    platform.expectOneCall("spiClockEnable");
     halGpio.expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &init);
@@ -90,7 +86,7 @@ TEST(SpiTest, initSetupsSpi)
                             SPI_CRCCALCULATION_DISABLED,
                             0};
 
-    mock("platform::stm32").expectOneCall("spiClockEnable");
+    platform.expectOneCall("spiClockEnable");
     halGpio.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
     halSpi.expectOneCall("HAL_SPI_Init")
         .withPointerParameter("hspi", &spi->nativeHandle())
