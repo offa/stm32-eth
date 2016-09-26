@@ -33,9 +33,12 @@ if( LTO )
 endif()
 
 
-if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
+
+if( "${BUILD_TYPE}" STREQUAL "debug")
     add_definitions(-DDEBUG -DUSE_FULL_ASSERT -DTRACE)
 endif()
+
 
 add_common_flag(-Wall -Wextra -pedantic -Werror -Wshadow)
 
