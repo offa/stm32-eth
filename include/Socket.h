@@ -39,6 +39,7 @@ namespace eth
         bool open(Protocol protocol, uint16_t port, uint8_t flag);
         void close();
         bool listen();
+        void accept();
         uint16_t send(const uint8_t* buffer, uint16_t length);
         SocketStatus getStatus() const;
 

@@ -38,6 +38,7 @@ namespace platform
     namespace stm32
     {
         void spiClockEnable();
+        void wait(uint32_t timeMs);
     }
 }
 

@@ -35,6 +35,21 @@ using eth::SocketInterrupt;
 using eth::Socket;
 using eth::Protocol;
 
+// TODO: move to mock target
+namespace platform
+{
+    namespace stm32
+    {
+        void wait(uint32_t timeMs)
+        {
+            mock("Platform::stm32").actualCall("wait")
+                .withParameter("timeMs", timeMs);
+
+        }
+    }
+}
+
+
 TEST_GROUP(SocketTest)
 {
     void setup() override
@@ -174,6 +189,32 @@ TEST(SocketTest, listenListens)
         .withParameter("socket", socketHandle)
         .withParameter("value", static_cast<int>(SocketCommand::listen));
     CHECK_TRUE(socket->listen());
+}
+
+TEST(SocketTest, acceptWaitsBetweenStatusCheck)
+{
+    constexpr uint32_t waitTime = 100;
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .ignoreOtherParameters()
+        .andReturnValue(static_cast<int>(SocketStatus::listen));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .ignoreOtherParameters()
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    mock("Platform::stm32").expectOneCall("wait").withParameter("timeMs", waitTime);
+    socket->accept();
+}
+
+TEST(SocketTest, acceptWaitsForConnection)
+{
+    constexpr int n = 3;
+    mock("Platform::stm32").expectNCalls(n, "wait").ignoreOtherParameters();
+    deviceMock.expectNCalls(n, "readSocketStatusRegister")
+        .ignoreOtherParameters()
+        .andReturnValue(static_cast<int>(SocketStatus::listen));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .ignoreOtherParameters()
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    socket->accept();
 }
 
 TEST(SocketTest, sendReturnsBytesTransmitted)

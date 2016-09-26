@@ -23,6 +23,7 @@
 #include "SocketStatus.h"
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
+#include "Platform.h"
 #include <algorithm>
 
 namespace eth
@@ -65,6 +66,15 @@ namespace eth
         device.executeSocketCommand(m_handle, SocketCommand::listen);
 
         return true;
+    }
+
+    void Socket::accept()
+    {
+        while( getStatus() == SocketStatus::listen )
+        {
+            constexpr uint32_t waitTimeMs = 100;
+            platform::stm32::wait(waitTimeMs);
+        }
     }
 
     uint16_t Socket::send(const uint8_t* buffer, uint16_t length)
