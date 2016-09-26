@@ -54,12 +54,8 @@ int main(int argc, char* argv[])
         }
 
 
-        while( socket.getStatus() == eth::SocketStatus::listen )
-        {
-            HAL_Delay(100);
-        }
-
-        trace_puts("listen() done");
+        socket.accept();
+        trace_puts("accept() done");
 
 
         while(true)
