@@ -491,8 +491,7 @@ TEST(SocketTest, receiveReceivesDataAndSendsCommand)
         .andReturnValue(static_cast<int>(SocketStatus::established));
     deviceMock.expectOneCall("receiveData")
         .withParameter("socket", socketHandle)
-        // TODO: Check Buffer
-        //.withMemoryBufferParameter("buffer", buffer.data(), sizeof(uint8_t))
+        .withOutputParameterReturning("buffer", buffer.data(), buffer.size())
         .withParameter("size", buffer.size())
         .ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand")
