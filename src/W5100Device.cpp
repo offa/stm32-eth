@@ -34,10 +34,7 @@ namespace eth
     }
 
 
-    W5100Device::W5100Device() : m_transmitBufferBaseAddress({{ getBufferAddress<0>(transmitBufferSize),
-                                                                getBufferAddress<1>(transmitBufferSize),
-                                                                getBufferAddress<2>(transmitBufferSize),
-                                                                getBufferAddress<3>(transmitBufferSize) }})
+    W5100Device::W5100Device()
     {
     }
 
@@ -119,7 +116,7 @@ namespace eth
         constexpr uint16_t transmitBufferMask = 0x07ff;
         uint16_t writePointer = readSocketTransmitWritePointer(s);
         const uint16_t offset = writePointer & transmitBufferMask;
-        const uint16_t destAddress = offset + m_transmitBufferBaseAddress[s];
+        const uint16_t destAddress = offset + transmitBufferBaseAddress[s];
 
         if( offset + size > transmitBufferSize )
         {
@@ -127,7 +124,7 @@ namespace eth
             write(W5100Register(destAddress, transmitSize), buffer, std::next(buffer, transmitSize));
             auto pos = std::next(buffer, transmitSize);
             auto remaining = size - transmitSize;
-            write(W5100Register(m_transmitBufferBaseAddress[s], remaining), pos, std::next(pos, remaining));
+            write(W5100Register(transmitBufferBaseAddress[s], remaining), pos, std::next(pos, remaining));
         }
         else
         {
@@ -254,6 +251,12 @@ namespace eth
     {
         write(sourceIpAddress, addr.cbegin(), addr.cend());
     }
+
+    const std::array<uint16_t, supportedSockets> W5100Device::transmitBufferBaseAddress{{
+                                                                getBufferAddress<0>(transmitBufferSize),
+                                                                getBufferAddress<1>(transmitBufferSize),
+                                                                getBufferAddress<2>(transmitBufferSize),
+                                                                getBufferAddress<3>(transmitBufferSize) }};
 
     W5100Device device;
 
