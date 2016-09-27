@@ -27,9 +27,16 @@ namespace eth
 {
 
     template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
-    static constexpr uint16_t getBufferAddress(uint16_t bufferSize)
+    static constexpr uint16_t getTransmitBufferAddress(uint16_t bufferSize)
     {
         constexpr uint16_t baseAddress = 0x4000;
+        return baseAddress + bufferSize * index;
+    }
+
+    template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
+    static constexpr uint16_t getReceiveBufferAddress(uint16_t bufferSize)
+    {
+        constexpr uint16_t baseAddress = 0x6000;
         return baseAddress + bufferSize * index;
     }
 
@@ -111,6 +118,27 @@ namespace eth
         return val;
     }
 
+
+    uint16_t W5100Device::getReceiveFreeSize(SocketHandle s)
+    {
+        uint16_t val = 0;
+        uint16_t val1 = 0;
+
+        do
+        {
+            val1 = readSocketReceiveFreeSizeRegister(s);
+
+            if( val1 != 0 )
+            {
+                val = readSocketReceiveFreeSizeRegister(s);
+            }
+        }
+        while( val != val1 );
+
+        return val;
+
+    }
+
     void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
     {
         constexpr uint16_t transmitBufferMask = 0x07ff;
@@ -120,7 +148,7 @@ namespace eth
 
         if( offset + size > transmitBufferSize )
         {
-            uint16_t transmitSize = transmitBufferSize - offset;
+            const uint16_t transmitSize = transmitBufferSize - offset;
             write(W5100Register(destAddress, transmitSize), buffer, std::next(buffer, transmitSize));
             auto pos = std::next(buffer, transmitSize);
             auto remaining = size - transmitSize;
@@ -133,6 +161,44 @@ namespace eth
 
         writePointer += size;
         writeSocketTransmitWritePointer(s, writePointer);
+    }
+
+    uint16_t W5100Device::receiveData(SocketHandle s, uint8_t* buffer, uint16_t size)
+    {
+        constexpr uint16_t receiveBufferMask = 0x07ff;
+        uint16_t readPointer = readSocketReceiveReadPointer(s);
+        const uint16_t offset = readPointer & receiveBufferMask;
+        const uint16_t destAddress = offset + receiveBufferBaseAddress[s];
+
+        if( offset + size > receiveBufferSize )
+        {
+            const uint16_t recvSize = receiveBufferSize - offset;
+            // TODO: Refactor all those loops
+
+            for( uint16_t i=0; i<recvSize; ++i )
+            {
+                buffer[i] = read(W5100Register(destAddress, 1).address(), i);
+            }
+
+            buffer += recvSize;
+
+            for( uint16_t i=0; i<(size - recvSize); ++i )
+            {
+                buffer[i] = read(W5100Register(destAddress, 1).address(), i);
+            }
+        }
+        else
+        {
+            for( uint16_t i=0; i<size; ++i )
+            {
+                buffer[i] = read(W5100Register(destAddress, 1).address(), i);
+            }
+        }
+
+        readPointer += size;
+        writeSocketReceiveReadPointer(s, readPointer);
+
+        return size;
     }
 
     void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
@@ -212,6 +278,11 @@ namespace eth
         return readWord(socketTransmitFreeSize(s));
     }
 
+    uint16_t W5100Device::readSocketReceiveFreeSizeRegister(SocketHandle s)
+    {
+        return readWord(socketReceiveFreeSize(s));
+    }
+
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
         return readWord(socketTransmitWritePointer(s));
@@ -220,6 +291,16 @@ namespace eth
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
         write(socketTransmitWritePointer(s), value);
+    }
+
+    uint16_t W5100Device::readSocketReceiveReadPointer(SocketHandle s)
+    {
+        return readWord(socketReceiveReadPointer(s));
+    }
+
+    void W5100Device::writeSocketReceiveReadPointer(SocketHandle s, uint16_t value)
+    {
+        write(socketReceiveReadPointer(s), value);
     }
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
@@ -253,10 +334,15 @@ namespace eth
     }
 
     const std::array<uint16_t, supportedSockets> W5100Device::transmitBufferBaseAddress{{
-                                                                getBufferAddress<0>(transmitBufferSize),
-                                                                getBufferAddress<1>(transmitBufferSize),
-                                                                getBufferAddress<2>(transmitBufferSize),
-                                                                getBufferAddress<3>(transmitBufferSize) }};
+                                                                getTransmitBufferAddress<0>(transmitBufferSize),
+                                                                getTransmitBufferAddress<1>(transmitBufferSize),
+                                                                getTransmitBufferAddress<2>(transmitBufferSize),
+                                                                getTransmitBufferAddress<3>(transmitBufferSize) }};
+    const std::array<uint16_t, supportedSockets> W5100Device::receiveBufferBaseAddress{{
+                                                                getReceiveBufferAddress<0>(transmitBufferSize),
+                                                                getReceiveBufferAddress<1>(transmitBufferSize),
+                                                                getReceiveBufferAddress<2>(transmitBufferSize),
+                                                                getReceiveBufferAddress<3>(transmitBufferSize) }};
 
     W5100Device device;
 

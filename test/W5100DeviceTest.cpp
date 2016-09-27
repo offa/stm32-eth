@@ -75,9 +75,16 @@ TEST_GROUP(W5100DeviceTest)
     void checkWriteCalls(size_t expectedCalls, size_t writesByReads = 0) const
     {
         constexpr size_t transmissionsPerWrite = 4;
-        auto actual = spiMock.getData("transmit::count").getUnsignedIntValue();
+        const auto actual = spiMock.getData("transmit::count").getUnsignedIntValue();
         const auto byReads = writesByReads * (transmissionsPerWrite - 1);
-        auto expected = (expectedCalls * transmissionsPerWrite) + byReads;
+        const auto expected = (expectedCalls * transmissionsPerWrite) + byReads;
+        CHECK_EQUAL(expected, actual);
+    }
+
+    void checkReadCalls(size_t expectedCalls, size_t ignore = 0) const
+    {
+        const auto actual = spiMock.getData("receive::count").getUnsignedIntValue();
+        const auto expected = expectedCalls - ignore;
         CHECK_EQUAL(expected, actual);
     }
 
@@ -95,6 +102,16 @@ TEST_GROUP(W5100DeviceTest)
     {
         expectRead(addr, static_cast<uint8_t>(data >> 8));
         expectRead(addr + 1, static_cast<uint8_t>(data & 0xff));
+    }
+
+    template<class Container>
+    void expectRead(uint16_t addr, const Container& data) const
+    {
+        std::for_each(data.begin(), data.end(), [&](uint8_t value)
+        {
+            expectRead(addr, value);
+            ++addr;
+        });
     }
 
     std::vector<uint8_t> createBuffer(size_t size) const
@@ -293,6 +310,20 @@ TEST(W5100DeviceTest, getTransmitFreeSize)
     CHECK_EQUAL(value, rtn);
 }
 
+TEST(W5100DeviceTest, getReceiveFreeSize)
+{
+    constexpr uint16_t addressOffset = 0x0026;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t value = 0x1234;
+    expectRead(address, static_cast<uint16_t>(0xaaaa));
+    expectRead(address, static_cast<uint16_t>(0xbbbb));
+    expectRead(address, static_cast<uint16_t>(0x1234));
+    expectRead(address, static_cast<uint16_t>(0x1234));
+
+    uint16_t rtn = device->getReceiveFreeSize(socket);
+    CHECK_EQUAL(value, rtn);
+}
+
 TEST(W5100DeviceTest, sendData)
 {
     constexpr uint16_t addressOffset = 0x0024;
@@ -313,12 +344,44 @@ TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 {
     constexpr auto ptrWrites = sizeof(uint16_t);
     constexpr auto ignoreReads = sizeof(uint16_t);
-    const uint16_t size = device->getTransmitBufferSize() + 5;
+    const uint16_t size = device->getTransmitBufferSize() + 2;
     auto buffer = createBuffer(size);
     spiMock.ignoreOtherCalls();
 
     device->sendData(socket, buffer.data(), buffer.size());
     checkWriteCalls(size + ptrWrites, ignoreReads);
+}
+
+TEST(W5100DeviceTest, receiveData)
+{
+    constexpr uint16_t addressOffset = 0x0028;
+    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t value = 0x3355;
+    expectRead(address, value);
+
+    constexpr uint16_t destAddress = 0x6355;
+    constexpr uint16_t size = 4;
+    auto buffer = createBuffer(size);
+    expectRead(destAddress, buffer);
+    expectWrite(address, static_cast<uint16_t>(value + size));
+
+    std::array<uint8_t, size> data;
+    auto rtn = device->receiveData(socket, data.data(), data.size());
+    CHECK_EQUAL(size, rtn);
+    CHECK_TRUE(std::equal(buffer.begin(), buffer.end(), data.begin()));
+}
+
+TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
+{
+    constexpr auto ptrReads = sizeof(uint16_t);
+    constexpr uint16_t size = eth::W5100Device::getReceiveBufferSize() + 2;
+    auto buffer = createBuffer(size);
+    spiMock.ignoreOtherCalls();
+
+    std::array<uint8_t, size> data;
+    auto rtn = device->receiveData(socket, data.data(), data.size());
+    CHECK_EQUAL(size, rtn);
+    checkReadCalls(size + ptrReads, 0);
 }
 
 TEST(W5100DeviceTest, setGatewayAddress)

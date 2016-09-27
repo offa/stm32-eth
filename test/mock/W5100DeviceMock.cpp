@@ -79,6 +79,13 @@ namespace eth
                 .returnUnsignedIntValue();
     }
 
+    uint16_t W5100Device::getReceiveFreeSize(SocketHandle s)
+    {
+        return mock("W5100Device").actualCall("getReceiveFreeSize")
+                .withParameter("socket", s)
+                .returnUnsignedIntValue();
+    }
+
     void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
     {
         mock("W5100Device").actualCall("sendData")
@@ -86,5 +93,22 @@ namespace eth
                 .withMemoryBufferParameter("buffer", buffer, size)
                 .withParameter("size", size);
     }
+
+    uint16_t W5100Device::receiveData(SocketHandle s, uint8_t* buffer, uint16_t size)
+    {
+        return mock("W5100Device").actualCall("receiveData")
+                        .withParameter("socket", s)
+                        .withOutputParameter("buffer", buffer)
+                        .withParameter("size", size)
+                        .returnUnsignedIntValueOrDefault(size);
+    }
+
+    SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)
+    {
+        return static_cast<SocketCommand>(mock("W5100Device").actualCall("readSocketCommandRegister")
+                .withParameter("socket", s)
+                .returnUnsignedIntValue());
+    }
+
 }
 

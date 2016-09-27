@@ -55,8 +55,10 @@ namespace eth
         SocketStatus readSocketStatusRegister(SocketHandle s);
 
         uint16_t getTransmitFreeSize(SocketHandle s);
+        uint16_t getReceiveFreeSize(SocketHandle s);
 
         void sendData(SocketHandle s, const uint8_t* buffer, uint16_t size);
+        uint16_t receiveData(SocketHandle s, uint8_t* buffer, uint16_t size);
 
         void write(W5100Register reg, uint8_t data);
         void write(W5100Register reg, uint16_t data);
@@ -88,6 +90,11 @@ namespace eth
             return transmitBufferSize;
         }
 
+        static constexpr uint16_t getReceiveBufferSize()
+        {
+            return receiveBufferSize;
+        }
+
         W5100Device& operator=(W5100Device&&) = default;
 
 
@@ -97,9 +104,13 @@ namespace eth
         uint8_t read(uint16_t addr, uint16_t offset);
 
         uint16_t readSocketTransmitFreeSizeRegister(SocketHandle s);
+        uint16_t readSocketReceiveFreeSizeRegister(SocketHandle s);
 
         uint16_t readSocketTransmitWritePointer(SocketHandle s);
         void writeSocketTransmitWritePointer(SocketHandle s, uint16_t value);
+
+        uint16_t readSocketReceiveReadPointer(SocketHandle s);
+        void writeSocketReceiveReadPointer(SocketHandle s, uint16_t value);
 
         void writeTransmitMemorySizeRegister(uint8_t value);
         void writeReceiveMemorySizeRegister(uint8_t value);
@@ -113,7 +124,9 @@ namespace eth
         static constexpr uint8_t opcodeWrite = 0xf0;
         static constexpr uint8_t opcodeRead = 0x0f;
         static constexpr uint16_t transmitBufferSize = 2048;
+        static constexpr uint16_t receiveBufferSize = 2048;
         static const std::array<uint16_t, supportedSockets> transmitBufferBaseAddress;
+        static const std::array<uint16_t, supportedSockets> receiveBufferBaseAddress;
     };
 
 

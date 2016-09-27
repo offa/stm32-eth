@@ -76,7 +76,7 @@ TEST_GROUP(SocketTest)
     static constexpr Protocol protocol = Protocol::tcp;
     static constexpr uint8_t flag = 0;
     static constexpr uint8_t statusSendOk = static_cast<uint8_t>(SocketInterrupt::send);
-    static constexpr size_t defaultSize = 10;
+    static constexpr uint16_t defaultSize = 10;
 };
 
 TEST(SocketTest, openReturnsErrorOnUnsupportedProtocol)
@@ -391,6 +391,165 @@ TEST(SocketTest, sendSetsOkAfterSend)
         .withParameter("value", statusSendOk);
 
     CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+}
+
+TEST(SocketTest, receiveReturnsBytesReceived)
+{
+    auto buffer = createBuffer(defaultSize);
+    deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    mock("W5100Device").expectOneCall("receiveData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+
+    std::array<uint8_t, defaultSize> data;
+    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+}
+
+TEST(SocketTest, receiveLimitsBuffer)
+{
+    constexpr uint16_t maxReceiveSize = 2048;
+    deviceMock.expectOneCall("getReceiveFreeSize")
+        .ignoreOtherParameters()
+        .andReturnValue(maxReceiveSize);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    mock("W5100Device").expectOneCall("receiveData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+
+    std::array<uint8_t, maxReceiveSize> data;
+    CHECK_EQUAL(maxReceiveSize, socket->receive(data.data(), data.size() + 1));
+}
+
+TEST(SocketTest, receiveLimitsBufferToReceiveFreeSize)
+{
+    constexpr uint16_t size = defaultSize - 2;
+    deviceMock.expectOneCall("getReceiveFreeSize")
+        .ignoreOtherParameters()
+        .andReturnValue(size);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    mock("W5100Device").expectOneCall("receiveData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+
+    std::array<uint8_t, defaultSize> data;
+    auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(size, result);
+}
+
+TEST(SocketTest, receiveChecksStatusFlagIfEstablished)
+{
+    auto buffer = createBuffer(defaultSize);
+    deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    mock("W5100Device").expectOneCall("receiveData").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+
+    std::array<uint8_t, defaultSize> data;
+    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+}
+
+TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
+{
+    auto buffer = createBuffer(defaultSize);
+    deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::closeWait));
+    deviceMock.expectOneCall("receiveData")
+        .ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand")
+        .ignoreOtherParameters();
+
+    std::array<uint8_t, defaultSize> data;
+    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+}
+
+TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
+{
+    auto buffer = createBuffer(defaultSize);
+    deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::init));
+
+    std::array<uint8_t, defaultSize> data;
+    CHECK_EQUAL(0, socket->receive(data.data(), data.size()));
+}
+
+TEST(SocketTest, receiveReceivesDataAndSendsCommand)
+{
+    auto buffer = createBuffer(defaultSize);
+    deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("receiveData")
+        .withParameter("socket", socketHandle)
+        // TODO: Check Buffer
+        //.withMemoryBufferParameter("buffer", buffer.data(), sizeof(uint8_t))
+        .withParameter("size", buffer.size())
+        .ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand")
+        .withParameter("socket", socketHandle)
+        .withParameter("value", static_cast<int>(SocketCommand::recv));
+
+    std::array<uint8_t, defaultSize> data;
+    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+}
+
+TEST(SocketTest, receiveWaitsForStatusFlagAfterSend)
+{
+    auto buffer = createBuffer(defaultSize);
+    deviceMock.expectOneCall("getReceiveFreeSize")
+        .ignoreOtherParameters()
+        .andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("receiveData")
+        .ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand")
+        .ignoreOtherParameters();
+
+    std::array<uint8_t, defaultSize> data;
+    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+}
+
+TEST(SocketTest, receiveWaitsForDataAvailable)
+{
+    auto buffer = createBuffer(defaultSize);
+    deviceMock.expectOneCall("getReceiveFreeSize")
+        .ignoreOtherParameters()
+        .andReturnValue(0);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+
+    deviceMock.expectOneCall("getReceiveFreeSize")
+        .ignoreOtherParameters()
+        .andReturnValue(defaultSize);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("receiveData")
+        .withParameter("socket", socketHandle)
+        .withParameter("size", defaultSize)
+        .ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand")
+        .withParameter("socket", socketHandle)
+        .withParameter("value", static_cast<int>(SocketCommand::recv));
+
+
+    std::array<uint8_t, defaultSize> data;
+    auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(buffer.size(), result);
+
 }
 
 TEST(SocketTest, getStatus)

@@ -41,6 +41,7 @@ namespace eth
         bool listen();
         void accept();
         uint16_t send(const uint8_t* buffer, uint16_t length);
+        uint16_t receive(uint8_t* buffer, uint16_t length);
         SocketStatus getStatus() const;
 
 

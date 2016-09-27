@@ -66,11 +66,20 @@ namespace eth
         return socketAddress<uint16_t>(s, 0x0020);
     }
 
+    constexpr W5100Register socketReceiveFreeSize(SocketHandle s)
+    {
+        return socketAddress<uint16_t>(s, 0x0026);
+    }
+
     constexpr W5100Register socketTransmitWritePointer(SocketHandle s)
     {
         return socketAddress<uint16_t>(s, 0x0024);
     }
 
+    constexpr W5100Register socketReceiveReadPointer(SocketHandle s)
+    {
+        return socketAddress<uint16_t>(s, 0x0028);
+    }
 
 
 }

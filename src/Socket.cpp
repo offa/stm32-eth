@@ -115,6 +115,51 @@ namespace eth
         return sendSize;
     }
 
+    uint16_t Socket::receive(uint8_t* buffer, uint16_t length)
+    {
+        uint16_t recvSize = device.getReceiveBufferSize();
+
+        if( recvSize < length )
+        {
+            length = recvSize;
+        }
+
+
+        while(true)
+        {
+            recvSize = device.getReceiveFreeSize(m_handle);
+            SocketStatus status = getStatus();
+
+            if( status != SocketStatus::established )
+            {
+                if( status == SocketStatus::closeWait && recvSize != 0 )
+                {
+                    break;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            if( recvSize != 0 )
+            {
+                break;
+            }
+        }
+
+
+        if( recvSize < length )
+        {
+            length = recvSize;
+        }
+
+        length = device.receiveData(m_handle, buffer, length);
+        device.executeSocketCommand(m_handle, SocketCommand::recv);
+
+        return length;
+    }
+
     SocketStatus Socket::getStatus() const
     {
         return device.readSocketStatusRegister(m_handle);
