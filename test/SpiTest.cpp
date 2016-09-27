@@ -47,7 +47,7 @@ TEST_GROUP(SpiTest)
     MockSupport& platformMock = mock("platform::stm32");
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
-    static constexpr uint32_t timeout = 0xffffffff;
+    static constexpr uint32_t timeout = 0xffff'ffff;
 };
 
 TEST(SpiTest, initSetupsGpioPins)
@@ -120,7 +120,7 @@ TEST(SpiTest, receiveReceivesByte)
         .withParameter("Size", size)
         .withParameter("Timeout", timeout);
 
-    auto result = spi->receive();
+    const auto result = spi->receive();
     CHECK_EQUAL(data, result);
 }
 

@@ -195,7 +195,7 @@ TEST(W5100DeviceTest, readRegisterByte)
     constexpr uint8_t data = 0xef;
     expectRead(0xddee, data);
 
-    uint8_t result = device->read(reg);
+    const uint8_t result = device->read(reg);
     CHECK_EQUAL(data, result);
 }
 
@@ -205,7 +205,7 @@ TEST(W5100DeviceTest, readRegisterTwoByte)
     constexpr uint16_t data = 0xef01;
     expectRead(0xddee, data);
 
-    uint16_t result = device->readWord(reg);
+    const uint16_t result = device->readWord(reg);
     CHECK_EQUAL(data, result);
 }
 
@@ -246,7 +246,7 @@ TEST(W5100DeviceTest, readSocketInterruptRegister)
     constexpr uint8_t value = 0xb8;
     expectRead(address, value);
 
-    uint8_t rtn = device->readSocketInterruptRegister(socket);
+    const uint8_t rtn = device->readSocketInterruptRegister(socket);
     CHECK_EQUAL(value, rtn);
 }
 
@@ -267,7 +267,7 @@ TEST(W5100DeviceTest, readSocketCommandRegister)
     constexpr SocketCommand cmd = SocketCommand::connect;
     expectRead(address, static_cast<uint8_t>(cmd));
 
-    auto rtn = device->readSocketCommandRegister(socket);
+    const auto rtn = device->readSocketCommandRegister(socket);
     CHECK_EQUAL(cmd, rtn);
 }
 
@@ -292,7 +292,7 @@ TEST(W5100DeviceTest, readSocketStatusRegister)
     constexpr SocketStatus status = SocketStatus::established;
     expectRead(address, static_cast<uint8_t>(status));
 
-    auto rtn = device->readSocketStatusRegister(socket);
+    const auto rtn = device->readSocketStatusRegister(socket);
     CHECK_EQUAL(status, rtn);
 }
 
@@ -306,7 +306,7 @@ TEST(W5100DeviceTest, getTransmitFreeSize)
     expectRead(address, static_cast<uint16_t>(0x1234));
     expectRead(address, static_cast<uint16_t>(0x1234));
 
-    uint16_t rtn = device->getTransmitFreeSize(socket);
+    const uint16_t rtn = device->getTransmitFreeSize(socket);
     CHECK_EQUAL(value, rtn);
 }
 
@@ -320,7 +320,7 @@ TEST(W5100DeviceTest, getReceiveFreeSize)
     expectRead(address, static_cast<uint16_t>(0x1234));
     expectRead(address, static_cast<uint16_t>(0x1234));
 
-    uint16_t rtn = device->getReceiveFreeSize(socket);
+    const uint16_t rtn = device->getReceiveFreeSize(socket);
     CHECK_EQUAL(value, rtn);
 }
 
@@ -366,7 +366,7 @@ TEST(W5100DeviceTest, receiveData)
     expectWrite(address, static_cast<uint16_t>(value + size));
 
     std::array<uint8_t, size> data;
-    auto rtn = device->receiveData(socket, data.data(), data.size());
+    const auto rtn = device->receiveData(socket, data.data(), data.size());
     CHECK_EQUAL(size, rtn);
     CHECK_TRUE(std::equal(buffer.begin(), buffer.end(), data.begin()));
 }
@@ -379,7 +379,7 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
     spiMock.ignoreOtherCalls();
 
     std::array<uint8_t, size> data;
-    auto rtn = device->receiveData(socket, data.data(), data.size());
+    const auto rtn = device->receiveData(socket, data.data(), data.size());
     CHECK_EQUAL(size, rtn);
     checkReadCalls(size + ptrReads, 0);
 }

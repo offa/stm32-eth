@@ -213,7 +213,8 @@ TEST(SocketTest, sendReturnsBytesTransmitted)
     deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
-    CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, sendLimitsBufferSize)
@@ -227,7 +228,8 @@ TEST(SocketTest, sendLimitsBufferSize)
     deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(maxSendSize + 1);
-    CHECK_EQUAL(maxSendSize, socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(maxSendSize, result);
 }
 
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
@@ -245,7 +247,8 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
     deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
-    CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfCloseWait)
@@ -263,7 +266,8 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfCloseWait)
     deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
-    CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagNotEnoughFreeMemory)
@@ -287,7 +291,8 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagNotEnoughFreeMemory)
     deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
     auto buffer = createBuffer(defaultSize);
-    CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
@@ -301,7 +306,8 @@ TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
         .andReturnValue(static_cast<int>(SocketStatus::init));
 
     auto buffer = createBuffer(defaultSize);
-    CHECK_EQUAL(0, socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(0, result);
 }
 
 TEST(SocketTest, sendSendsDataAndCommand)
@@ -319,7 +325,8 @@ TEST(SocketTest, sendSendsDataAndCommand)
     deviceMock.expectOneCall("readSocketInterruptRegister").ignoreOtherParameters().andReturnValue(statusSendOk);
     deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
-    CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
@@ -348,7 +355,8 @@ TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
         .andReturnValue(ready);
     deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
 
-    CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, sendClosesConnectionIfClosedStatus)
@@ -368,7 +376,8 @@ TEST(SocketTest, sendClosesConnectionIfClosedStatus)
         .andReturnValue(static_cast<int>(SocketStatus::closed));
     expectClose(socketHandle);
 
-    CHECK_EQUAL(0, socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(0, result);
 }
 
 TEST(SocketTest, sendSetsOkAfterSend)
@@ -390,7 +399,8 @@ TEST(SocketTest, sendSetsOkAfterSend)
         .withParameter("socket", socketHandle)
         .withParameter("value", statusSendOk);
 
-    CHECK_EQUAL(buffer.size(), socket->send(buffer.data(), buffer.size()));
+    const auto result = socket->send(buffer.data(), buffer.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, receiveReturnsBytesReceived)
@@ -404,7 +414,8 @@ TEST(SocketTest, receiveReturnsBytesReceived)
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
     std::array<uint8_t, defaultSize> data;
-    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+    const auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, receiveLimitsBuffer)
@@ -420,7 +431,8 @@ TEST(SocketTest, receiveLimitsBuffer)
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
     std::array<uint8_t, maxReceiveSize> data;
-    CHECK_EQUAL(maxReceiveSize, socket->receive(data.data(), data.size() + 1));
+    const auto result = socket->receive(data.data(), data.size() + 1);
+    CHECK_EQUAL(maxReceiveSize, result);
 }
 
 TEST(SocketTest, receiveLimitsBufferToReceiveFreeSize)
@@ -436,7 +448,7 @@ TEST(SocketTest, receiveLimitsBufferToReceiveFreeSize)
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
     std::array<uint8_t, defaultSize> data;
-    auto result = socket->receive(data.data(), data.size());
+    const auto result = socket->receive(data.data(), data.size());
     CHECK_EQUAL(size, result);
 }
 
@@ -451,7 +463,8 @@ TEST(SocketTest, receiveChecksStatusFlagIfEstablished)
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
     std::array<uint8_t, defaultSize> data;
-    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+    const auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
@@ -467,7 +480,8 @@ TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
         .ignoreOtherParameters();
 
     std::array<uint8_t, defaultSize> data;
-    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+    const auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
@@ -479,7 +493,8 @@ TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
         .andReturnValue(static_cast<int>(SocketStatus::init));
 
     std::array<uint8_t, defaultSize> data;
-    CHECK_EQUAL(0, socket->receive(data.data(), data.size()));
+    const auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(0, result);
 }
 
 TEST(SocketTest, receiveReceivesDataAndSendsCommand)
@@ -499,7 +514,8 @@ TEST(SocketTest, receiveReceivesDataAndSendsCommand)
         .withParameter("value", static_cast<int>(SocketCommand::recv));
 
     std::array<uint8_t, defaultSize> data;
-    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+    const auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, receiveWaitsForStatusFlagAfterSend)
@@ -517,7 +533,8 @@ TEST(SocketTest, receiveWaitsForStatusFlagAfterSend)
         .ignoreOtherParameters();
 
     std::array<uint8_t, defaultSize> data;
-    CHECK_EQUAL(buffer.size(), socket->receive(data.data(), data.size()));
+    const auto result = socket->receive(data.data(), data.size());
+    CHECK_EQUAL(buffer.size(), result);
 }
 
 TEST(SocketTest, receiveWaitsForDataAvailable)
@@ -546,7 +563,7 @@ TEST(SocketTest, receiveWaitsForDataAvailable)
 
 
     std::array<uint8_t, defaultSize> data;
-    auto result = socket->receive(data.data(), data.size());
+    const auto result = socket->receive(data.data(), data.size());
     CHECK_EQUAL(buffer.size(), result);
 
 }
@@ -556,6 +573,6 @@ TEST(SocketTest, getStatus)
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::listen));
-    auto status = socket->getStatus();
+    const auto status = socket->getStatus();
     CHECK_EQUAL(eth::SocketStatus::listen, status);
 }
