@@ -68,11 +68,9 @@ namespace eth
         void write(W5100Register reg, Iterator begin, Iterator end)
         {
             uint16_t offset = 0;
-
             std::for_each(begin, end, [&](uint8_t data)
             {
-                write(reg.address(), offset, data);
-                ++offset;
+                write(reg.address(), offset++, data);
             });
         }
 
