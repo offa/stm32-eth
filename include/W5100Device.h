@@ -81,7 +81,8 @@ namespace eth
         void read(W5100Register reg, OutputIterator output, uint16_t size)
         {
             uint16_t i = 0;
-            std::generate(output, std::next(output, size), [&] {
+            std::generate(output, std::next(output, size), [&]
+            {
                 return read(reg.address(), i++);
             });
         }

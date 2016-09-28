@@ -67,8 +67,7 @@ TEST_GROUP(W5100DeviceTest)
     {
         std::for_each(data.begin(), data.end(), [&](uint8_t value)
         {
-            expectWrite(addr, value);
-            ++addr;
+            expectWrite(addr++, value);
         });
     }
 
@@ -109,8 +108,7 @@ TEST_GROUP(W5100DeviceTest)
     {
         std::for_each(data.begin(), data.end(), [&](uint8_t value)
         {
-            expectRead(addr, value);
-            ++addr;
+            expectRead(addr++, value);
         });
     }
 
