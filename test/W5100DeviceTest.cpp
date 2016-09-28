@@ -119,12 +119,17 @@ TEST_GROUP(W5100DeviceTest)
         return buffer;
     }
 
+    static constexpr uint16_t toAddress(eth::SocketHandle s, uint16_t address)
+    {
+        constexpr uint16_t socketBaseAddress = 0x0400;
+        constexpr uint16_t socketChannelSize = 0x0100;
+        return socketBaseAddress + s * socketChannelSize + address;
+    }
+
 
     std::unique_ptr<eth::W5100Device> device;
     MockSupport& spiMock = mock("Spi");
     static constexpr eth::SocketHandle socket = 0;
-    static constexpr uint16_t socktBaseAddr = 0x0400;
-    static constexpr uint16_t socktChannelSize = 0x0100;
 };
 
 TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
@@ -209,8 +214,7 @@ TEST(W5100DeviceTest, readRegisterTwoByte)
 
 TEST(W5100DeviceTest, writeSocketModeRegister)
 {
-    constexpr uint16_t addressOffset = 0x0000;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0000);
     constexpr uint8_t value = 0x17;
     expectWrite(address, value);
 
@@ -219,8 +223,7 @@ TEST(W5100DeviceTest, writeSocketModeRegister)
 
 TEST(W5100DeviceTest, writeSocketSourcePort)
 {
-    constexpr uint16_t addressOffset = 0x0004;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0004);
     constexpr uint16_t value = 0x1234;
     expectWrite(address, value);
 
@@ -229,8 +232,7 @@ TEST(W5100DeviceTest, writeSocketSourcePort)
 
 TEST(W5100DeviceTest, writeSocketInterruptRegister)
 {
-    constexpr uint16_t addressOffset = 0x0002;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0002);
     constexpr uint8_t value = 0x45;
     expectWrite(address, value);
 
@@ -239,8 +241,7 @@ TEST(W5100DeviceTest, writeSocketInterruptRegister)
 
 TEST(W5100DeviceTest, readSocketInterruptRegister)
 {
-    constexpr uint16_t addressOffset = 0x0002;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0002);
     constexpr uint8_t value = 0xb8;
     expectRead(address, value);
 
@@ -250,8 +251,7 @@ TEST(W5100DeviceTest, readSocketInterruptRegister)
 
 TEST(W5100DeviceTest, writeSocketCommandRegister)
 {
-    constexpr uint16_t addressOffset = 0x0001;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0001);
     constexpr SocketCommand cmd = SocketCommand::listen;
     expectWrite(address, static_cast<uint8_t>(cmd));
 
@@ -260,8 +260,7 @@ TEST(W5100DeviceTest, writeSocketCommandRegister)
 
 TEST(W5100DeviceTest, readSocketCommandRegister)
 {
-    constexpr uint16_t addressOffset = 0x0001;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0001);
     constexpr SocketCommand cmd = SocketCommand::connect;
     expectRead(address, static_cast<uint8_t>(cmd));
 
@@ -273,8 +272,7 @@ TEST(W5100DeviceTest, executeSocketCommand)
 {
     constexpr SocketCommand cmd = SocketCommand::connect;
     constexpr uint8_t registerCleared = 0x00;
-    constexpr uint16_t addressOffset = 0x0001;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0001);
     expectWrite(address, static_cast<uint8_t>(cmd));
     expectRead(address, static_cast<uint8_t>(0x01));
     expectRead(address, static_cast<uint8_t>(0x01));
@@ -285,8 +283,7 @@ TEST(W5100DeviceTest, executeSocketCommand)
 
 TEST(W5100DeviceTest, readSocketStatusRegister)
 {
-    constexpr uint16_t addressOffset = 0x0003;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0003);
     constexpr SocketStatus status = SocketStatus::established;
     expectRead(address, static_cast<uint8_t>(status));
 
@@ -296,8 +293,7 @@ TEST(W5100DeviceTest, readSocketStatusRegister)
 
 TEST(W5100DeviceTest, getTransmitFreeSize)
 {
-    constexpr uint16_t addressOffset = 0x0020;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0020);
     constexpr uint16_t value = 0x1234;
     expectRead(address, static_cast<uint16_t>(0xaaaa));
     expectRead(address, static_cast<uint16_t>(0xbbbb));
@@ -310,8 +306,7 @@ TEST(W5100DeviceTest, getTransmitFreeSize)
 
 TEST(W5100DeviceTest, getReceiveFreeSize)
 {
-    constexpr uint16_t addressOffset = 0x0026;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0026);
     constexpr uint16_t value = 0x1234;
     expectRead(address, static_cast<uint16_t>(0xaaaa));
     expectRead(address, static_cast<uint16_t>(0xbbbb));
@@ -324,8 +319,7 @@ TEST(W5100DeviceTest, getReceiveFreeSize)
 
 TEST(W5100DeviceTest, sendData)
 {
-    constexpr uint16_t addressOffset = 0x0024;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0024);
     constexpr uint16_t value = 0x3355;
     expectRead(address, value);
 
@@ -352,8 +346,7 @@ TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 
 TEST(W5100DeviceTest, receiveData)
 {
-    constexpr uint16_t addressOffset = 0x0028;
-    constexpr uint16_t address = socktBaseAddr + socket * socktChannelSize + addressOffset;
+    constexpr uint16_t address = toAddress(socket, 0x0028);
     constexpr uint16_t value = 0x3355;
     expectRead(address, value);
 
