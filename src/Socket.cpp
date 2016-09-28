@@ -117,22 +117,17 @@ namespace eth
 
     uint16_t Socket::receive(uint8_t* buffer, uint16_t length)
     {
-        uint16_t recvSize = device.getReceiveBufferSize();
+        uint16_t available = device.getReceiveBufferSize();
+        uint16_t receiveSize = std::min(available, length);
 
-        if( recvSize < length )
+        while( true )
         {
-            length = recvSize;
-        }
-
-
-        while(true)
-        {
-            recvSize = device.getReceiveFreeSize(m_handle);
+            available = device.getReceiveFreeSize(m_handle);
             SocketStatus status = getStatus();
 
             if( status != SocketStatus::established )
             {
-                if( status == SocketStatus::closeWait && recvSize != 0 )
+                if( status == SocketStatus::closeWait && available != 0 )
                 {
                     break;
                 }
@@ -142,22 +137,17 @@ namespace eth
                 }
             }
 
-            if( recvSize != 0 )
+            if( available != 0 )
             {
                 break;
             }
         }
 
-
-        if( recvSize < length )
-        {
-            length = recvSize;
-        }
-
-        length = device.receiveData(m_handle, buffer, length);
+        receiveSize = std::min(available, receiveSize);
+        receiveSize = device.receiveData(m_handle, buffer, receiveSize);
         device.executeSocketCommand(m_handle, SocketCommand::recv);
 
-        return length;
+        return receiveSize;
     }
 
     SocketStatus Socket::getStatus() const
