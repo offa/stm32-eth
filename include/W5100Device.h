@@ -27,6 +27,7 @@
 #include "W5100Register.h"
 #include <array>
 #include <algorithm>
+#include <iterator>
 #include <stdint.h>
 
 namespace eth
@@ -77,6 +78,16 @@ namespace eth
 
         uint8_t read(W5100Register reg);
         uint16_t readWord(W5100Register reg);
+
+        template<class OutputIterator>
+        void read(W5100Register reg, OutputIterator output, uint16_t size)
+        {
+            for( uint16_t i=0; i<size; ++i )
+            {
+                *output = read(reg.address(), i);
+                output = std::next(output);
+            }
+        }
 
         void writeModeRegister(Mode value);
 

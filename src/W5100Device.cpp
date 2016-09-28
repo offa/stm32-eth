@@ -173,26 +173,13 @@ namespace eth
         if( offset + size > receiveBufferSize )
         {
             const uint16_t recvSize = receiveBufferSize - offset;
-            // TODO: Refactor all those loops
-
-            for( uint16_t i=0; i<recvSize; ++i )
-            {
-                buffer[i] = read(W5100Register(destAddress, 1).address(), i);
-            }
-
-            buffer += recvSize;
-
-            for( uint16_t i=0; i<(size - recvSize); ++i )
-            {
-                buffer[i] = read(W5100Register(destAddress, 1).address(), i);
-            }
+            read(W5100Register(destAddress, 1), buffer, recvSize);
+            buffer = std::next(buffer, recvSize);
+            read(W5100Register(destAddress, 1), buffer, (size -recvSize));
         }
         else
         {
-            for( uint16_t i=0; i<size; ++i )
-            {
-                buffer[i] = read(W5100Register(destAddress, 1).address(), i);
-            }
+            read(W5100Register(destAddress, 1), buffer, size);
         }
 
         readPointer += size;
