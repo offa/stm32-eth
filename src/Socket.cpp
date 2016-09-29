@@ -120,7 +120,7 @@ namespace eth
         uint16_t available = device.getReceiveBufferSize();
         uint16_t receiveSize = std::min(available, length);
 
-        while( true )
+        do
         {
             available = device.getReceiveFreeSize(m_handle);
             const SocketStatus status = getStatus();
@@ -129,12 +129,8 @@ namespace eth
             {
                 return 0;
             }
-
-            if( available != 0 )
-            {
-                break;
-            }
         }
+        while( available == 0 );
 
         receiveSize = std::min(available, receiveSize);
         receiveSize = device.receiveData(m_handle, buffer, receiveSize);
