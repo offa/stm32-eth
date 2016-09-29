@@ -79,7 +79,7 @@ namespace eth
 
     uint16_t Socket::send(const uint8_t* buffer, uint16_t length)
     {
-        uint16_t sendSize = std::min(device.getTransmitBufferSize(), length);
+        const uint16_t sendSize = std::min(device.getTransmitBufferSize(), length);
         const auto freeSize = waitForBuffer(sendSize);
 
         if( freeSize == 0 )
@@ -109,7 +109,6 @@ namespace eth
 
     uint16_t Socket::receive(uint8_t* buffer, uint16_t length)
     {
-        uint16_t receiveSize = std::min(device.getReceiveBufferSize(), length);
         const uint16_t available = waitForData();
 
         if( available == 0 )
@@ -117,11 +116,12 @@ namespace eth
             return 0;
         }
 
-        receiveSize = std::min(available, receiveSize);
-        receiveSize = device.receiveData(m_handle, buffer, receiveSize);
+        const uint16_t sizeLimited = std::min(device.getReceiveBufferSize(), length);
+        const uint16_t receiveSize = std::min(available, sizeLimited);
+        const uint16_t received = device.receiveData(m_handle, buffer, receiveSize);
         device.executeSocketCommand(m_handle, SocketCommand::recv);
 
-        return receiveSize;
+        return received;
     }
 
     SocketStatus Socket::getStatus() const
