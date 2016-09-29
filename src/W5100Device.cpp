@@ -162,9 +162,10 @@ namespace eth
         if( offset + size > receiveBufferSize )
         {
             const uint16_t recvSize = receiveBufferSize - offset;
-            read(makeRegister<uint8_t>(destAddress), buffer, recvSize);
+            const auto reg = makeRegister<uint8_t>(destAddress);
+            read(reg, buffer, recvSize);
             buffer = std::next(buffer, recvSize);
-            read(makeRegister<uint8_t>(destAddress), buffer, (size - recvSize));
+            read(reg, buffer, (size - recvSize));
         }
         else
         {
