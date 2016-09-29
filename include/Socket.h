@@ -50,7 +50,9 @@ namespace eth
 
     private:
 
+        uint16_t waitForBuffer(uint16_t size) const;
         uint16_t waitForData() const;
+
 
         static constexpr bool connectionReady(SocketStatus status)
         {

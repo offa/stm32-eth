@@ -79,21 +79,13 @@ namespace eth
 
     uint16_t Socket::send(const uint8_t* buffer, uint16_t length)
     {
-        constexpr uint16_t bufferSize = device.getTransmitBufferSize();
-        uint16_t sendSize = std::min(bufferSize, length);
-        uint16_t freeSize = 0;
+        uint16_t sendSize = std::min(device.getTransmitBufferSize(), length);
+        const auto freeSize = waitForBuffer(sendSize);
 
-        do
+        if( freeSize == 0 )
         {
-            freeSize = device.getTransmitFreeSize(m_handle);
-            const SocketStatus status = getStatus();
-
-            if( connectionReady(status) == false )
-            {
-                return 0;
-            }
+            return 0;
         }
-        while( freeSize < sendSize );
 
         device.sendData(m_handle, buffer, sendSize);
         device.executeSocketCommand(m_handle, SocketCommand::send);
@@ -115,6 +107,47 @@ namespace eth
         return sendSize;
     }
 
+    uint16_t Socket::receive(uint8_t* buffer, uint16_t length)
+    {
+        uint16_t receiveSize = std::min(device.getReceiveBufferSize(), length);
+        const uint16_t available = waitForData();
+
+        if( available == 0 )
+        {
+            return 0;
+        }
+
+        receiveSize = std::min(available, receiveSize);
+        receiveSize = device.receiveData(m_handle, buffer, receiveSize);
+        device.executeSocketCommand(m_handle, SocketCommand::recv);
+
+        return receiveSize;
+    }
+
+    SocketStatus Socket::getStatus() const
+    {
+        return device.readSocketStatusRegister(m_handle);
+    }
+
+    uint16_t Socket::waitForBuffer(uint16_t size) const
+    {
+        uint16_t freeSize = 0;
+
+        do
+        {
+            freeSize = device.getTransmitFreeSize(m_handle);
+            const SocketStatus status = getStatus();
+
+            if( connectionReady(status) == false )
+            {
+                return 0;
+            }
+        }
+        while( freeSize < size );
+
+        return freeSize;
+    }
+
     uint16_t Socket::waitForData() const
     {
         uint16_t available = 0;
@@ -134,27 +167,5 @@ namespace eth
         return available;
     }
 
-    uint16_t Socket::receive(uint8_t* buffer, uint16_t length)
-    {
-        uint16_t receiveSize = std::min(device.getReceiveBufferSize(), length);
-        const uint16_t available = waitForData();
-
-        if( available == 0 )
-        {
-            return 0;
-        }
-
-
-        receiveSize = std::min(available, receiveSize);
-        receiveSize = device.receiveData(m_handle, buffer, receiveSize);
-        device.executeSocketCommand(m_handle, SocketCommand::recv);
-
-        return receiveSize;
-    }
-
-    SocketStatus Socket::getStatus() const
-    {
-        return device.readSocketStatusRegister(m_handle);
-    }
 
 }
