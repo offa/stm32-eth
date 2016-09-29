@@ -86,9 +86,9 @@ namespace eth
         do
         {
             freeSize = device.getTransmitFreeSize(m_handle);
-            auto status = getStatus();
+            const SocketStatus status = getStatus();
 
-            if( (status != SocketStatus::established) && (status != SocketStatus::closeWait) )
+            if( connectionReady(status) == false )
             {
                 return 0;
             }
@@ -123,18 +123,11 @@ namespace eth
         while( true )
         {
             available = device.getReceiveFreeSize(m_handle);
-            SocketStatus status = getStatus();
+            const SocketStatus status = getStatus();
 
-            if( status != SocketStatus::established )
+            if( connectionReady(status) == false )
             {
-                if( status == SocketStatus::closeWait && available != 0 )
-                {
-                    break;
-                }
-                else
-                {
-                    return 0;
-                }
+                return 0;
             }
 
             if( available != 0 )

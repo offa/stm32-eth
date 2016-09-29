@@ -50,6 +50,13 @@ namespace eth
 
     private:
 
+        static constexpr bool connectionReady(SocketStatus status)
+        {
+            return ( status == SocketStatus::established )
+                    || ( status == SocketStatus::closeWait );
+        }
+
+
         SocketHandle m_handle;
     };
 
