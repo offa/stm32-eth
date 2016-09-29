@@ -112,8 +112,7 @@ namespace eth
         void write(uint16_t addr, uint16_t offset, uint8_t data);
         uint8_t read(uint16_t addr, uint16_t offset);
 
-        uint16_t readSocketTransmitFreeSizeRegister(SocketHandle s);
-        uint16_t readSocketReceiveFreeSizeRegister(SocketHandle s);
+        uint16_t readFreesize(W5100Register freesizeReg);
 
         uint16_t readSocketTransmitWritePointer(SocketHandle s);
         void writeSocketTransmitWritePointer(SocketHandle s, uint16_t value);

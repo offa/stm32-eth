@@ -101,42 +101,32 @@ namespace eth
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
     {
-        uint16_t val = 0;
-        uint16_t val1 = 0;
-
-        do
-        {
-            val1 = readSocketTransmitFreeSizeRegister(s);
-
-            if( val1 != 0 )
-            {
-                val = readSocketTransmitFreeSizeRegister(s);
-            }
-        }
-        while( val != val1 );
-
-        return val;
+        return readFreesize(socketTransmitFreeSize(s));
     }
 
 
     uint16_t W5100Device::getReceiveFreeSize(SocketHandle s)
+    {
+        return readFreesize(socketReceiveFreeSize(s));
+    }
+
+    uint16_t W5100Device::readFreesize(W5100Register freesizeReg)
     {
         uint16_t val = 0;
         uint16_t val1 = 0;
 
         do
         {
-            val1 = readSocketReceiveFreeSizeRegister(s);
+            val1 = readWord(freesizeReg);
 
             if( val1 != 0 )
             {
-                val = readSocketReceiveFreeSizeRegister(s);
+                val = readWord(freesizeReg);
             }
         }
         while( val != val1 );
 
         return val;
-
     }
 
     void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
@@ -256,16 +246,6 @@ namespace eth
     void W5100Device::setIpAddress(const std::array<uint8_t, 4>& addr)
     {
         writeSourceIpRegister(addr);
-    }
-
-    uint16_t W5100Device::readSocketTransmitFreeSizeRegister(SocketHandle s)
-    {
-        return readWord(socketTransmitFreeSize(s));
-    }
-
-    uint16_t W5100Device::readSocketReceiveFreeSizeRegister(SocketHandle s)
-    {
-        return readWord(socketReceiveFreeSize(s));
     }
 
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
