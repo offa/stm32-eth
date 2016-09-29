@@ -50,6 +50,8 @@ namespace eth
 
     private:
 
+        uint16_t waitForData() const;
+
         static constexpr bool connectionReady(SocketStatus status)
         {
             return ( status == SocketStatus::established )
