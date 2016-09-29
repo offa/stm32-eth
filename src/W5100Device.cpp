@@ -139,10 +139,12 @@ namespace eth
         if( offset + size > transmitBufferSize )
         {
             const uint16_t transmitSize = transmitBufferSize - offset;
-            write(W5100Register(destAddress, transmitSize), buffer, std::next(buffer, transmitSize));
-            const auto pos = std::next(buffer, transmitSize);
+            const auto begin = buffer;
+            const auto border = std::next(buffer, transmitSize);
             const auto remaining = size - transmitSize;
-            write(W5100Register(transmitBufferBaseAddress[s], remaining), pos, std::next(pos, remaining));
+            const auto end = std::next(buffer, size);
+            write(W5100Register(destAddress, transmitSize), begin, border);
+            write(W5100Register(transmitBufferBaseAddress[s], remaining), border, end);
         }
         else
         {
@@ -162,10 +164,11 @@ namespace eth
 
         if( offset + size > receiveBufferSize )
         {
-            const uint16_t recvSize = receiveBufferSize - offset;
-            read(reg, buffer, std::next(buffer, recvSize));
-            buffer = std::next(buffer, recvSize);
-            read(reg, buffer, std::next(buffer, (size - recvSize)));
+            const auto begin = buffer;
+            const auto border = std::next(buffer, (receiveBufferSize - offset));
+            const auto end = std::next(buffer, size);
+            read(reg, begin, border);
+            read(reg, border, end);
         }
         else
         {
