@@ -158,18 +158,18 @@ namespace eth
         const uint16_t readPointer = readSocketReceiveReadPointer(s);
         const uint16_t offset = readPointer & receiveBufferMask;
         const uint16_t destAddress = offset + receiveBufferBaseAddress[s];
+        const auto reg = makeRegister<uint8_t>(destAddress);
 
         if( offset + size > receiveBufferSize )
         {
             const uint16_t recvSize = receiveBufferSize - offset;
-            const auto reg = makeRegister<uint8_t>(destAddress);
             read(reg, buffer, std::next(buffer, recvSize));
             buffer = std::next(buffer, recvSize);
             read(reg, buffer, std::next(buffer, (size - recvSize)));
         }
         else
         {
-            read(makeRegister<uint8_t>(destAddress), buffer, std::next(buffer, size));
+            read(reg, buffer, std::next(buffer, size));
         }
 
         writeSocketReceiveReadPointer(s, (readPointer + size));
