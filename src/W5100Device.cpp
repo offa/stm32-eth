@@ -142,7 +142,7 @@ namespace eth
     void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
     {
         constexpr uint16_t transmitBufferMask = 0x07ff;
-        uint16_t writePointer = readSocketTransmitWritePointer(s);
+        const uint16_t writePointer = readSocketTransmitWritePointer(s);
         const uint16_t offset = writePointer & transmitBufferMask;
         const uint16_t destAddress = offset + transmitBufferBaseAddress[s];
 
@@ -159,14 +159,13 @@ namespace eth
             write(W5100Register(destAddress, size), buffer, std::next(buffer, size));
         }
 
-        writePointer += size;
-        writeSocketTransmitWritePointer(s, writePointer);
+        writeSocketTransmitWritePointer(s, (writePointer + size));
     }
 
     uint16_t W5100Device::receiveData(SocketHandle s, uint8_t* buffer, uint16_t size)
     {
         constexpr uint16_t receiveBufferMask = 0x07ff;
-        uint16_t readPointer = readSocketReceiveReadPointer(s);
+        const uint16_t readPointer = readSocketReceiveReadPointer(s);
         const uint16_t offset = readPointer & receiveBufferMask;
         const uint16_t destAddress = offset + receiveBufferBaseAddress[s];
 
@@ -182,8 +181,7 @@ namespace eth
             read(makeRegister<uint8_t>(destAddress), buffer, size);
         }
 
-        readPointer += size;
-        writeSocketReceiveReadPointer(s, readPointer);
+        writeSocketReceiveReadPointer(s, (readPointer + size));
 
         return size;
     }
