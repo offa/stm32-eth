@@ -64,8 +64,8 @@ namespace eth
         void write(W5100Register reg, uint8_t data);
         void write(W5100Register reg, uint16_t data);
 
-        template<class Iterator>
-        void write(W5100Register reg, Iterator begin, Iterator end)
+        template<class InputIterator>
+        void write(W5100Register reg, InputIterator begin, InputIterator end)
         {
             uint16_t offset = 0;
             std::for_each(begin, end, [&](uint8_t data)
