@@ -1,4 +1,5 @@
 
+
 macro(add_common_flag)
     foreach(_flag ${ARGN})
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_flag}")
@@ -56,14 +57,6 @@ if( LTO )
     add_linker_flag(-flto)
 endif()
 
-
-if( CMAKE_BUILD_TYPE )
-    string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
-
-    if( "${BUILD_TYPE}" STREQUAL "debug")
-        add_definitions(-DDEBUG -DUSE_FULL_ASSERT -DTRACE)
-    endif()
-endif()
 
 
 if( NOT CMAKE_CROSSCOMPILING )
