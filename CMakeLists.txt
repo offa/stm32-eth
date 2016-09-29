@@ -27,12 +27,6 @@ include(Compiler)
 include(Cpp14)
 
 
-if( LTO )
-    add_common_flag(-flto)
-    add_linker_flag(-flto)
-endif()
-
-
 if( CMAKE_BUILD_TYPE )
     string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
 

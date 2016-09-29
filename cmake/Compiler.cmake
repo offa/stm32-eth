@@ -52,6 +52,10 @@ macro(add_size_target _target)
 endmacro()
 
 
+if( LTO )
+    add_common_flag(-flto)
+    add_linker_flag(-flto)
+endif()
 
 
 
