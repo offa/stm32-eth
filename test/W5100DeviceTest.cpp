@@ -228,7 +228,7 @@ TEST(W5100DeviceTest, writeSocketModeRegister)
 TEST(W5100DeviceTest, writeSocketSourcePort)
 {
     constexpr uint16_t address = toAddress(socket, 0x0004);
-    constexpr uint16_t value = 0x1234;
+    constexpr uint16_t value = 0x1388;
     expectWrite(address, value);
 
     device->writeSocketSourcePort(socket, value);
@@ -382,7 +382,7 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
 TEST(W5100DeviceTest, setGatewayAddress)
 {
     constexpr uint16_t address = 0x0001;
-    std::array<uint8_t, 4> value = {{ 1, 2, 3, 4 }};
+    std::array<uint8_t, 4> value = {{ 192, 168, 0, 1 }};
     expectWrite(address, value);
 
     device->setGatewayAddress(value);
@@ -391,7 +391,7 @@ TEST(W5100DeviceTest, setGatewayAddress)
 TEST(W5100DeviceTest, setSubnetMask)
 {
     constexpr uint16_t address = 0x0005;
-    std::array<uint8_t, 4> value = {{ 1, 2, 3, 4 }};
+    std::array<uint8_t, 4> value = {{ 255, 255, 255, 0 }};
     expectWrite(address, value);
 
     device->setSubnetMask(value);
@@ -400,7 +400,7 @@ TEST(W5100DeviceTest, setSubnetMask)
 TEST(W5100DeviceTest, setMacAddress)
 {
     constexpr uint16_t address = 0x0009;
-    std::array<uint8_t, 6> value = {{ 1, 2, 3, 4, 5, 6 }};
+    std::array<uint8_t, 6> value = {{ 0x00, 0x08, 0xdc, 0x01, 0x02, 0x03 }};
     expectWrite(address, value);
 
     device->setMacAddress(value);
@@ -409,7 +409,7 @@ TEST(W5100DeviceTest, setMacAddress)
 TEST(W5100DeviceTest, setIpAddress)
 {
     constexpr uint16_t address = 0x000f;
-    std::array<uint8_t, 4> value = {{ 1, 2, 3, 4 }};
+    std::array<uint8_t, 4> value = {{ 192, 168, 0, 3 }};
     expectWrite(address, value);
 
     device->setIpAddress(value);
