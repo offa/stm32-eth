@@ -23,10 +23,7 @@
 
 namespace eth
 {
-    W5100Device device;
-
-
-    W5100Device::W5100Device()
+    W5100Device::W5100Device(Spi& spi) : m_spi(spi)
     {
     }
 

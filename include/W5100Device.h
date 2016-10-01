@@ -33,11 +33,13 @@
 namespace eth
 {
 
+    class Spi;
+
     class W5100Device
     {
     public:
 
-        W5100Device();
+        explicit W5100Device(Spi& spi);
         W5100Device(W5100Device&&) = default;
 
         void init();
@@ -129,6 +131,7 @@ namespace eth
         void writeSourceIpRegister(const std::array<uint8_t, 4>& addr);
 
 
+        Spi& m_spi;
         static constexpr uint8_t opcodeWrite = 0xf0;
         static constexpr uint8_t opcodeRead = 0x0f;
         static constexpr uint16_t transmitBufferSize = 2048;

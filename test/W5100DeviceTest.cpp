@@ -19,6 +19,7 @@
  */
 
 #include "W5100Device.h"
+#include "Spi.h"
 #include "TestHelper.h"
 #include <vector>
 #include <algorithm>
@@ -26,6 +27,8 @@
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
+using eth::W5100Device;
+using eth::Spi;
 using eth::SocketCommand;
 using eth::SocketStatus;
 using eth::Mode;
@@ -36,7 +39,7 @@ TEST_GROUP(W5100DeviceTest)
 {
     void setup() override
     {
-        device = std::make_unique<eth::W5100Device>();
+        device = std::make_unique<W5100Device>(spi);
         mock().strictOrder();
     }
 
@@ -128,6 +131,7 @@ TEST_GROUP(W5100DeviceTest)
 
 
     std::unique_ptr<eth::W5100Device> device;
+    Spi spi;
     MockSupport& spiMock = mock("Spi");
     static constexpr eth::SocketHandle socket = 0;
 };

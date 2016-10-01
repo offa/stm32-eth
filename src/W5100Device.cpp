@@ -41,7 +41,7 @@ namespace eth
     }
 
 
-    W5100Device::W5100Device()
+    W5100Device::W5100Device(Spi& spi) : m_spi(spi)
     {
     }
 
@@ -183,12 +183,12 @@ namespace eth
     void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
     {
         const auto address = addr + offset;
-        spi.setSlaveSelect();
-        spi.transmit(opcodeWrite);
-        spi.transmit(byte::get<1>(address));
-        spi.transmit(byte::get<0>(address));
-        spi.transmit(data);
-        spi.resetSlaveSelect();
+        m_spi.setSlaveSelect();
+        m_spi.transmit(opcodeWrite);
+        m_spi.transmit(byte::get<1>(address));
+        m_spi.transmit(byte::get<0>(address));
+        m_spi.transmit(data);
+        m_spi.resetSlaveSelect();
     }
 
     void W5100Device::write(W5100Register reg, uint8_t data)
@@ -205,12 +205,12 @@ namespace eth
     uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
     {
         const auto address = addr + offset;
-        spi.setSlaveSelect();
-        spi.transmit(opcodeRead);
-        spi.transmit(byte::get<1>(address));
-        spi.transmit(byte::get<0>(address));
-        const auto data = spi.receive();
-        spi.resetSlaveSelect();
+        m_spi.setSlaveSelect();
+        m_spi.transmit(opcodeRead);
+        m_spi.transmit(byte::get<1>(address));
+        m_spi.transmit(byte::get<0>(address));
+        const auto data = m_spi.receive();
+        m_spi.resetSlaveSelect();
 
         return data;
     }
@@ -312,7 +312,5 @@ namespace eth
                                                                 getReceiveBufferAddress<1>(transmitBufferSize),
                                                                 getReceiveBufferAddress<2>(transmitBufferSize),
                                                                 getReceiveBufferAddress<3>(transmitBufferSize) }};
-
-    W5100Device device;
 
 }

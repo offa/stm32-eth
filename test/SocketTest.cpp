@@ -23,6 +23,7 @@
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
 #include "W5100Device.h"
+#include "Spi.h"
 #include "TestHelper.h"
 #include <vector>
 #include <numeric>
@@ -34,6 +35,12 @@ using eth::SocketCommand;
 using eth::SocketInterrupt;
 using eth::Socket;
 using eth::Protocol;
+
+namespace eth
+{
+    static Spi spi;
+    W5100Device device(spi);
+}
 
 TEST_GROUP(SocketTest)
 {

@@ -50,7 +50,5 @@ namespace eth
         static constexpr uint32_t timeout = ~0;
     };
 
-    extern Spi spi;
-
 }
 
