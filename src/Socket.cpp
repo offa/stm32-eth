@@ -29,7 +29,7 @@
 namespace eth
 {
 
-    Socket::Socket(SocketHandle handle) : m_handle(handle)
+    Socket::Socket(SocketHandle handle, W5100Device& device) : m_handle(handle), m_device(device)
     {
     }
 
@@ -38,10 +38,10 @@ namespace eth
         if( protocol == Protocol::tcp )
         {
             close();
-            device.writeSocketModeRegister(m_handle, static_cast<uint8_t>(protocol) | flag);
+            m_device.writeSocketModeRegister(m_handle, static_cast<uint8_t>(protocol) | flag);
 
-            device.writeSocketSourcePort(m_handle, port);
-            device.executeSocketCommand(m_handle, SocketCommand::open);
+            m_device.writeSocketSourcePort(m_handle, port);
+            m_device.executeSocketCommand(m_handle, SocketCommand::open);
             return true;
         }
 
@@ -51,8 +51,8 @@ namespace eth
     void Socket::close()
     {
         // TODO: Safe close in dtor
-        device.executeSocketCommand(m_handle, SocketCommand::close);
-        device.writeSocketInterruptRegister(m_handle, 0xff);
+        m_device.executeSocketCommand(m_handle, SocketCommand::close);
+        m_device.writeSocketInterruptRegister(m_handle, 0xff);
     }
 
     bool Socket::listen()
@@ -62,7 +62,7 @@ namespace eth
             return false;
         }
 
-        device.executeSocketCommand(m_handle, SocketCommand::listen);
+        m_device.executeSocketCommand(m_handle, SocketCommand::listen);
 
         return true;
     }
@@ -78,7 +78,7 @@ namespace eth
 
     uint16_t Socket::send(const uint8_t* buffer, uint16_t length)
     {
-        const uint16_t sendSize = std::min(device.getTransmitBufferSize(), length);
+        const uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), length);
         const auto freeSize = waitForBuffer(sendSize);
 
         if( freeSize == 0 )
@@ -86,13 +86,13 @@ namespace eth
             return 0;
         }
 
-        device.sendData(m_handle, buffer, sendSize);
-        device.executeSocketCommand(m_handle, SocketCommand::send);
+        m_device.sendData(m_handle, buffer, sendSize);
+        m_device.executeSocketCommand(m_handle, SocketCommand::send);
 
 
         constexpr uint8_t sendMask = static_cast<uint8_t>(SocketInterrupt::send);
 
-        while( ( device.readSocketInterruptRegister(m_handle) & sendMask ) != sendMask )
+        while( ( m_device.readSocketInterruptRegister(m_handle) & sendMask ) != sendMask )
         {
             if( getStatus() == SocketStatus::closed )
             {
@@ -101,7 +101,7 @@ namespace eth
             }
         }
 
-        device.writeSocketInterruptRegister(m_handle, sendMask);
+        m_device.writeSocketInterruptRegister(m_handle, sendMask);
 
         return sendSize;
     }
@@ -115,17 +115,17 @@ namespace eth
             return 0;
         }
 
-        const uint16_t sizeLimited = std::min(device.getReceiveBufferSize(), length);
+        const uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), length);
         const uint16_t receiveSize = std::min(available, sizeLimited);
-        const uint16_t received = device.receiveData(m_handle, buffer, receiveSize);
-        device.executeSocketCommand(m_handle, SocketCommand::receive);
+        const uint16_t received = m_device.receiveData(m_handle, buffer, receiveSize);
+        m_device.executeSocketCommand(m_handle, SocketCommand::receive);
 
         return received;
     }
 
     SocketStatus Socket::getStatus() const
     {
-        return device.readSocketStatusRegister(m_handle);
+        return m_device.readSocketStatusRegister(m_handle);
     }
 
     uint16_t Socket::waitForBuffer(uint16_t size) const
@@ -134,7 +134,7 @@ namespace eth
 
         do
         {
-            freeSize = device.getTransmitFreeSize(m_handle);
+            freeSize = m_device.getTransmitFreeSize(m_handle);
             const SocketStatus status = getStatus();
 
             if( connectionReady(status) == false )
@@ -153,7 +153,7 @@ namespace eth
 
         do
         {
-            available = device.getReceiveFreeSize(m_handle);
+            available = m_device.getReceiveFreeSize(m_handle);
             const SocketStatus status = getStatus();
 
             if( connectionReady(status) == false )

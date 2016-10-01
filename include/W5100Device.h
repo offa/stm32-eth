@@ -32,8 +32,8 @@
 
 namespace eth
 {
-
     class Spi;
+
 
     class W5100Device
     {
@@ -139,9 +139,6 @@ namespace eth
         static const std::array<uint16_t, supportedSockets> transmitBufferBaseAddress;
         static const std::array<uint16_t, supportedSockets> receiveBufferBaseAddress;
     };
-
-
-    extern W5100Device device;
 
 }
 

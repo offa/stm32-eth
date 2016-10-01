@@ -27,12 +27,14 @@
 
 namespace eth
 {
+    class W5100Device;
+
 
     class Socket
     {
     public:
 
-        explicit Socket(SocketHandle handle);
+        Socket(SocketHandle handle, W5100Device& device);
         Socket(Socket&&) = default;
 
 
@@ -62,6 +64,7 @@ namespace eth
 
 
         SocketHandle m_handle;
+        W5100Device& m_device;
     };
 
 }

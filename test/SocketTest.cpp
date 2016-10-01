@@ -35,19 +35,15 @@ using eth::SocketCommand;
 using eth::SocketInterrupt;
 using eth::Socket;
 using eth::Protocol;
-
-namespace eth
-{
-    static Spi spi;
-    W5100Device device(spi);
-}
+using eth::W5100Device;
+using eth::Spi;
 
 TEST_GROUP(SocketTest)
 {
     void setup() override
     {
         constexpr auto handle = socketHandle;
-        socket = std::make_unique<Socket>(handle);
+        socket = std::make_unique<Socket>(handle, device);
         mock().strictOrder();
     }
 
@@ -76,6 +72,8 @@ TEST_GROUP(SocketTest)
 
 
     std::unique_ptr<Socket> socket;
+    Spi spi;
+    W5100Device device{spi};
     MockSupport& deviceMock = mock("W5100Device");
     MockSupport& platformMock = mock("platform::stm32");
     static constexpr eth::SocketHandle socketHandle = 0;
