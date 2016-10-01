@@ -40,7 +40,6 @@ namespace eth
             close();
             device.writeSocketModeRegister(m_handle, static_cast<uint8_t>(protocol) | flag);
 
-            // TODO: Check port for != 0
             device.writeSocketSourcePort(m_handle, port);
             device.executeSocketCommand(m_handle, SocketCommand::open);
             return true;
