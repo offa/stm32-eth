@@ -63,7 +63,7 @@ namespace eth
         }
 
 
-        SocketHandle m_handle;
+        const SocketHandle m_handle;
         W5100Device& m_device;
     };
 
