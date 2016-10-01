@@ -25,13 +25,6 @@
 #include "Spi.h"
 
 
-namespace eth
-{
-    Spi spi;
-}
-
-
-
 int main(int argc, char* argv[])
 {
     (void) argc;
@@ -39,16 +32,18 @@ int main(int argc, char* argv[])
 
     HAL_Init();
 
-    eth::spi.init();
+    eth::Spi spi;
+    spi.init();
 
-    eth::device.init();
-    eth::device.setGatewayAddress({192, 168, 1, 1});
-    eth::device.setIpAddress({192, 168, 1, 8});
-    eth::device.setSubnetMask({255, 255, 255, 0});
-    eth::device.setMacAddress({0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef});
+    eth::W5100Device device(spi);
+    device.init();
+    device.setGatewayAddress({192, 168, 1, 1});
+    device.setIpAddress({192, 168, 1, 8});
+    device.setSubnetMask({255, 255, 255, 0});
+    device.setMacAddress({0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef});
 
     constexpr eth::SocketHandle handle = 0;
-    eth::Socket socket(handle);
+    eth::Socket socket(handle, device);
     constexpr uint16_t port = 5000;
 
     while(true)
