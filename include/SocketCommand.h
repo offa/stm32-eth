@@ -34,7 +34,7 @@ namespace eth
         send = 0x20,
         sendMac = 0x21,
         sendKeep = 0x22,
-        recv = 0x40
+        receive = 0x40
     };
 
 }

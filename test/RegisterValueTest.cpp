@@ -77,7 +77,7 @@ TEST(RegisterValueTest, socketCommand)
     CHECK_EQUAL(0x20, value(SocketCommand::send));
     CHECK_EQUAL(0x21, value(SocketCommand::sendMac));
     CHECK_EQUAL(0x22, value(SocketCommand::sendKeep));
-    CHECK_EQUAL(0x40, value(SocketCommand::recv));
+    CHECK_EQUAL(0x40, value(SocketCommand::receive));
 }
 
 TEST(RegisterValueTest, socketInterrupt)

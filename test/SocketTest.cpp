@@ -511,7 +511,7 @@ TEST(SocketTest, receiveReceivesDataAndSendsCommand)
         .ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand")
         .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::recv));
+        .withParameter("value", static_cast<int>(SocketCommand::receive));
 
     std::array<uint8_t, defaultSize> data;
     const auto result = socket->receive(data.data(), data.size());
@@ -559,7 +559,7 @@ TEST(SocketTest, receiveWaitsForDataAvailable)
         .ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand")
         .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::recv));
+        .withParameter("value", static_cast<int>(SocketCommand::receive));
 
 
     std::array<uint8_t, defaultSize> data;

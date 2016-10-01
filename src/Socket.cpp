@@ -119,7 +119,7 @@ namespace eth
         const uint16_t sizeLimited = std::min(device.getReceiveBufferSize(), length);
         const uint16_t receiveSize = std::min(available, sizeLimited);
         const uint16_t received = device.receiveData(m_handle, buffer, receiveSize);
-        device.executeSocketCommand(m_handle, SocketCommand::recv);
+        device.executeSocketCommand(m_handle, SocketCommand::receive);
 
         return received;
     }
