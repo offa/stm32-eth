@@ -68,7 +68,7 @@ TEST(RegisterValueTest, mode)
 TEST(RegisterValueTest, socketCommand)
 {
     using eth::SocketCommand;
-    CHECK_EQUAL(0x00, value(SocketCommand::commandExecuted));
+    CHECK_EQUAL(0x00, value(SocketCommand::executed));
     CHECK_EQUAL(0x01, value(SocketCommand::open));
     CHECK_EQUAL(0x02, value(SocketCommand::listen));
     CHECK_EQUAL(0x04, value(SocketCommand::connect));
