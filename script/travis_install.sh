@@ -2,6 +2,16 @@
 
 set -ex
 
+## Install GSL
+wget https://github.com/Microsoft/GSL/archive/master.tar.gz -O gsl.tar.gz
+tar -xzvf gsl.tar.gz
+pushd GSL-master
+mkdir build && cd build
+cmake ..
+sudo make install
+popd
+
+
 if [ "$CXX" != "arm-none-eabi-g++" ]; then
     ## Install CppUTest
     CPPUTEST_VERSION=3.8
