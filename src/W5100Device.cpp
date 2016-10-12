@@ -153,7 +153,7 @@ namespace eth
         writeSocketTransmitWritePointer(s, (writePointer + size));
     }
 
-    gsl::span<uint8_t> W5100Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
+    uint16_t W5100Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
     {
         constexpr uint16_t receiveBufferMask = 0x07ff;
         const auto size = buffer.length();
@@ -177,7 +177,7 @@ namespace eth
         }
 
         writeSocketReceiveReadPointer(s, (readPointer + size));
-        return buffer;
+        return size;
     }
 
     void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
@@ -236,7 +236,7 @@ namespace eth
         return byte::to<uint16_t>(b1, b0);
     }
 
-    gsl::span<uint8_t> W5100Device::read(W5100Register reg, gsl::span<uint8_t> buffer)
+    uint16_t W5100Device::read(W5100Register reg, gsl::span<uint8_t> buffer)
     {
         uint16_t i = 0;
         std::generate(buffer.begin(), buffer.end(), [&]
@@ -244,7 +244,7 @@ namespace eth
             return read(reg.address(), i++);
         });
 
-        return buffer;
+        return i;
 
     }
 

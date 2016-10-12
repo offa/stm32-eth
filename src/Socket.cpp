@@ -106,7 +106,7 @@ namespace eth
         return sendSize;
     }
 
-    gsl::span<uint8_t> Socket::receive(gsl::span<uint8_t> buffer)
+    uint16_t Socket::receive(gsl::span<uint8_t> buffer)
     {
         const uint16_t available = waitForData();
 
@@ -118,10 +118,10 @@ namespace eth
         const uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), uint16_t(buffer.length()));
         const uint16_t receiveSize = std::min(available, sizeLimited);
         auto shrinkedBuffer = buffer.first(receiveSize);
-        const auto received = m_device.receiveData(m_handle, shrinkedBuffer);
+        m_device.receiveData(m_handle, shrinkedBuffer);
         m_device.executeSocketCommand(m_handle, SocketCommand::receive);
 
-        return received;
+        return receiveSize;
     }
 
     SocketStatus Socket::getStatus() const

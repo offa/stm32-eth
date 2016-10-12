@@ -44,7 +44,7 @@ namespace eth
         bool listen();
         void accept();
         uint16_t send(const gsl::span<const uint8_t> buffer);
-        gsl::span<uint8_t> receive(gsl::span<uint8_t> buffer);
+        uint16_t receive(gsl::span<uint8_t> buffer);
         SocketStatus getStatus() const;
 
 

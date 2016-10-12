@@ -232,11 +232,12 @@ TEST(W5100DeviceTest, readRegisterSpan)
     constexpr uint16_t size = 10;
     constexpr W5100Register reg(0xddee, size);
     auto data = createBuffer(size);
-    std::array<uint8_t, size> buffer;
     expectRead(0xddee, data);
 
+    std::array<uint8_t, size> buffer;
     const auto result = device->read(reg, buffer);
-    CHECK_TRUE(std::equal(data.begin(), data.end(), result.begin()));
+    CHECK_EQUAL(size, result);
+    CHECK_TRUE(std::equal(data.begin(), data.end(), buffer.begin()));
 }
 
 TEST(W5100DeviceTest, writeSocketModeRegister)
@@ -385,8 +386,8 @@ TEST(W5100DeviceTest, receiveData)
 
     std::array<uint8_t, size> data;
     const auto rtn = device->receiveData(socket, data);
-    CHECK_EQUAL(size, rtn.length());
-    CHECK_TRUE(std::equal(rtn.begin(), rtn.end(), data.begin()));
+    CHECK_EQUAL(size, rtn);
+    CHECK_TRUE(std::equal(buffer.begin(), buffer.end(), data.begin()));
 }
 
 TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
@@ -398,7 +399,7 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
 
     std::array<uint8_t, size> data;
     const auto rtn = device->receiveData(socket, data);
-    CHECK_EQUAL(size, rtn.length());
+    CHECK_EQUAL(size, rtn);
     checkReadCalls(size + ptrReads, 0);
 }
 

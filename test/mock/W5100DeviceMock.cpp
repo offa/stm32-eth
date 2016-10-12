@@ -91,16 +91,13 @@ namespace eth
                 .withParameter("size", buffer.length());
     }
 
-    gsl::span<uint8_t> W5100Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
+    uint16_t W5100Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
     {
-        auto result = mock("W5100Device").actualCall("receiveData")
-                        .withParameter("socket", s)
-                        //.withOutputParameter("buffer", buffer.data()) // TODO: Required?
-                        .withParameter("size", buffer.length())
-                        .returnPointerValue();
-
-        return *(gsl::span<uint8_t>*)result;
-
+        return mock("W5100Device").actualCall("receiveData")
+                    .withParameter("socket", s)
+                    .withOutputParameter("buffer", buffer.data())
+                    .withParameter("size", buffer.length())
+                    .returnUnsignedIntValue();
     }
 
     SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)

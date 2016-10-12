@@ -62,7 +62,7 @@ namespace eth
         uint16_t getReceiveFreeSize(SocketHandle s);
 
         void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
-        gsl::span<uint8_t> receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
+        uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
         void write(W5100Register reg, uint8_t data);
         void write(W5100Register reg, uint16_t data);
@@ -70,7 +70,7 @@ namespace eth
 
         uint8_t read(W5100Register reg);
         uint16_t readWord(W5100Register reg);
-        gsl::span<uint8_t> read(W5100Register reg, gsl::span<uint8_t> buffer);
+        uint16_t read(W5100Register reg, gsl::span<uint8_t> buffer);
 
         void writeModeRegister(Mode value);
 
