@@ -511,8 +511,7 @@ TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
     CHECK_EQUAL(0, result);
 }
 
-// TODO: Split this test
-TEST(SocketTest, receiveReceivesDataAndSendsCommand)
+TEST(SocketTest, receiveReceivesData)
 {
     auto buffer = createBuffer(defaultSize);
     gsl::span<uint8_t> bufferSpan(buffer);
@@ -524,6 +523,23 @@ TEST(SocketTest, receiveReceivesDataAndSendsCommand)
         .withParameter("socket", socketHandle)
         .withOutputParameterReturning("buffer", buffer.data(), buffer.size())
         .withParameter("size", buffer.size())
+        .andReturnValue(defaultSize);
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+
+    std::array<uint8_t, defaultSize> data;
+    const auto result = socket->receive(data);
+    CHECK_EQUAL(buffer.size(), result);
+}
+
+TEST(SocketTest, receiveSendsCommandAfterReceive)
+{
+    auto buffer = createBuffer(defaultSize);
+    gsl::span<uint8_t> bufferSpan(buffer);
+    deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
     deviceMock.expectOneCall("executeSocketCommand")
