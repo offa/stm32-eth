@@ -83,21 +83,24 @@ namespace eth
                 .returnUnsignedIntValue();
     }
 
-    void W5100Device::sendData(SocketHandle s, const uint8_t* buffer, uint16_t size)
+    void W5100Device::sendData(SocketHandle s, const gsl::span<const uint8_t> buffer)
     {
         mock("W5100Device").actualCall("sendData")
                 .withParameter("socket", s)
-                .withMemoryBufferParameter("buffer", buffer, size)
-                .withParameter("size", size);
+                .withMemoryBufferParameter("buffer", buffer.data(), buffer.length())
+                .withParameter("size", buffer.length());
     }
 
-    uint16_t W5100Device::receiveData(SocketHandle s, uint8_t* buffer, uint16_t size)
+    gsl::span<uint8_t> W5100Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
     {
-        return mock("W5100Device").actualCall("receiveData")
+        auto result = mock("W5100Device").actualCall("receiveData")
                         .withParameter("socket", s)
-                        .withOutputParameter("buffer", buffer)
-                        .withParameter("size", size)
-                        .returnUnsignedIntValueOrDefault(size);
+                        //.withOutputParameter("buffer", buffer.data()) // TODO: Required?
+                        .withParameter("size", buffer.length())
+                        .returnPointerValue();
+
+        return *(gsl::span<uint8_t>*)result;
+
     }
 
     SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)

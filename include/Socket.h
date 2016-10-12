@@ -24,6 +24,7 @@
 #include "SocketStatus.h"
 #include "Protocol.h"
 #include <stdint.h>
+#include <gsl/span>
 
 namespace eth
 {
@@ -42,8 +43,8 @@ namespace eth
         void close();
         bool listen();
         void accept();
-        uint16_t send(const uint8_t* buffer, uint16_t length);
-        uint16_t receive(uint8_t* buffer, uint16_t length);
+        uint16_t send(const gsl::span<const uint8_t> buffer);
+        gsl::span<uint8_t> receive(gsl::span<uint8_t> buffer);
         SocketStatus getStatus() const;
 
 

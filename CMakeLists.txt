@@ -48,9 +48,14 @@ include_directories(SYSTEM "system/include"
                             "system/include/stm32f4-hal"
                             "system/include/cmsis"
                             )
+
 if( CMAKE_CROSSCOMPILING OR INTEGRATION_TEST )
     add_subdirectory("system")
 endif()
+
+
+find_package(GSL REQUIRED)
+include_directories(SYSTEM ${GSL_INCLUDE_DIR})
 
 
 include_directories("include")

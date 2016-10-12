@@ -76,8 +76,8 @@ int main(int argc, char* argv[])
         {
             if( socket.getStatus() == eth::SocketStatus::established )
             {
-                const std::string msg = "*** Test *** Test *** Test ***\n\r";
-                auto n = socket.send(reinterpret_cast<const uint8_t*>(msg.c_str()), msg.size());
+                std::array<uint8_t, 6> msg{'a', 'b', 'c', 'd', '\n', '\r'};
+                auto n = socket.send(msg);
 
                 if( n != msg.size() )
                 {
