@@ -55,7 +55,7 @@ endif()
 
 
 find_package(GSL REQUIRED)
-include_directories(SYSTEM ${GSL_INCLUDE_DIR})
+include_directories(${GSL_INCLUDE_DIR})
 
 
 include_directories("include")
