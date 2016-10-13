@@ -74,7 +74,7 @@ matrix:
           packages:
             - gcc-arm-embedded
           sources: *sources
-    - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED
+    - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED=ON
       addons:
         apt:
           packages:

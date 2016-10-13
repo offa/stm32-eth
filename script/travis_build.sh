@@ -2,11 +2,16 @@
 
 set -ex
 
+echo "LTO: ${LTO_ENABLED}"
+
 if [ -v LTO_ENABLED ]; then
     LTO_ENABLED=ON
+    echo "--> ON"
 else
     LTO_ENABLED=OFF
+    echo "--> OFF"
 fi
+echo "LTO: ${LTO_ENABLED}"
 
 
 mkdir build && cd build
