@@ -2,10 +2,17 @@
 
 set -ex
 
+if [ -v LTO_ENABLED ]; then
+    LTO_ENABLED=ON
+else
+    LTO_ENABLED=OFF
+fi
+
+
 mkdir build && cd build
 
 if [ "$CXX" == "arm-none-eabi-g++" ]; then
-    cmake -DUNITTEST=OFF -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DINTEGRATION_TEST=ON -DCMAKE_TOOLCHAIN_FILE=../arm-embedded-toolchain.cmake ..
+    cmake -DUNITTEST=OFF -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DINTEGRATION_TEST=ON -DLTO=${LTO_ENABLED} -DCMAKE_TOOLCHAIN_FILE=../arm-embedded-toolchain.cmake ..
     make
 
     make eth-stm32.size

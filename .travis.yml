@@ -74,6 +74,12 @@ matrix:
           packages:
             - gcc-arm-embedded
           sources: *sources
+    - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED
+      addons:
+        apt:
+          packages:
+            - gcc-arm-embedded
+          sources: *sources
 
 script:
     - script/travis_build.sh
