@@ -20,10 +20,12 @@
 
 #pragma once
 
+#include <stdint.h>
+
 namespace eth
 {
 
-    enum class Protocol
+    enum class Protocol : uint8_t
     {
         tcp = 0x01,
         udp = 0x02,

@@ -20,10 +20,12 @@
 
 #pragma once
 
+#include <stdint.h>
+
 namespace eth
 {
 
-    enum class SocketInterrupt
+    enum class SocketInterrupt : uint8_t
     {
         connect = 0x01,
         disconnect = 0x02,
