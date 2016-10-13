@@ -5,11 +5,8 @@ set -ex
 ## Install GSL
 wget https://github.com/Microsoft/GSL/archive/master.tar.gz -O gsl.tar.gz
 tar -xzvf gsl.tar.gz
-pushd GSL-master
-mkdir build && cd build
-cmake ..
-sudo make install
-popd
+mkdir dependencies
+mv GSL-master dependencies/gsl
 
 
 if [ "$CXX" != "arm-none-eabi-g++" ]; then
@@ -24,7 +21,7 @@ if [ "$CXX" != "arm-none-eabi-g++" ]; then
     fi
 
     wget https://github.com/cpputest/cpputest/releases/download/v${CPPUTEST_VERSION}/${CPPUTEST}.tar.gz
-    tar -xzvf *.tar.gz
+    tar -xzvf ${CPPUTEST}.tar.gz
     pushd ${CPPUTEST}
     mkdir _build && cd _build
     cmake $BUILD_FLAGS ..

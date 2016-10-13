@@ -2,6 +2,9 @@
 
 set -ex
 
+export GSL_INCLUDE_DIR=dependencies/gsl
+
+
 mkdir build && cd build
 
 if [ "$CXX" == "arm-none-eabi-g++" ]; then
