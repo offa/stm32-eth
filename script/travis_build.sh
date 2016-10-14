@@ -2,7 +2,11 @@
 
 set -ex
 
-export GSL_INCLUDE_DIR=dependencies/gsl
+if [ -v GSL_INCLUDE_DIR ]; then
+    echo "GSL: ${GSL_INCLUDE_DIR}"
+else
+    export GSL_INCLUDE_DIR=dependencies/gsl
+fi
 
 
 mkdir build && cd build
