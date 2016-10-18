@@ -231,20 +231,20 @@ namespace eth
 
     uint16_t W5100Device::readWord(W5100Register reg)
     {
-        const auto b1 = read(reg);
-        const auto b0 = read(reg.address(), 1);
-        return byte::to<uint16_t>(b1, b0);
+        const auto byte1 = read(reg);
+        const auto byte0 = read(reg.address(), 1);
+        return byte::to<uint16_t>(byte1, byte0);
     }
 
     uint16_t W5100Device::read(W5100Register reg, gsl::span<uint8_t> buffer)
     {
-        uint16_t i = 0;
+        uint16_t offset = 0;
         std::generate(buffer.begin(), buffer.end(), [&]
         {
-            return read(reg.address(), i++);
+            return read(reg.address(), offset++);
         });
 
-        return i;
+        return offset;
 
     }
 
