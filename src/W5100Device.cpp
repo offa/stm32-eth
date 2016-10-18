@@ -253,7 +253,7 @@ namespace eth
         write(mode, static_cast<uint8_t>(value));
     }
 
-    void W5100Device::setGatewayAddress(const std::array<uint8_t, 4>& addr)
+    void W5100Device::setGatewayAddress(std::array<uint8_t, 4> addr)
     {
         write(gatewayAddress, addr);
     }

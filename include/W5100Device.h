@@ -74,10 +74,10 @@ namespace eth
 
         void writeModeRegister(Mode value);
 
-        void setGatewayAddress(const std::array<uint8_t, 4>& addr);
-        void setSubnetMask(const std::array<uint8_t, 4> addr);
-        void setMacAddress(const std::array<uint8_t, 6> addr);
-        void setIpAddress(const std::array<uint8_t, 4> addr);
+        void setGatewayAddress(std::array<uint8_t, 4> addr);
+        void setSubnetMask(std::array<uint8_t, 4> addr);
+        void setMacAddress(std::array<uint8_t, 6> addr);
+        void setIpAddress(std::array<uint8_t, 4> addr);
 
         static constexpr uint16_t getTransmitBufferSize()
         {
