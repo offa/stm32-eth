@@ -94,20 +94,6 @@ namespace eth
         m_device.sendData(m_handle, buffer);
         m_device.executeSocketCommand(m_handle, SocketCommand::send);
 
-
-        constexpr uint8_t sendMask = static_cast<uint8_t>(SocketInterrupt::send);
-
-        while( ( m_device.readSocketInterruptRegister(m_handle) & sendMask ) != sendMask )
-        {
-            if( getStatus() == SocketStatus::closed )
-            {
-                close();
-                return 0;
-            }
-        }
-
-        m_device.writeSocketInterruptRegister(m_handle, sendMask);
-
         return sendSize;
     }
 
