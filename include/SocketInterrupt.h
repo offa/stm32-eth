@@ -25,13 +25,51 @@
 namespace eth
 {
 
-    enum class SocketInterrupt : uint8_t
+    class SocketInterrupt
     {
-        connect = 0x01,
-        disconnect = 0x02,
-        receive = 0x04,
-        timeout = 0x08,
-        send = 0x10
+    public:
+
+        enum class Mask : uint8_t
+        {
+            connect = 0x01,
+            disconnect = 0x02,
+            receive = 0x04,
+            timeout = 0x08,
+            send = 0x10
+        };
+
+
+        constexpr explicit SocketInterrupt(uint8_t value) : m_value(value)
+        {
+        }
+
+        constexpr SocketInterrupt(SocketInterrupt::Mask mask) : SocketInterrupt(static_cast<uint8_t>(mask))
+        {
+        }
+
+        constexpr SocketInterrupt() : SocketInterrupt(0xff)
+        {
+        }
+
+
+        constexpr uint8_t value() const
+        {
+            return m_value;
+        }
+
+        constexpr bool test(Mask mask) const
+        {
+            return m_value & static_cast<uint8_t>(mask);
+        }
+
+        constexpr void set(Mask mask)
+        {
+            m_value |= static_cast<uint8_t>(mask);
+        }
+
+    private:
+
+        uint8_t m_value;
     };
 
 }

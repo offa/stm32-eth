@@ -44,7 +44,9 @@ list(APPEND BYTETEST_SRC ByteTest.cpp)
 _add_test(ByteTest BYTETEST_SRC)
 
 
-list(APPEND REGISTERVALUETEST_SRC RegisterValueTest.cpp)
+list(APPEND REGISTERVALUETEST_SRC RegisterValueTest.cpp
+                                    SocketInterruptTest.cpp
+                                    )
 _add_test(RegisterValueTest REGISTERVALUETEST_SRC)
 
 list(APPEND SPITEST_SRC SpiTest.cpp

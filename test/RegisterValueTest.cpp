@@ -83,11 +83,11 @@ TEST(RegisterValueTest, socketCommand)
 TEST(RegisterValueTest, socketInterrupt)
 {
     using eth::SocketInterrupt;
-    CHECK_EQUAL(0x01, value(SocketInterrupt::connect));
-    CHECK_EQUAL(0x02, value(SocketInterrupt::disconnect));
-    CHECK_EQUAL(0x04, value(SocketInterrupt::receive));
-    CHECK_EQUAL(0x08, value(SocketInterrupt::timeout));
-    CHECK_EQUAL(0x10, value(SocketInterrupt::send));
+    CHECK_EQUAL(0x01, value(SocketInterrupt::Mask::connect));
+    CHECK_EQUAL(0x02, value(SocketInterrupt::Mask::disconnect));
+    CHECK_EQUAL(0x04, value(SocketInterrupt::Mask::receive));
+    CHECK_EQUAL(0x08, value(SocketInterrupt::Mask::timeout));
+    CHECK_EQUAL(0x10, value(SocketInterrupt::Mask::send));
 }
 
 TEST(RegisterValueTest, socketStatus)

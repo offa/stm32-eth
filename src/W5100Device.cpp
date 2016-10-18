@@ -89,14 +89,14 @@ namespace eth
         write(socketSourcePort(s), value);
     }
 
-    void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
+    void W5100Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
     {
-        write(socketInterrupt(s), value);
+        write(socketInterrupt(s), value.value());
     }
 
-    uint8_t W5100Device::readSocketInterruptRegister(SocketHandle s)
+    SocketInterrupt W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
-        return read(socketInterrupt(s));
+        return SocketInterrupt(read(socketInterrupt(s)));
     }
 
     void W5100Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)

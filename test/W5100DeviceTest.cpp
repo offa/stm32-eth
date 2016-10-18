@@ -33,6 +33,7 @@ using eth::SocketCommand;
 using eth::SocketStatus;
 using eth::Mode;
 using eth::W5100Register;
+using eth::SocketInterrupt;
 using eth::makeRegister;
 
 TEST_GROUP(W5100DeviceTest)
@@ -264,7 +265,7 @@ TEST(W5100DeviceTest, writeSocketInterruptRegister)
     constexpr uint8_t value = 0x45;
     expectWrite(address, value);
 
-    device->writeSocketInterruptRegister(socket, value);
+    device->writeSocketInterruptRegister(socket, SocketInterrupt(value));
 }
 
 TEST(W5100DeviceTest, readSocketInterruptRegister)
@@ -273,8 +274,8 @@ TEST(W5100DeviceTest, readSocketInterruptRegister)
     constexpr uint8_t value = 0xb8;
     expectRead(address, value);
 
-    const uint8_t rtn = device->readSocketInterruptRegister(socket);
-    CHECK_EQUAL(value, rtn);
+    const auto rtn = device->readSocketInterruptRegister(socket);
+    CHECK_EQUAL(value, rtn.value());
 }
 
 TEST(W5100DeviceTest, writeSocketCommandRegister)

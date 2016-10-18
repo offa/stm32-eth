@@ -22,6 +22,7 @@
 
 #include "SocketHandle.h"
 #include "SocketStatus.h"
+#include "SocketInterrupt.h"
 #include "Protocol.h"
 #include <stdint.h>
 #include <gsl/span>
@@ -55,6 +56,7 @@ namespace eth
 
         uint16_t waitForBuffer(uint16_t size) const;
         uint16_t waitForData() const;
+        bool isPendingInterrupt(SocketInterrupt::Mask mask);
 
 
         static constexpr bool connectionReady(SocketStatus status)

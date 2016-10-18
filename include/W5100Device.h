@@ -23,6 +23,7 @@
 #include "SocketHandle.h"
 #include "SocketCommand.h"
 #include "SocketStatus.h"
+#include "SocketInterrupt.h"
 #include "Mode.h"
 #include "W5100Register.h"
 #include <array>
@@ -50,8 +51,8 @@ namespace eth
         void writeSocketModeRegister(SocketHandle s, uint8_t value);
         void writeSocketSourcePort(SocketHandle s, uint16_t value);
 
-        void writeSocketInterruptRegister(SocketHandle s, uint8_t value);
-        uint8_t readSocketInterruptRegister(SocketHandle s);
+        void writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value);
+        SocketInterrupt readSocketInterruptRegister(SocketHandle s);
 
         void writeSocketCommandRegister(SocketHandle s, SocketCommand value);
         SocketCommand readSocketCommandRegister(SocketHandle s);

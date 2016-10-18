@@ -41,18 +41,19 @@ namespace eth
                 .withParameter("value", value);
     }
 
-    void W5100Device::writeSocketInterruptRegister(SocketHandle s, uint8_t value)
+    void W5100Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
     {
         mock("W5100Device").actualCall("writeSocketInterruptRegister")
                 .withParameter("socket", s)
-                .withParameter("value", value);
+                .withParameter("value", value.value());
     }
 
-    uint8_t W5100Device::readSocketInterruptRegister(SocketHandle s)
+    SocketInterrupt W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
-        return mock("W5100Device").actualCall("readSocketInterruptRegister")
-                .withParameter("socket", s)
-                .returnUnsignedIntValue();
+        const auto value =  mock("W5100Device").actualCall("readSocketInterruptRegister")
+                                .withParameter("socket", s)
+                                .returnUnsignedIntValue();
+        return SocketInterrupt(value);
     }
 
     void W5100Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
