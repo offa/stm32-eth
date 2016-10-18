@@ -78,6 +78,11 @@ namespace eth
 
     uint16_t Socket::send(const gsl::span<const uint8_t> buffer)
     {
+        if( buffer.empty() == true )
+        {
+            return 0;
+        }
+
         const uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), uint16_t(buffer.length()));
         const auto freeSize = waitForBuffer(sendSize);
 

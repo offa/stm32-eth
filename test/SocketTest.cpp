@@ -222,6 +222,18 @@ TEST(SocketTest, sendReturnsBytesTransmitted)
     CHECK_EQUAL(buffer.size(), result);
 }
 
+TEST(SocketTest, sendIgnoresEmptyBuffer)
+{
+    const auto result = socket->send({ });
+    CHECK_EQUAL(0, result);
+}
+
+TEST(SocketTest, sendIgnoresNullptrBuffer)
+{
+    const auto result = socket->send({nullptr});
+    CHECK_EQUAL(0, result);
+}
+
 TEST(SocketTest, sendLimitsBufferSize)
 {
     constexpr uint16_t maxSendSize = 2048;
