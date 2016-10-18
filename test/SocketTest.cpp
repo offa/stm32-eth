@@ -230,7 +230,7 @@ TEST(SocketTest, sendIgnoresEmptyBuffer)
 
 TEST(SocketTest, sendIgnoresNullptrBuffer)
 {
-    const auto result = socket->send({nullptr});
+    const auto result = socket->send(nullptr);
     CHECK_EQUAL(0, result);
 }
 
@@ -435,6 +435,19 @@ TEST(SocketTest, receiveReturnsBytesReceived)
     std::array<uint8_t, defaultSize> data;
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
+}
+
+TEST(SocketTest, receiveIgnoresEmptyBuffer)
+{
+    std::vector<uint8_t> buffer;
+    const auto result = socket->receive(buffer);
+    CHECK_EQUAL(0, result);
+}
+
+TEST(SocketTest, receiveIgnoresNullptrBuffer)
+{
+    const auto result = socket->receive(nullptr);
+    CHECK_EQUAL(0, result);
 }
 
 TEST(SocketTest, receiveLimitsBuffer)

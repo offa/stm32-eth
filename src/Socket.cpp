@@ -113,6 +113,11 @@ namespace eth
 
     uint16_t Socket::receive(gsl::span<uint8_t> buffer)
     {
+        if( buffer.empty() == true )
+        {
+            return 0;
+        }
+
         const uint16_t available = waitForData();
 
         if( available == 0 )
