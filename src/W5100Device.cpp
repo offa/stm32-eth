@@ -25,20 +25,35 @@
 
 namespace eth
 {
-
-    template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
-    static constexpr uint16_t getTransmitBufferAddress(uint16_t bufferSize)
+    namespace
     {
-        constexpr uint16_t baseAddress = 0x4000;
-        return baseAddress + bufferSize * index;
+
+        template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
+        constexpr uint16_t getTransmitBufferAddress()
+        {
+            constexpr uint16_t baseAddress = 0x4000;
+            return baseAddress + W5100Device::getTransmitBufferSize() * index;
+        }
+
+        template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
+        constexpr uint16_t getReceiveBufferAddress()
+        {
+            constexpr uint16_t baseAddress = 0x6000;
+            return baseAddress + W5100Device::getReceiveBufferSize() * index;
+        }
+
+        constexpr std::array<uint16_t, supportedSockets> transmitBufferBaseAddress{{
+                                                            getTransmitBufferAddress<0>(),
+                                                            getTransmitBufferAddress<1>(),
+                                                            getTransmitBufferAddress<2>(),
+                                                            getTransmitBufferAddress<3>() }};
+        constexpr std::array<uint16_t, supportedSockets> receiveBufferBaseAddress{{
+                                                            getReceiveBufferAddress<0>(),
+                                                            getReceiveBufferAddress<1>(),
+                                                            getReceiveBufferAddress<2>(),
+                                                            getReceiveBufferAddress<3>() }};
     }
 
-    template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
-    static constexpr uint16_t getReceiveBufferAddress(uint16_t bufferSize)
-    {
-        constexpr uint16_t baseAddress = 0x6000;
-        return baseAddress + bufferSize * index;
-    }
 
 
     W5100Device::W5100Device(Spi& spi) : m_spi(spi)
@@ -302,16 +317,5 @@ namespace eth
     {
         write(receiveMemorySize, value);
     }
-
-    const std::array<uint16_t, supportedSockets> W5100Device::transmitBufferBaseAddress{{
-                                                                getTransmitBufferAddress<0>(transmitBufferSize),
-                                                                getTransmitBufferAddress<1>(transmitBufferSize),
-                                                                getTransmitBufferAddress<2>(transmitBufferSize),
-                                                                getTransmitBufferAddress<3>(transmitBufferSize) }};
-    const std::array<uint16_t, supportedSockets> W5100Device::receiveBufferBaseAddress{{
-                                                                getReceiveBufferAddress<0>(transmitBufferSize),
-                                                                getReceiveBufferAddress<1>(transmitBufferSize),
-                                                                getReceiveBufferAddress<2>(transmitBufferSize),
-                                                                getReceiveBufferAddress<3>(transmitBufferSize) }};
 
 }

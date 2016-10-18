@@ -114,8 +114,6 @@ namespace eth
         static constexpr uint8_t opcodeRead = 0x0f;
         static constexpr uint16_t transmitBufferSize = 2048;
         static constexpr uint16_t receiveBufferSize = 2048;
-        static const std::array<uint16_t, supportedSockets> transmitBufferBaseAddress;
-        static const std::array<uint16_t, supportedSockets> receiveBufferBaseAddress;
     };
 
 }
