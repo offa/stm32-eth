@@ -52,7 +52,7 @@ Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.
 
 Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 
-![W5100 Pin Assignment](http://fs5.directupload.net/images/161016/qwtaw2sv.png)
+![W5100 Pin Assignment](http://fs5.directupload.net/images/161018/3xybitii.png)
 
 #### Stm32
 
