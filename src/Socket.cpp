@@ -175,7 +175,7 @@ namespace eth
         return available;
     }
 
-    bool Socket::isPendingInterrupt(SocketInterrupt::Mask mask)
+    bool Socket::isPendingInterrupt(SocketInterrupt::Mask mask) const
     {
         const auto value = m_device.readSocketInterruptRegister(m_handle);
         return value.test(mask) == false;
