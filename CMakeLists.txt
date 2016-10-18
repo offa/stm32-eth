@@ -36,21 +36,35 @@ if( CMAKE_BUILD_TYPE )
 endif()
 
 
-add_common_flag(-Wall -Wextra -pedantic -Werror -Wshadow)
+add_common_flag(-Wall
+                -Wextra
+                -pedantic
+                -Werror
+                -Wshadow
+                )
 
 if( COVERAGE )
     include(Coverage)
 endif()
 
 
-add_definitions(-DSTM32F407xx -DUSE_HAL_DRIVER -DHSE_VALUE=8000000 -DOS_USE_TRACE_SEMIHOSTING_DEBUG)
+add_definitions(-DSTM32F407xx
+                -DUSE_HAL_DRIVER
+                -DHSE_VALUE=8000000
+                -DOS_USE_TRACE_SEMIHOSTING_DEBUG
+                )
 include_directories(SYSTEM "system/include"
                             "system/include/stm32f4-hal"
                             "system/include/cmsis"
                             )
+
 if( CMAKE_CROSSCOMPILING OR INTEGRATION_TEST )
     add_subdirectory("system")
 endif()
+
+
+find_package(GSL REQUIRED)
+include_directories(${GSL_INCLUDE_DIR})
 
 
 include_directories("include")

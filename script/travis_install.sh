@@ -2,6 +2,13 @@
 
 set -ex
 
+## Install GSL
+wget https://github.com/Microsoft/GSL/archive/master.tar.gz -O gsl.tar.gz
+tar -xzvf gsl.tar.gz
+mkdir dependencies
+mv GSL-master dependencies/gsl
+
+
 if [ "$CXX" != "arm-none-eabi-g++" ]; then
     ## Install CppUTest
     CPPUTEST_VERSION=3.8
@@ -14,7 +21,7 @@ if [ "$CXX" != "arm-none-eabi-g++" ]; then
     fi
 
     wget https://github.com/cpputest/cpputest/releases/download/v${CPPUTEST_VERSION}/${CPPUTEST}.tar.gz
-    tar -xzvf *.tar.gz
+    tar -xzvf ${CPPUTEST}.tar.gz
     pushd ${CPPUTEST}
     mkdir _build && cd _build
     cmake $BUILD_FLAGS ..

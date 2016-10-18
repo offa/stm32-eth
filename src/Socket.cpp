@@ -76,9 +76,9 @@ namespace eth
         }
     }
 
-    uint16_t Socket::send(const uint8_t* buffer, uint16_t length)
+    uint16_t Socket::send(const gsl::span<const uint8_t> buffer)
     {
-        const uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), length);
+        const uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), uint16_t(buffer.length()));
         const auto freeSize = waitForBuffer(sendSize);
 
         if( freeSize == 0 )
@@ -86,7 +86,7 @@ namespace eth
             return 0;
         }
 
-        m_device.sendData(m_handle, buffer, sendSize);
+        m_device.sendData(m_handle, buffer);
         m_device.executeSocketCommand(m_handle, SocketCommand::send);
 
 
@@ -106,7 +106,7 @@ namespace eth
         return sendSize;
     }
 
-    uint16_t Socket::receive(uint8_t* buffer, uint16_t length)
+    uint16_t Socket::receive(gsl::span<uint8_t> buffer)
     {
         const uint16_t available = waitForData();
 
@@ -115,12 +115,13 @@ namespace eth
             return 0;
         }
 
-        const uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), length);
+        const uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), uint16_t(buffer.length()));
         const uint16_t receiveSize = std::min(available, sizeLimited);
-        const uint16_t received = m_device.receiveData(m_handle, buffer, receiveSize);
+        auto shrinkedBuffer = buffer.first(receiveSize);
+        m_device.receiveData(m_handle, shrinkedBuffer);
         m_device.executeSocketCommand(m_handle, SocketCommand::receive);
 
-        return received;
+        return receiveSize;
     }
 
     SocketStatus Socket::getStatus() const

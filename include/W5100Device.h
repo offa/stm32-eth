@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <iterator>
 #include <stdint.h>
+#include <gsl/span>
 
 namespace eth
 {
@@ -60,41 +61,23 @@ namespace eth
         uint16_t getTransmitFreeSize(SocketHandle s);
         uint16_t getReceiveFreeSize(SocketHandle s);
 
-        void sendData(SocketHandle s, const uint8_t* buffer, uint16_t size);
-        uint16_t receiveData(SocketHandle s, uint8_t* buffer, uint16_t size);
+        void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
+        uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
         void write(W5100Register reg, uint8_t data);
         void write(W5100Register reg, uint16_t data);
-
-        template<class InputIterator>
-        void write(W5100Register reg, InputIterator begin, InputIterator end)
-        {
-            uint16_t offset = 0;
-            std::for_each(begin, end, [&](uint8_t data)
-            {
-                write(reg.address(), offset++, data);
-            });
-        }
+        void write(W5100Register reg, const gsl::span<const uint8_t> buffer);
 
         uint8_t read(W5100Register reg);
         uint16_t readWord(W5100Register reg);
-
-        template<class OutputIterator>
-        void read(W5100Register reg, OutputIterator outputBegin, OutputIterator outputEnd)
-        {
-            uint16_t i = 0;
-            std::generate(outputBegin, outputEnd, [&]
-            {
-                return read(reg.address(), i++);
-            });
-        }
+        uint16_t read(W5100Register reg, gsl::span<uint8_t> buffer);
 
         void writeModeRegister(Mode value);
 
         void setGatewayAddress(const std::array<uint8_t, 4>& addr);
-        void setSubnetMask(const std::array<uint8_t, 4>& addr);
-        void setMacAddress(const std::array<uint8_t, 6>& addr);
-        void setIpAddress(const std::array<uint8_t, 4>& addr);
+        void setSubnetMask(const std::array<uint8_t, 4> addr);
+        void setMacAddress(const std::array<uint8_t, 6> addr);
+        void setIpAddress(const std::array<uint8_t, 4> addr);
 
         static constexpr uint16_t getTransmitBufferSize()
         {
@@ -124,11 +107,6 @@ namespace eth
 
         void writeTransmitMemorySizeRegister(uint8_t value);
         void writeReceiveMemorySizeRegister(uint8_t value);
-
-        void writeGatewayAddressRegister(const std::array<uint8_t, 4>& addr);
-        void writeSubnetMaskRegister(const std::array<uint8_t, 4>& addr);
-        void writeSourceMacAddressRegister(const std::array<uint8_t, 6>& addr);
-        void writeSourceIpRegister(const std::array<uint8_t, 4>& addr);
 
 
         Spi& m_spi;

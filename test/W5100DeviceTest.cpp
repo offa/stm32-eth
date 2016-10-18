@@ -170,6 +170,17 @@ TEST(W5100DeviceTest, writeRegisterTwoByte)
     device->write(reg, data);
 }
 
+TEST(W5100DeviceTest, writeSpan)
+{
+    constexpr uint16_t size = 10;
+    constexpr W5100Register reg(0xa1b2, size);
+    auto data = createBuffer(size);
+    const gsl::span<uint8_t> span(data);
+
+    expectWrite(0xa1b2, span);
+    device->write(reg, span);
+}
+
 TEST(W5100DeviceTest, writeBuffer)
 {
     constexpr uint16_t size = 10;
@@ -179,7 +190,7 @@ TEST(W5100DeviceTest, writeBuffer)
     spiMock.expectNCalls(size, "setSlaveSelect");
     spiMock.ignoreOtherCalls();
 
-    device->write(reg, data.begin(), data.end());
+    device->write(reg, data);
     checkWriteCalls(size);
 }
 
@@ -192,7 +203,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
     spiMock.expectNCalls(size, "setSlaveSelect");
     spiMock.ignoreOtherCalls();
 
-    device->write(reg, data.data(), std::next(data.data(), data.size()));
+    device->write(reg, {data.data(), size});
     checkWriteCalls(size);
 }
 
@@ -214,6 +225,19 @@ TEST(W5100DeviceTest, readRegisterTwoByte)
 
     const uint16_t result = device->readWord(reg);
     CHECK_EQUAL(data, result);
+}
+
+TEST(W5100DeviceTest, readRegisterSpan)
+{
+    constexpr uint16_t size = 10;
+    constexpr W5100Register reg(0xddee, size);
+    auto data = createBuffer(size);
+    expectRead(0xddee, data);
+
+    std::array<uint8_t, size> buffer;
+    const auto result = device->read(reg, buffer);
+    CHECK_EQUAL(size, result);
+    CHECK_TRUE(std::equal(data.begin(), data.end(), buffer.begin()));
 }
 
 TEST(W5100DeviceTest, writeSocketModeRegister)
@@ -333,7 +357,7 @@ TEST(W5100DeviceTest, sendData)
     expectWrite(destAddress, buffer);
     expectWrite(address, static_cast<uint16_t>(value + size));
 
-    device->sendData(socket, buffer.data(), buffer.size());
+    device->sendData(socket, buffer);
 }
 
 TEST(W5100DeviceTest, sendDataCircularBufferWrap)
@@ -344,7 +368,7 @@ TEST(W5100DeviceTest, sendDataCircularBufferWrap)
     auto buffer = createBuffer(size);
     spiMock.ignoreOtherCalls();
 
-    device->sendData(socket, buffer.data(), buffer.size());
+    device->sendData(socket, buffer);
     checkWriteCalls(size + ptrWrites, ignoreReads);
 }
 
@@ -361,7 +385,7 @@ TEST(W5100DeviceTest, receiveData)
     expectWrite(address, static_cast<uint16_t>(value + size));
 
     std::array<uint8_t, size> data;
-    const auto rtn = device->receiveData(socket, data.data(), data.size());
+    const auto rtn = device->receiveData(socket, data);
     CHECK_EQUAL(size, rtn);
     CHECK_TRUE(std::equal(buffer.begin(), buffer.end(), data.begin()));
 }
@@ -374,7 +398,7 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
     spiMock.ignoreOtherCalls();
 
     std::array<uint8_t, size> data;
-    const auto rtn = device->receiveData(socket, data.data(), data.size());
+    const auto rtn = device->receiveData(socket, data);
     CHECK_EQUAL(size, rtn);
     checkReadCalls(size + ptrReads, 0);
 }
