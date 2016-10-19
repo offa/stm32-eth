@@ -24,6 +24,13 @@ endmacro()
 
 
 
+list(APPEND COMMONTEST_SRC RegisterValueTest.cpp
+                                    SocketInterruptTest.cpp
+                                    ByteTest.cpp
+                                    )
+_add_test(CommonTest COMMONTEST_SRC)
+
+
 list(APPEND SOCKETTEST_SRC SocketTest.cpp
                     $<TARGET_OBJECTS:socket>
                     $<TARGET_OBJECTS:w5100device-mock>
@@ -39,15 +46,6 @@ list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
                         )
 _add_test(W5100DeviceTest W5100TEST_SRC)
 
-
-list(APPEND BYTETEST_SRC ByteTest.cpp)
-_add_test(ByteTest BYTETEST_SRC)
-
-
-list(APPEND REGISTERVALUETEST_SRC RegisterValueTest.cpp
-                                    SocketInterruptTest.cpp
-                                    )
-_add_test(RegisterValueTest REGISTERVALUETEST_SRC)
 
 list(APPEND SPITEST_SRC SpiTest.cpp
                         $<TARGET_OBJECTS:stm32hal-mock>
@@ -68,10 +66,9 @@ if( UNITTEST_JUNIT )
 endif()
 
 
-add_custom_target(unittest SocketTest ${TEST_FLAGS}
+add_custom_target(unittest CommonTest ${TEST_FLAGS}
+                    COMMAND SocketTest ${TEST_FLAGS}
                     COMMAND W5100DeviceTest ${TEST_FLAGS}
-                    COMMAND ByteTest ${TEST_FLAGS}
-                    COMMAND RegisterValueTest ${TEST_FLAGS}
                     COMMAND SpiTest ${TEST_FLAGS}
 
                     COMMENT "Running unittests\n\n"
