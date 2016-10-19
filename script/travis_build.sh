@@ -7,6 +7,7 @@ if [ -v LTO_ENABLED ]; then
     LTO_ENABLED=ON
 else
     LTO_ENABLED=OFF
+fi
 
 if [ -v GSL_INCLUDE_DIR ]; then
     echo "GSL: ${GSL_INCLUDE_DIR}"

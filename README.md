@@ -48,6 +48,12 @@ Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.
 
 ## Pin assignment
 
+#### W5100
+
+Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
+
+[![W5100 Pin Assignment](doc/W5100-Pin-Assignment-Scaled.png?raw=true)](doc/W5100-Pin-Assignment.png?raw=true)
+
 #### Stm32
 
 | Pin  | Stm32 |
@@ -57,11 +63,7 @@ Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.
 | SCK  | PB13  |
 | SS   | PB12  |
 
-#### W5100
 
-Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
-
-![W5100 Pin Assignment](http://fs5.directupload.net/images/161016/qwtaw2sv.png)
 
 
 ## License

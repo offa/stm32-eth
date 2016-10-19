@@ -53,6 +53,11 @@ namespace eth
         // TODO: Safe close in dtor
         m_device.executeSocketCommand(m_handle, SocketCommand::close);
         m_device.writeSocketInterruptRegister(m_handle, SocketInterrupt(0xff));
+
+        while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::closed )
+        {
+            // Wait for completion
+        }
     }
 
     bool Socket::listen()
@@ -93,18 +98,6 @@ namespace eth
 
         m_device.sendData(m_handle, buffer);
         m_device.executeSocketCommand(m_handle, SocketCommand::send);
-        constexpr auto sendMask = SocketInterrupt::Mask::send;
-
-        while( isPendingInterrupt(sendMask) == true )
-        {
-            if( getStatus() == SocketStatus::closed )
-            {
-                close();
-                return 0;
-            }
-        }
-
-        m_device.writeSocketInterruptRegister(m_handle, SocketInterrupt(sendMask));
 
         return sendSize;
     }
