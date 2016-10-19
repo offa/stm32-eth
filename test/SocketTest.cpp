@@ -61,6 +61,9 @@ TEST_GROUP(SocketTest)
         deviceMock.expectOneCall("writeSocketInterruptRegister")
             .withParameter("socket", handle)
             .withParameter("value", 0xff);
+        deviceMock.expectOneCall("readSocketStatusRegister")
+            .withParameter("socket", socketHandle)
+            .andReturnValue(static_cast<int>(SocketStatus::closed));
     }
 
     std::vector<uint8_t> createBuffer(size_t size) const
@@ -154,12 +157,25 @@ TEST(SocketTest, openOpensSocket)
 
 TEST(SocketTest, close)
 {
-    deviceMock.expectOneCall("executeSocketCommand")
+    expectClose(socketHandle);
+    socket->close();
+}
+
+TEST(SocketTest, closeWaitsForCloseStatus)
+{
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketInterruptRegister").ignoreOtherParameters();
+
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::close));
-    deviceMock.expectOneCall("writeSocketInterruptRegister")
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
-        .withParameter("value", 0xff);
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::closed));
+
     socket->close();
 }
 

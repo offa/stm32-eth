@@ -53,6 +53,11 @@ namespace eth
         // TODO: Safe close in dtor
         m_device.executeSocketCommand(m_handle, SocketCommand::close);
         m_device.writeSocketInterruptRegister(m_handle, 0xff);
+
+        while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::closed )
+        {
+            // Wait for completion
+        }
     }
 
     bool Socket::listen()
