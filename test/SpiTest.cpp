@@ -44,7 +44,7 @@ TEST_GROUP(SpiTest)
     std::unique_ptr<eth::Spi> spi;
     MockSupport& halSpiMock = mock("HAL_SPI");
     MockSupport& halGpioMock = mock("HAL_GPIO");
-    MockSupport& platformMock = mock("platform::stm32");
+    MockSupport& platformMock = mock("platform");
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
     static constexpr uint32_t timeout = 0xffff'ffff;

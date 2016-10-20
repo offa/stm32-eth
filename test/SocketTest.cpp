@@ -78,7 +78,7 @@ TEST_GROUP(SocketTest)
     Spi spi;
     W5100Device device{spi};
     MockSupport& deviceMock = mock("W5100Device");
-    MockSupport& platformMock = mock("platform::stm32");
+    MockSupport& platformMock = mock("platform");
     static constexpr eth::SocketHandle socketHandle = 0;
     static constexpr uint16_t port = 1234;
     static constexpr Protocol protocol = Protocol::tcp;

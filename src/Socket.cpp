@@ -77,7 +77,7 @@ namespace eth
         while( getStatus() == SocketStatus::listen )
         {
             constexpr uint32_t waitTimeMs = 100;
-            platform::stm32::wait(waitTimeMs);
+            platform::wait(waitTimeMs);
         }
     }
 

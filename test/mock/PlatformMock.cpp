@@ -23,19 +23,16 @@
 
 namespace platform
 {
-    namespace stm32
+    void spiClockEnable()
     {
-        void spiClockEnable()
-        {
-            mock("platform::stm32").actualCall("spiClockEnable");
-        }
+        mock("platform").actualCall("spiClockEnable");
+    }
 
-        void wait(uint32_t timeMs)
-        {
-            mock("platform::stm32").actualCall("wait")
-                .withParameter("timeMs", timeMs);
+    void wait(uint32_t timeMs)
+    {
+        mock("platform").actualCall("wait")
+            .withParameter("timeMs", timeMs);
 
-        }
     }
 }
 
