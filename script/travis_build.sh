@@ -2,11 +2,17 @@
 
 set -ex
 
-
-if [ -v GSL_INCLUDE_DIR ]; then
-    echo "GSL: ${GSL_INCLUDE_DIR}"
+if [ ! -v LTO_ENABLED ]; then
+    LTO_ENABLED=ON
 else
-    export GSL_INCLUDE_DIR=dependencies/gsl
+    LTO_ENABLED=OFF
+fi
+
+
+if [ ! -v GSL_INCLUDE_DIR ]; then
+    if [ -d "t1/t2" ]; then
+        export GSL_INCLUDE_DIR=dependencies/gsl
+    fi
 fi
 
 
