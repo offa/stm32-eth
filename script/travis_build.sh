@@ -10,7 +10,7 @@ fi
 
 
 if [ ! -v GSL_INCLUDE_DIR ]; then
-    if [ -d "t1/t2" ]; then
+    if [ -d "dependencies/gsl" ]; then
         export GSL_INCLUDE_DIR=dependencies/gsl
     fi
 fi
