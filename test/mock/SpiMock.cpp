@@ -59,7 +59,4 @@ namespace eth
         mock("Spi").actualCall("resetSlaveSelect");
     }
 
-
-    Spi spi;
-
 }
