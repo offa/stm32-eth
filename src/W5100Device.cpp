@@ -20,7 +20,7 @@
 
 #include "W5100Device.h"
 #include "W5100Registers.h"
-#include "Spi.h"
+#include "SpiWriter.h"
 #include "Byte.h"
 
 namespace eth
@@ -56,7 +56,7 @@ namespace eth
 
 
 
-    W5100Device::W5100Device(Spi& spi) : m_spi(spi)
+    W5100Device::W5100Device(SpiWriter& writer) : m_writer(writer)
     {
     }
 
@@ -198,12 +198,7 @@ namespace eth
     void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
     {
         const auto address = addr + offset;
-        m_spi.setSlaveSelect();
-        m_spi.transmit(opcodeWrite);
-        m_spi.transmit(byte::get<1>(address));
-        m_spi.transmit(byte::get<0>(address));
-        m_spi.transmit(data);
-        m_spi.resetSlaveSelect();
+        m_writer.write(address, data);
     }
 
     void W5100Device::write(W5100Register reg, uint8_t data)
@@ -229,12 +224,7 @@ namespace eth
     uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
     {
         const auto address = addr + offset;
-        m_spi.setSlaveSelect();
-        m_spi.transmit(opcodeRead);
-        m_spi.transmit(byte::get<1>(address));
-        m_spi.transmit(byte::get<0>(address));
-        const auto data = m_spi.receive();
-        m_spi.resetSlaveSelect();
+        const auto data = m_writer.read(address);
 
         return data;
     }

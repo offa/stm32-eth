@@ -19,7 +19,7 @@
  */
 
 #include "W5100Device.h"
-#include "Spi.h"
+#include "SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>
 #include <algorithm>
@@ -28,7 +28,7 @@
 #include <CppUTestExt/MockSupport.h>
 
 using eth::W5100Device;
-using eth::Spi;
+using eth::SpiWriter;
 using eth::SocketCommand;
 using eth::SocketStatus;
 using eth::Mode;
@@ -40,7 +40,7 @@ TEST_GROUP(W5100DeviceTest)
 {
     void setup() override
     {
-        device = std::make_unique<W5100Device>(spi);
+        device = std::make_unique<W5100Device>(writer);
         mock().strictOrder();
     }
 
@@ -52,12 +52,9 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectWrite(uint16_t addr, uint8_t data) const
     {
-        spiMock.expectOneCall("setSlaveSelect");
-        spiMock.expectOneCall("transmit").withParameter("data", 0xf0);
-        spiMock.expectOneCall("transmit").withParameter("data", addr >> 8);
-        spiMock.expectOneCall("transmit").withParameter("data", addr & 0xff);
-        spiMock.expectOneCall("transmit").withParameter("data", data);
-        spiMock.expectOneCall("resetSlaveSelect");
+        writerMock.expectOneCall("write")
+            .withParameter("address", addr)
+            .withParameter("data", data);
     }
 
     void expectWrite(uint16_t addr, uint16_t data) const
@@ -75,30 +72,23 @@ TEST_GROUP(W5100DeviceTest)
         });
     }
 
-    void checkWriteCalls(size_t expectedCalls, size_t writesByReads = 0) const
+    void checkWriteCalls(size_t expectedCalls) const
     {
-        constexpr size_t transmissionsPerWrite = 4;
-        const auto actual = spiMock.getData("transmit::count").getUnsignedIntValue();
-        const auto byReads = writesByReads * (transmissionsPerWrite - 1);
-        const auto expected = (expectedCalls * transmissionsPerWrite) + byReads;
-        CHECK_EQUAL(expected, actual);
+        const auto actual = writerMock.getData("write::count").getUnsignedIntValue();
+        CHECK_EQUAL(expectedCalls, actual);
     }
 
-    void checkReadCalls(size_t expectedCalls, size_t ignore = 0) const
+    void checkReadCalls(size_t expectedCalls) const
     {
-        const auto actual = spiMock.getData("receive::count").getUnsignedIntValue();
-        const auto expected = expectedCalls - ignore;
-        CHECK_EQUAL(expected, actual);
+        const auto actual = writerMock.getData("read::count").getUnsignedIntValue();
+        CHECK_EQUAL(expectedCalls, actual);
     }
 
     void expectRead(uint16_t addr, uint8_t data) const
     {
-        spiMock.expectOneCall("setSlaveSelect");
-        spiMock.expectOneCall("transmit").withParameter("data", 0x0f);
-        spiMock.expectOneCall("transmit").withParameter("data", addr >> 8);
-        spiMock.expectOneCall("transmit").withParameter("data", addr & 0xff);
-        spiMock.expectOneCall("receive").andReturnValue(data);
-        spiMock.expectOneCall("resetSlaveSelect");
+        writerMock.expectOneCall("read")
+            .withParameter("address", addr)
+            .andReturnValue(data);
     }
 
     void expectRead(uint16_t addr, uint16_t data) const
@@ -132,8 +122,8 @@ TEST_GROUP(W5100DeviceTest)
 
 
     std::unique_ptr<eth::W5100Device> device;
-    Spi spi;
-    MockSupport& spiMock = mock("Spi");
+    SpiWriter writer;
+    MockSupport& writerMock = mock("SpiWriter");
     static constexpr eth::SocketHandle socket = 0;
 };
 
@@ -188,8 +178,7 @@ TEST(W5100DeviceTest, writeBuffer)
     constexpr W5100Register reg(0xa1b2, size);
     auto data = createBuffer(size);
 
-    spiMock.expectNCalls(size, "setSlaveSelect");
-    spiMock.ignoreOtherCalls();
+    writerMock.ignoreOtherCalls();
 
     device->write(reg, data);
     checkWriteCalls(size);
@@ -201,8 +190,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
     constexpr W5100Register reg(0xa1b2, size);
     auto data = createBuffer(size);
 
-    spiMock.expectNCalls(size, "setSlaveSelect");
-    spiMock.ignoreOtherCalls();
+    writerMock.ignoreOtherCalls();
 
     device->write(reg, {data.data(), size});
     checkWriteCalls(size);
@@ -364,13 +352,12 @@ TEST(W5100DeviceTest, sendData)
 TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 {
     constexpr auto ptrWrites = sizeof(uint16_t);
-    constexpr auto ignoreReads = sizeof(uint16_t);
     const uint16_t size = device->getTransmitBufferSize() + 2;
     auto buffer = createBuffer(size);
-    spiMock.ignoreOtherCalls();
+    writerMock.ignoreOtherCalls();
 
     device->sendData(socket, buffer);
-    checkWriteCalls(size + ptrWrites, ignoreReads);
+    checkWriteCalls(size + ptrWrites);
 }
 
 TEST(W5100DeviceTest, receiveData)
@@ -396,12 +383,12 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
     constexpr auto ptrReads = sizeof(uint16_t);
     constexpr uint16_t size = eth::W5100Device::getReceiveBufferSize() + 2;
     auto buffer = createBuffer(size);
-    spiMock.ignoreOtherCalls();
+    writerMock.ignoreOtherCalls();
 
     std::array<uint8_t, size> data;
     const auto rtn = device->receiveData(socket, data);
     CHECK_EQUAL(size, rtn);
-    checkReadCalls(size + ptrReads, 0);
+    checkReadCalls(size + ptrReads);
 }
 
 TEST(W5100DeviceTest, setGatewayAddress)

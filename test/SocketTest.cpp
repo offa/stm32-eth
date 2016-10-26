@@ -23,7 +23,7 @@
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
 #include "W5100Device.h"
-#include "Spi.h"
+#include "SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>
 #include <numeric>
@@ -36,7 +36,7 @@ using eth::SocketInterrupt;
 using eth::Socket;
 using eth::Protocol;
 using eth::W5100Device;
-using eth::Spi;
+using eth::SpiWriter;
 
 TEST_GROUP(SocketTest)
 {
@@ -75,7 +75,7 @@ TEST_GROUP(SocketTest)
 
 
     std::unique_ptr<Socket> socket;
-    Spi spi;
+    SpiWriter spi;
     W5100Device device{spi};
     MockSupport& deviceMock = mock("W5100Device");
     MockSupport& platformMock = mock("platform");

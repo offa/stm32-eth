@@ -42,17 +42,17 @@ _add_test(SocketTest SOCKETTEST_SRC)
 list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
                         W5100RegisterTest.cpp
                         $<TARGET_OBJECTS:w5100device>
-                        $<TARGET_OBJECTS:spi-mock>
+                        $<TARGET_OBJECTS:spiwriter-mock>
                         )
 _add_test(W5100DeviceTest W5100TEST_SRC)
 
 
-list(APPEND SPITEST_SRC SpiTest.cpp
-                        $<TARGET_OBJECTS:stm32hal-mock>
-                        $<TARGET_OBJECTS:spi>
-                        $<TARGET_OBJECTS:platform-mock>
-                        )
-_add_test(SpiTest SPITEST_SRC)
+list(APPEND SPIWRITERTEST_SRC SpiWriterTest.cpp
+                            $<TARGET_OBJECTS:stm32hal-mock>
+                            $<TARGET_OBJECTS:spiwriter>
+                            $<TARGET_OBJECTS:platform-mock>
+                            )
+_add_test(SpiWriterTest SPIWRITERTEST_SRC)
 
 
 set(TEST_FLAGS -c)
@@ -70,7 +70,7 @@ endif()
 add_custom_target(unittest CommonTest ${TEST_FLAGS}
                     COMMAND SocketTest ${TEST_FLAGS}
                     COMMAND W5100DeviceTest ${TEST_FLAGS}
-                    COMMAND SpiTest ${TEST_FLAGS}
+                    COMMAND SpiWriterTest ${TEST_FLAGS}
 
                     COMMENT "Running unittests\n\n"
                     VERBATIM
