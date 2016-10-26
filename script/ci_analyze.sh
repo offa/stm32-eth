@@ -13,6 +13,6 @@ cppcheck -v --error-exitcode=1 \
             -I include \
             --suppress=missingInclude \
             -i system/src \
+            --project="${BUILD_DIR}/compile_commands.json" \
             src include 2> cppcheck-result.xml
-            #--project="${BUILD_DIR}/compile_commands.json" \
 
