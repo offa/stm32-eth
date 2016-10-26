@@ -62,7 +62,7 @@ if( UNITTEST_VERBOSE )
 endif()
 
 if( UNITTEST_JUNIT )
-    set(TEST_FLAGS ${TEST_FLAGS} -ojunit)
+    set(TEST_FLAGS ${TEST_FLAGS} -ojunit -k ${PROJECT_NAME})
 endif()
 
 
