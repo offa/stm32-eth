@@ -2,12 +2,7 @@
 
 set -ex
 
-if [ ! -v LTO_ENABLED ]; then
-    LTO_ENABLED=ON
-else
-    LTO_ENABLED=OFF
-fi
-
+LTO_ENABLED=${LTO_ENABLED:=OFF}
 
 if [ ! -v GSL_INCLUDE_DIR ]; then
     if [ -d "dependencies/gsl" ]; then
