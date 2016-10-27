@@ -82,7 +82,8 @@ matrix:
           sources: *sources
 
 script:
-    - script/travis_build.sh
+    - script/ci_build.sh
 
 before_install:
-    - script/travis_install.sh
+    - script/ci_install.sh
+
