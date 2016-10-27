@@ -81,48 +81,48 @@ namespace eth
 
     void W5100Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
-        write(socketMode(s), value);
+        write(w5100::socketMode(s), value);
     }
 
     void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
-        write(socketSourcePort(s), value);
+        write(w5100::socketSourcePort(s), value);
     }
 
     void W5100Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
     {
-        write(socketInterrupt(s), value.value());
+        write(w5100::socketInterrupt(s), value.value());
     }
 
     SocketInterrupt W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
-        return SocketInterrupt(read(socketInterrupt(s)));
+        return SocketInterrupt(read(w5100::socketInterrupt(s)));
     }
 
     void W5100Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
     {
-        write(socketCommand(s), static_cast<uint8_t>(value));
+        write(w5100::socketCommand(s), static_cast<uint8_t>(value));
     }
 
     SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)
     {
-        return static_cast<SocketCommand>(read(socketCommand(s)));
+        return static_cast<SocketCommand>(read(w5100::socketCommand(s)));
     }
 
     SocketStatus W5100Device::readSocketStatusRegister(SocketHandle s)
     {
-        return static_cast<SocketStatus>(read(socketStatus(s)));
+        return static_cast<SocketStatus>(read(w5100::socketStatus(s)));
     }
 
     uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
     {
-        return readFreesize(socketTransmitFreeSize(s));
+        return readFreesize(w5100::socketTransmitFreeSize(s));
     }
 
 
     uint16_t W5100Device::getReceiveFreeSize(SocketHandle s)
     {
-        return readFreesize(socketReceiveFreeSize(s));
+        return readFreesize(w5100::socketReceiveFreeSize(s));
     }
 
     uint16_t W5100Device::readFreesize(W5100Register freesizeReg)
@@ -255,57 +255,57 @@ namespace eth
 
     void W5100Device::writeModeRegister(Mode value)
     {
-        write(mode, static_cast<uint8_t>(value));
+        write(w5100::mode, static_cast<uint8_t>(value));
     }
 
     void W5100Device::setGatewayAddress(std::array<uint8_t, 4> addr)
     {
-        write(gatewayAddress, addr);
+        write(w5100::gatewayAddress, addr);
     }
 
     void W5100Device::setSubnetMask(std::array<uint8_t, 4> addr)
     {
-        write(subnetMask, addr);
+        write(w5100::subnetMask, addr);
     }
 
     void W5100Device::setMacAddress(std::array<uint8_t, 6> addr)
     {
-        write(sourceMacAddress, addr);
+        write(w5100::sourceMacAddress, addr);
     }
 
     void W5100Device::setIpAddress(std::array<uint8_t, 4> addr)
     {
-        write(sourceIpAddress, addr);
+        write(w5100::sourceIpAddress, addr);
     }
 
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
-        return readWord(socketTransmitWritePointer(s));
+        return readWord(w5100::socketTransmitWritePointer(s));
     }
 
     void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
     {
-        write(socketTransmitWritePointer(s), value);
+        write(w5100::socketTransmitWritePointer(s), value);
     }
 
     uint16_t W5100Device::readSocketReceiveReadPointer(SocketHandle s)
     {
-        return readWord(socketReceiveReadPointer(s));
+        return readWord(w5100::socketReceiveReadPointer(s));
     }
 
     void W5100Device::writeSocketReceiveReadPointer(SocketHandle s, uint16_t value)
     {
-        write(socketReceiveReadPointer(s), value);
+        write(w5100::socketReceiveReadPointer(s), value);
     }
 
     void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
     {
-        write(transmitMemorySize, value);
+        write(w5100::transmitMemorySize, value);
     }
 
     void W5100Device::writeReceiveMemorySizeRegister(uint8_t value)
     {
-        write(receiveMemorySize, value);
+        write(w5100::receiveMemorySize, value);
     }
 
 }

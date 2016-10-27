@@ -25,61 +25,65 @@
 namespace eth
 {
 
-    constexpr W5100Register mode = makeRegister<uint8_t>(0x0000);
-    constexpr W5100Register transmitMemorySize = makeRegister<uint8_t>(0x001b);
-    constexpr W5100Register receiveMemorySize = makeRegister<uint8_t>(0x001a);
-
-    constexpr W5100Register gatewayAddress = makeRegister<uint8_t>(0x0001);
-    constexpr W5100Register subnetMask = makeRegister<uint8_t>(0x0005);
-    constexpr W5100Register sourceMacAddress = makeRegister<uint8_t>(0x0009);
-    constexpr W5100Register sourceIpAddress = makeRegister<uint8_t>(0x000f);
-
-
-
-    constexpr W5100Register socketMode(SocketHandle s)
+    namespace w5100
     {
-        return socketAddress<uint8_t>(s, 0x0000);
-    }
 
-    constexpr W5100Register socketSourcePort(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0004);
-    }
+        constexpr W5100Register mode = makeRegister<uint8_t>(0x0000);
+        constexpr W5100Register transmitMemorySize = makeRegister<uint8_t>(0x001b);
+        constexpr W5100Register receiveMemorySize = makeRegister<uint8_t>(0x001a);
 
-    constexpr W5100Register socketInterrupt(SocketHandle s)
-    {
-        return socketAddress<uint8_t>(s, 0x0002);
-    }
+        constexpr W5100Register gatewayAddress = makeRegister<uint8_t>(0x0001);
+        constexpr W5100Register subnetMask = makeRegister<uint8_t>(0x0005);
+        constexpr W5100Register sourceMacAddress = makeRegister<uint8_t>(0x0009);
+        constexpr W5100Register sourceIpAddress = makeRegister<uint8_t>(0x000f);
 
-    constexpr W5100Register socketCommand(SocketHandle s)
-    {
-        return socketAddress<uint8_t>(s, 0x0001);
-    }
 
-    constexpr W5100Register socketStatus(SocketHandle s)
-    {
-        return socketAddress<uint8_t>(s, 0x0003);
-    }
 
-    constexpr W5100Register socketTransmitFreeSize(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0020);
-    }
+        constexpr W5100Register socketMode(SocketHandle s)
+        {
+            return socketAddress<uint8_t>(s, 0x0000);
+        }
 
-    constexpr W5100Register socketReceiveFreeSize(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0026);
-    }
+        constexpr W5100Register socketSourcePort(SocketHandle s)
+        {
+            return socketAddress<uint16_t>(s, 0x0004);
+        }
 
-    constexpr W5100Register socketTransmitWritePointer(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0024);
-    }
+        constexpr W5100Register socketInterrupt(SocketHandle s)
+        {
+            return socketAddress<uint8_t>(s, 0x0002);
+        }
 
-    constexpr W5100Register socketReceiveReadPointer(SocketHandle s)
-    {
-        return socketAddress<uint16_t>(s, 0x0028);
-    }
+        constexpr W5100Register socketCommand(SocketHandle s)
+        {
+            return socketAddress<uint8_t>(s, 0x0001);
+        }
 
+        constexpr W5100Register socketStatus(SocketHandle s)
+        {
+            return socketAddress<uint8_t>(s, 0x0003);
+        }
+
+        constexpr W5100Register socketTransmitFreeSize(SocketHandle s)
+        {
+            return socketAddress<uint16_t>(s, 0x0020);
+        }
+
+        constexpr W5100Register socketReceiveFreeSize(SocketHandle s)
+        {
+            return socketAddress<uint16_t>(s, 0x0026);
+        }
+
+        constexpr W5100Register socketTransmitWritePointer(SocketHandle s)
+        {
+            return socketAddress<uint16_t>(s, 0x0024);
+        }
+
+        constexpr W5100Register socketReceiveReadPointer(SocketHandle s)
+        {
+            return socketAddress<uint16_t>(s, 0x0028);
+        }
+
+    }
 
 }
