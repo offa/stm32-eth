@@ -95,7 +95,13 @@ TEST(SocketTest, openReturnsErrorOnUnsupportedProtocol)
 
 TEST(SocketTest, openReturnsSuccess)
 {
-    deviceMock.ignoreOtherCalls();
+    expectClose(socketHandle);
+    deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
@@ -105,6 +111,9 @@ TEST(SocketTest, openResetsSocketFirst)
     deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
@@ -117,6 +126,9 @@ TEST(SocketTest, openSetsProtocol)
         .withParameter("value", value);
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
@@ -130,6 +142,9 @@ TEST(SocketTest, openSetsFlag)
         .withParameter("value", value);
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
     CHECK_TRUE(socket->open(protocol, port, flagValue));
 }
 
@@ -141,6 +156,9 @@ TEST(SocketTest, openSetsPort)
         .withParameter("socket", socketHandle)
         .withParameter("value", port);
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 
@@ -152,6 +170,29 @@ TEST(SocketTest, openOpensSocket)
     deviceMock.expectOneCall("executeSocketCommand")
         .withParameter("socket", socketHandle)
         .withParameter("value", static_cast<int>(SocketCommand::open));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    CHECK_TRUE(socket->open(protocol, port, flag));
+}
+
+TEST(SocketTest, openWaitsForStatus)
+{
+    expectClose(socketHandle);
+    deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
+    deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
+
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::closed));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::closed));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
 

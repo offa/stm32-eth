@@ -42,8 +42,16 @@ namespace eth
 
             m_device.writeSocketSourcePort(m_handle, port);
             m_device.executeSocketCommand(m_handle, SocketCommand::open);
+
+            while( m_device.readSocketStatusRegister(m_handle) == SocketStatus::closed )
+            {
+                // Wait for completion
+            }
+
             return true;
         }
+
+
 
         return false;
     }
