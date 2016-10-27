@@ -26,7 +26,9 @@ if [ "$CXX" == "arm-none-eabi-g++" ]; then
         make eth-stm32.size
     fi
 else
-    cmake -DUNITTEST_VERBOSE=ON -DCMAKE_BUILD_TYPE=Release ..
+    BUILD_TYPE=${BUILD_TYPE:=Release}
+
+    cmake -DUNITTEST_VERBOSE=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
     make
     make unittest
 fi
