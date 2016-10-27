@@ -1,0 +1,10 @@
+{
+   static-init-destr
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*alloc
+   ...
+   obj:*/*.so*
+   ...
+}
+
