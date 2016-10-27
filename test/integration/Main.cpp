@@ -22,7 +22,7 @@
 #include <diag/Trace.h>
 #include "Socket.h"
 #include "W5100Device.h"
-#include "Spi.h"
+#include "SpiWriter.h"
 
 
 int main(int argc, char* argv[])
@@ -32,10 +32,10 @@ int main(int argc, char* argv[])
 
     HAL_Init();
 
-    eth::Spi spi;
-    spi.init();
+    eth::SpiWriter writer;
+    writer.init();
 
-    eth::W5100Device device(spi);
+    eth::W5100Device device(writer);
     device.init();
     device.setGatewayAddress({192, 168, 1, 1});
     device.setIpAddress({192, 168, 1, 8});

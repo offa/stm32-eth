@@ -18,7 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Spi.h"
+#include "SpiWriter.h"
 #include <CppUTestExt/MockSupport.h>
 
 namespace eth
@@ -27,36 +27,38 @@ namespace eth
     {
         static inline void incrementCalls(const ::SimpleString& name)
         {
-            int count = mock("Spi").getData(name).getUnsignedIntValue();
+            int count = mock("SpiWriter").getData(name).getUnsignedIntValue();
             ++count;
-            mock("Spi").setData(name, count);
+            mock("SpiWriter").setData(name, count);
         }
     }
 
-    void Spi::transmit(uint8_t data)
+    void SpiWriter::write(uint16_t address, uint8_t data)
     {
-        mockutil::incrementCalls("transmit::count");
+        mockutil::incrementCalls("write::count");
 
-        mock("Spi").actualCall("transmit")
+        mock("SpiWriter").actualCall("write")
+                .withParameter("address", address)
                 .withParameter("data", data);
     }
 
-    uint8_t Spi::receive()
+    uint8_t SpiWriter::read(uint16_t address)
     {
-        mockutil::incrementCalls("receive::count");
+        mockutil::incrementCalls("read::count");
 
-        return mock("Spi").actualCall("receive")
+        return mock("SpiWriter").actualCall("read")
+                .withParameter("address", address)
                 .returnUnsignedIntValue();
     }
 
-    void Spi::setSlaveSelect()
+    void SpiWriter::setSlaveSelect()
     {
-        mock("Spi").actualCall("setSlaveSelect");
+        mock("SpiWriter").actualCall("setSlaveSelect");
     }
 
-    void Spi::resetSlaveSelect()
+    void SpiWriter::resetSlaveSelect()
     {
-        mock("Spi").actualCall("resetSlaveSelect");
+        mock("SpiWriter").actualCall("resetSlaveSelect");
     }
 
 }

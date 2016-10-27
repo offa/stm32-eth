@@ -18,12 +18,14 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Spi.h"
+#include "SpiWriter.h"
+#include "Byte.h"
+#include <array>
 
 namespace eth
 {
 
-    void Spi::init()
+    void SpiWriter::init()
     {
         platform::spiClockEnable();
 
@@ -55,31 +57,47 @@ namespace eth
         HAL_SPI_Init(&m_handle);
     }
 
-    void Spi::transmit(uint8_t data)
+    void SpiWriter::write(uint16_t address, uint8_t data)
     {
-        // TODO: Check returnvalue
-        HAL_SPI_Transmit(&m_handle, &data, sizeof(data), timeout);
+        std::array<uint8_t, 4> a = {{ 0xf0,
+            byte::get<1>(address),
+            byte::get<0>(address),
+            data
+        }};
+
+        setSlaveSelect();
+        HAL_SPI_Transmit(&m_handle, a.data(), a.size(), timeout);
+        resetSlaveSelect();
     }
 
-    uint8_t Spi::receive()
+    uint8_t SpiWriter::read(uint16_t address)
     {
-        // TODO: Check returnvalue
+        std::array<uint8_t, 3> a = {{ 0x0f,
+            byte::get<1>(address),
+            byte::get<0>(address)
+        }};
+
+        setSlaveSelect();
+        HAL_SPI_Transmit(&m_handle, a.data(), a.size(), timeout);
+
         uint8_t buffer;
         HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
+        resetSlaveSelect();
+
         return buffer;
     }
 
-    void Spi::setSlaveSelect()
+    void SpiWriter::setSlaveSelect()
     {
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
     }
 
-    void Spi::resetSlaveSelect()
+    void SpiWriter::resetSlaveSelect()
     {
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
     }
 
-    Spi::Handle& Spi::nativeHandle()
+    SpiWriter::Handle& SpiWriter::nativeHandle()
     {
         return m_handle;
     }

@@ -18,16 +18,17 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Spi.h"
+#include "SpiWriter.h"
 #include "mock/Stm32HalComparator.h"
+#include <gsl/span>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
-TEST_GROUP(SpiTest)
+TEST_GROUP(SpiWriterTest)
 {
     void setup() override
     {
-        spi = std::make_unique<eth::Spi>();
+        spi = std::make_unique<eth::SpiWriter>();
         mock().strictOrder();
 
         mock().installComparator("SPI_InitTypeDef", spiHandleCompare);
@@ -41,7 +42,43 @@ TEST_GROUP(SpiTest)
         mock().removeAllComparatorsAndCopiers();
     }
 
-    std::unique_ptr<eth::Spi> spi;
+    void expectWrite(gsl::span<uint8_t> data) const
+    {
+        halSpiMock.expectOneCall("HAL_SPI_Transmit")
+            .withPointerParameter("hspi", &spi->nativeHandle())
+            .withMemoryBufferParameter("pData", data.data(), data.size())
+            .withParameter("Size", data.size())
+            .withParameter("Timeout", timeout);
+    }
+
+    void expectRead(const uint8_t* data) const
+    {
+        constexpr auto size = sizeof(uint8_t);
+        halSpiMock.expectOneCall("HAL_SPI_Receive")
+            .withPointerParameter("hspi", &spi->nativeHandle())
+            .withOutputParameterReturning("pData", data, size)
+            .withParameter("Size", size)
+            .withParameter("Timeout", timeout);
+    }
+
+    void expectSlaveSelectSet() const
+    {
+        halGpioMock.expectOneCall("HAL_GPIO_WritePin")
+            .withPointerParameter("GPIOx", GPIOB)
+            .withParameter("GPIO_Pin", GPIO_PIN_12)
+            .withParameter("PinState", GPIO_PIN_RESET);
+    }
+
+    void expectSlaveSelectReset() const
+    {
+        halGpioMock.expectOneCall("HAL_GPIO_WritePin")
+            .withPointerParameter("GPIOx", GPIOB)
+            .withParameter("GPIO_Pin", GPIO_PIN_12)
+            .withParameter("PinState", GPIO_PIN_SET);
+    }
+
+
+    std::unique_ptr<eth::SpiWriter> spi;
     MockSupport& halSpiMock = mock("HAL_SPI");
     MockSupport& halGpioMock = mock("HAL_GPIO");
     MockSupport& platformMock = mock("platform");
@@ -50,7 +87,7 @@ TEST_GROUP(SpiTest)
     static constexpr uint32_t timeout = 0xffff'ffff;
 };
 
-TEST(SpiTest, initSetupsGpioPins)
+TEST(SpiWriterTest, initSetupsGpioPins)
 {
     GPIO_InitTypeDef init{(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
                             GPIO_MODE_AF_PP, GPIO_NOPULL,
@@ -72,7 +109,7 @@ TEST(SpiTest, initSetupsGpioPins)
     spi->init();
 }
 
-TEST(SpiTest, initSetupsSpi)
+TEST(SpiWriterTest, initSetupsSpi)
 {
     SPI_InitTypeDef spiInit{SPI_MODE_MASTER,
                             SPI_DIRECTION_2LINES,
@@ -95,52 +132,25 @@ TEST(SpiTest, initSetupsSpi)
     spi->init();
 }
 
-TEST(SpiTest, transmitTransmitsByte)
+TEST(SpiWriterTest, writeTransmitsByte)
 {
-    const uint8_t data = 0xab;
-    constexpr uint16_t size = sizeof(data);
+    std::array<uint8_t, 4> data = {{ 0xf0, 0x22, 0x11, 0xab }};
+    expectSlaveSelectSet();
+    expectWrite(data);
+    expectSlaveSelectReset();
 
-    halSpiMock.expectOneCall("HAL_SPI_Transmit")
-        .withPointerParameter("hspi", &spi->nativeHandle())
-        .withMemoryBufferParameter("pData", &data, size)
-        .withParameter("Size", size)
-        .withParameter("Timeout", timeout);
-
-    spi->transmit(data);
+    spi->write(0x2211, 0xab);
 }
 
-TEST(SpiTest, receiveReceivesByte)
+TEST(SpiWriterTest, readReceivesByte)
 {
-    const uint8_t data = 0xcd;
-    constexpr uint16_t size = sizeof(data);
+    const uint8_t value = 0xcd;
+    std::array<uint8_t, 3> data = {{ 0x0f, 0x33, 0x55 }};
+    expectSlaveSelectSet();
+    expectWrite(data);
+    expectRead(&value);
+    expectSlaveSelectReset();
 
-    halSpiMock.expectOneCall("HAL_SPI_Receive")
-        .withPointerParameter("hspi", &spi->nativeHandle())
-        .withOutputParameterReturning("pData", &data, size)
-        .withParameter("Size", size)
-        .withParameter("Timeout", timeout);
-
-    const auto result = spi->receive();
-    CHECK_EQUAL(data, result);
+    const auto result = spi->read(0x3355);
+    CHECK_EQUAL(value, result);
 }
-
-TEST(SpiTest, setSlaveSelectSetsPinLow)
-{
-    halGpioMock.expectOneCall("HAL_GPIO_WritePin")
-        .withPointerParameter("GPIOx", GPIOB)
-        .withParameter("GPIO_Pin", GPIO_PIN_12)
-        .withParameter("PinState", GPIO_PIN_RESET);
-
-    spi->setSlaveSelect();
-}
-
-TEST(SpiTest, resetSlaveSelectSetsPinHigh)
-{
-    halGpioMock.expectOneCall("HAL_GPIO_WritePin")
-        .withPointerParameter("GPIOx", GPIOB)
-        .withParameter("GPIO_Pin", GPIO_PIN_12)
-        .withParameter("PinState", GPIO_PIN_SET);
-
-    spi->resetSlaveSelect();
-}
-

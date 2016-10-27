@@ -34,14 +34,14 @@
 
 namespace eth
 {
-    class Spi;
+    class SpiWriter;
 
 
     class W5100Device
     {
     public:
 
-        explicit W5100Device(Spi& spi);
+        explicit W5100Device(SpiWriter& writer);
         W5100Device(W5100Device&&) = default;
 
         void init();
@@ -110,7 +110,7 @@ namespace eth
         void writeReceiveMemorySizeRegister(uint8_t value);
 
 
-        Spi& m_spi;
+        SpiWriter& m_writer;
         static constexpr uint8_t opcodeWrite = 0xf0;
         static constexpr uint8_t opcodeRead = 0x0f;
         static constexpr uint16_t transmitBufferSize = 2048;

@@ -26,7 +26,7 @@
 namespace eth
 {
 
-    class Spi
+    class SpiWriter
     {
     public:
 
@@ -35,16 +35,15 @@ namespace eth
 
         void init();
 
-        void transmit(uint8_t data);
-        uint8_t receive();
-
-        void setSlaveSelect();
-        void resetSlaveSelect();
+        void write(uint16_t address, uint8_t data);
+        uint8_t read(uint16_t address);
 
         Handle& nativeHandle();
 
-
    private:
+
+        void setSlaveSelect();
+        void resetSlaveSelect();
 
         Handle m_handle{};
         static constexpr uint32_t timeout = ~0;
