@@ -19,7 +19,10 @@ option(LTO "Enable Link Time Optimization (LTO)" OFF)
 message(STATUS "Enable LTO : ${LTO}")
 
 option(INTEGRATION_TEST "Build Integration Tests" OFF)
-message(STATUS "Build Integration Tests: ${INTEGRATION_TEST}")
+message(STATUS "Build Integration Tests : ${INTEGRATION_TEST}")
+
+option(GSL_CONTRACT_UNENFORCED "GSL contract violations unenforced" OFF)
+message(STATUS "Unenforced GSL contracts : ${GSL_CONTRACT_UNENFORCED}")
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -62,6 +65,10 @@ endif()
 
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIR})
+
+if( GSL_CONTRACT_UNENFORCED )
+    add_definitions(-DGSL_UNENFORCED_ON_CONTRACT_VIOLATION)
+endif()
 
 
 include_directories("include")
