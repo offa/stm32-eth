@@ -73,7 +73,6 @@ namespace eth
         uint16_t waitForData() const;
         bool isPendingInterrupt(SocketInterrupt::Mask mask) const;
 
-
         static constexpr bool connectionReady(SocketStatus status)
         {
             return ( status == SocketStatus::established )

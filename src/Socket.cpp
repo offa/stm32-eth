@@ -22,7 +22,6 @@
 #include "W5100Device.h"
 #include "SocketStatus.h"
 #include "SocketCommand.h"
-#include "SocketInterrupt.h"
 #include "Platform.h"
 #include <algorithm>
 
@@ -146,9 +145,7 @@ namespace eth
                 return Status::closed;
             }
 
-            const auto registerValue = m_device.readSocketInterruptRegister(m_handle);
-
-            if( registerValue.test(SocketInterrupt::Mask::timeout) == true )
+            if( isPendingInterrupt(SocketInterrupt::Mask::timeout) == true )
             {
                 return Status::timeout;
             }
@@ -163,9 +160,7 @@ namespace eth
 
         while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::closed )
         {
-            const auto registerValue = m_device.readSocketInterruptRegister(m_handle);
-
-            if( registerValue.test(SocketInterrupt::Mask::timeout) == true )
+            if( isPendingInterrupt(SocketInterrupt::Mask::timeout) == true )
             {
                 return Status::timeout;
             }
@@ -215,6 +210,12 @@ namespace eth
         while( available == 0 );
 
         return available;
+    }
+
+    bool Socket::isPendingInterrupt(SocketInterrupt::Mask mask) const
+    {
+        const auto value = m_device.readSocketInterruptRegister(m_handle);
+        return value.test(mask);
     }
 
 }
