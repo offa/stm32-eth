@@ -732,3 +732,59 @@ TEST(SocketTest, connectErrorOnTimeout)
     const auto rtn = socket->connect(addr, 4567);
     CHECK_EQUAL(Socket::Status::timeout, rtn);
 }
+
+TEST(SocketTest, disconnect)
+{
+    deviceMock.expectOneCall("executeSocketCommand")
+        .withParameter("socket", socketHandle)
+        .withParameter("value", static_cast<int>(SocketCommand::disconnect));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::closed));
+
+    const auto rtn = socket->disconnect();
+    CHECK_EQUAL(Socket::Status::ok, rtn);
+}
+
+TEST(SocketTest, disconnectWaitsForClosedStatus)
+{
+    deviceMock.expectOneCall("executeSocketCommand")
+        .withParameter("socket", socketHandle)
+        .withParameter("value", static_cast<int>(SocketCommand::disconnect));
+
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("readSocketInterruptRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(0x00u);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("readSocketInterruptRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(0x00u);
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::closed));
+
+    const auto rtn = socket->disconnect();
+    CHECK_EQUAL(Socket::Status::ok, rtn);
+}
+
+TEST(SocketTest, disconnectErrorOnTimeout)
+{
+    deviceMock.expectOneCall("executeSocketCommand")
+        .withParameter("socket", socketHandle)
+        .withParameter("value", static_cast<int>(SocketCommand::disconnect));
+    deviceMock.expectOneCall("readSocketStatusRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketStatus::established));
+    deviceMock.expectOneCall("readSocketInterruptRegister")
+        .withParameter("socket", socketHandle)
+        .andReturnValue(static_cast<int>(SocketInterrupt::Mask::timeout));
+
+    const auto rtn = socket->disconnect();
+    CHECK_EQUAL(Socket::Status::timeout, rtn);
+}
+

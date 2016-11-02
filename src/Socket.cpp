@@ -157,6 +157,23 @@ namespace eth
         return Status::ok;
     }
 
+    Socket::Status Socket::disconnect()
+    {
+        m_device.executeSocketCommand(m_handle, SocketCommand::disconnect);
+
+        while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::closed )
+        {
+            const auto registerValue = m_device.readSocketInterruptRegister(m_handle);
+
+            if( registerValue.test(SocketInterrupt::Mask::timeout) == true )
+            {
+                return Status::timeout;
+            }
+        }
+
+        return Status::ok;
+    }
+
     SocketStatus Socket::getStatus() const
     {
         return m_device.readSocketStatusRegister(m_handle);

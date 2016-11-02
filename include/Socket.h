@@ -37,6 +37,14 @@ namespace eth
     {
     public:
 
+        enum class Status : uint8_t
+        {
+            ok,
+            closed,
+            timeout
+        };
+
+
         Socket(SocketHandle handle, W5100Device& device);
         Socket(Socket&&) = default;
 
@@ -49,14 +57,9 @@ namespace eth
         uint16_t receive(gsl::span<uint8_t> buffer);
 
 
-        enum class Status
-        {
-            ok,
-            closed,
-            timeout
-        };
 
         Status connect(std::array<uint8_t,4> address, uint16_t port);
+        Status disconnect();
 
         SocketStatus getStatus() const;
 
