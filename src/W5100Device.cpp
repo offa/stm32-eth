@@ -278,6 +278,16 @@ namespace eth
         write(w5100::sourceIpAddress, addr);
     }
 
+    void W5100Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
+    {
+        write(w5100::socketDestIpAddress(s), addr);
+    }
+
+    void W5100Device::setDestPort(SocketHandle s, uint16_t port)
+    {
+        write(w5100::socketDestPort(s), port);
+    }
+
     uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
     {
         return readWord(w5100::socketTransmitWritePointer(s));

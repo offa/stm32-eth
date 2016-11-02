@@ -133,6 +133,30 @@ namespace eth
         return receiveSize;
     }
 
+    Socket::Status Socket::connect(std::array<uint8_t,4> address, uint16_t port)
+    {
+        m_device.setDestIpAddress(m_handle, address);
+        m_device.setDestPort(m_handle, port);
+        m_device.executeSocketCommand(m_handle, SocketCommand::connect);
+
+        while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::established )
+        {
+            if( m_device.readSocketStatusRegister(m_handle) == SocketStatus::closed )
+            {
+                return Status::closed;
+            }
+
+            const auto registerValue = m_device.readSocketInterruptRegister(m_handle);
+
+            if( registerValue.test(SocketInterrupt::Mask::timeout) == true )
+            {
+                return Status::timeout;
+            }
+        }
+
+        return Status::ok;
+    }
+
     SocketStatus Socket::getStatus() const
     {
         return m_device.readSocketStatusRegister(m_handle);

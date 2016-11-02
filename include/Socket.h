@@ -24,6 +24,7 @@
 #include "SocketStatus.h"
 #include "SocketInterrupt.h"
 #include "Protocol.h"
+#include <array>
 #include <stdint.h>
 #include <gsl/span>
 
@@ -46,6 +47,17 @@ namespace eth
         void accept();
         uint16_t send(const gsl::span<const uint8_t> buffer);
         uint16_t receive(gsl::span<uint8_t> buffer);
+
+
+        enum class Status
+        {
+            ok,
+            closed,
+            timeout
+        };
+
+        Status connect(std::array<uint8_t,4> address, uint16_t port);
+
         SocketStatus getStatus() const;
 
 

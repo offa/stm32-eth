@@ -23,6 +23,7 @@
 
 #include "SocketCommand.h"
 #include "SocketStatus.h"
+#include "Socket.h"
 #include <CppUTest/TestHarness.h>
 
 inline SimpleString StringFrom(eth::SocketStatus status)
@@ -35,4 +36,19 @@ inline SimpleString StringFrom(eth::SocketCommand cmd)
     return SimpleString("0x") + HexStringFrom(static_cast<unsigned long>(cmd));
 }
 
+inline SimpleString StringFrom(eth::Socket::Status status)
+{
+    using eth::Socket;
 
+    switch(status)
+    {
+        case Socket::Status::ok:
+            return "Ok";
+        case Socket::Status::closed:
+            return "closed";
+        case Socket::Status::timeout:
+            return "timeout";
+        default:
+            return "UNKNOWN";
+    }
+}

@@ -80,6 +80,10 @@ namespace eth
         void setMacAddress(std::array<uint8_t, 6> addr);
         void setIpAddress(std::array<uint8_t, 4> addr);
 
+        void setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr);
+        void setDestPort(SocketHandle s, uint16_t port);
+
+
         static constexpr uint16_t getTransmitBufferSize()
         {
             return transmitBufferSize;

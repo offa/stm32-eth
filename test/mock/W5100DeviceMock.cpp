@@ -108,5 +108,19 @@ namespace eth
                 .returnUnsignedIntValue());
     }
 
+    void W5100Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
+    {
+        mock("W5100Device").actualCall("setDestIpAddress")
+                .withParameter("socket", s)
+                .withMemoryBufferParameter("buffer", addr.data(), addr.size());
+    }
+
+    void W5100Device::setDestPort(SocketHandle s, uint16_t port)
+    {
+        mock("W5100Device").actualCall("setDestPort")
+                .withParameter("socket", s)
+                .withParameter("port", port);
+    }
+
 }
 

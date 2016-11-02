@@ -436,3 +436,21 @@ TEST(W5100DeviceTest, writeModeRegister)
     device->writeModeRegister(mode);
 }
 
+TEST(W5100DeviceTest, setDestIpAddress)
+{
+    constexpr uint16_t address = toAddress(socket, 0x000c);
+    std::array<uint8_t, 4> value = {{ 192, 168, 1, 4 }};
+    expectWrite(address, value);
+
+    device->setDestIpAddress(socket, value);
+}
+
+TEST(W5100DeviceTest, setDestPort)
+{
+    constexpr uint16_t address = toAddress(socket, 0x0010);
+    constexpr uint16_t value = 1234;
+    expectWrite(address, value);
+
+    device->setDestPort(socket, value);
+}
+
