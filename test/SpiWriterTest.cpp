@@ -28,11 +28,13 @@ TEST_GROUP(SpiWriterTest)
 {
     void setup() override
     {
-        spi = std::make_unique<eth::SpiWriter>();
-        mock().strictOrder();
-
         mock().installComparator("SPI_InitTypeDef", spiHandleCompare);
         mock().installComparator("GPIO_InitTypeDef", gpioInitCompare);
+
+        mock().disable();
+        spi = std::make_unique<eth::SpiWriter>();
+        mock().enable();
+        mock().strictOrder();
     }
 
     void teardown() override
@@ -77,7 +79,6 @@ TEST_GROUP(SpiWriterTest)
             .withParameter("PinState", GPIO_PIN_SET);
     }
 
-
     std::unique_ptr<eth::SpiWriter> spi;
     MockSupport& halSpiMock = mock("HAL_SPI");
     MockSupport& halGpioMock = mock("HAL_GPIO");
@@ -106,7 +107,7 @@ TEST(SpiWriterTest, initSetupsGpioPins)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &initSS);
     halSpiMock.expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
 
-    spi->init();
+    eth::SpiWriter writer;
 }
 
 TEST(SpiWriterTest, initSetupsSpi)
@@ -126,10 +127,11 @@ TEST(SpiWriterTest, initSetupsSpi)
     platformMock.expectOneCall("spiClockEnable");
     halGpioMock.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
     halSpiMock.expectOneCall("HAL_SPI_Init")
-        .withPointerParameter("hspi", &spi->nativeHandle())
         .withPointerParameter("hspi.instance", SPI2)
-        .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit);
-    spi->init();
+        .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit)
+        .ignoreOtherParameters();
+
+    eth::SpiWriter writer;
 }
 
 TEST(SpiWriterTest, writeTransmitsByte)

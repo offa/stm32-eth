@@ -33,7 +33,7 @@ namespace eth
         using Handle = SPI_HandleTypeDef;
 
 
-        void init();
+        SpiWriter();
 
         void write(uint16_t address, uint8_t data);
         uint8_t read(uint16_t address);
@@ -42,6 +42,7 @@ namespace eth
 
    private:
 
+        void init();
         void setSlaveSelect();
         void resetSlaveSelect();
 

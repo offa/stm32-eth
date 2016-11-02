@@ -25,6 +25,12 @@
 namespace eth
 {
 
+    SpiWriter::SpiWriter()
+    {
+        init();
+    }
+
+
     void SpiWriter::init()
     {
         platform::spiClockEnable();

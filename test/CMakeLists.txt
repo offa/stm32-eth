@@ -35,6 +35,7 @@ list(APPEND SOCKETTEST_SRC SocketTest.cpp
                     $<TARGET_OBJECTS:socket>
                     $<TARGET_OBJECTS:w5100device-mock>
                     $<TARGET_OBJECTS:platform-mock>
+                    $<TARGET_OBJECTS:spiwriter-mock>
                     )
 _add_test(SocketTest SOCKETTEST_SRC)
 

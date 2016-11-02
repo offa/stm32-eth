@@ -33,6 +33,11 @@ namespace eth
         }
     }
 
+
+    SpiWriter::SpiWriter()
+    {
+    }
+
     void SpiWriter::write(uint16_t address, uint8_t data)
     {
         mockutil::incrementCalls("write::count");
