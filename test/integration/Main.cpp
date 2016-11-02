@@ -33,7 +33,6 @@ int main(int argc, char* argv[])
     HAL_Init();
 
     eth::SpiWriter writer;
-    writer.init();
 
     eth::W5100Device device(writer);
     device.init();
