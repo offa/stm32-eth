@@ -84,9 +84,6 @@ namespace eth
             return socketAddress<uint16_t>(s, 0x0028);
         }
 
-
-
-        // TODO: Dest address
         constexpr W5100Register socketDestIpAddress(SocketHandle s)
         {
             return socketAddress<uint8_t>(s, 0x000c);
