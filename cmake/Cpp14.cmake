@@ -14,8 +14,12 @@ if( NOT CMAKE_CROSSCOMPILING )
     endif()
 
 
-    if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT $ENV{BROKEN_CLANG_WORKAROUND} )
-        add_cxx_flag(-stdlib=libc++)
+    if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+        if( $ENV{BROKEN_CLANG_WORKAROUND} )
+            message(STATUS "Clang not using 'libc++'")
+        else()
+            add_cxx_flag(-stdlib=libc++)
+        endif()
     endif()
 
 else()
