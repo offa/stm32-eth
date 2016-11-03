@@ -13,9 +13,11 @@ if( NOT CMAKE_CROSSCOMPILING )
         message(WARNING "C++14 not supported by ${CMAKE_CXX_COMPILER}")
     endif()
 
-    if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+
+    if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT $ENV{BROKEN_CLANG_WORKAROUND} )
         add_cxx_flag(-stdlib=libc++)
     endif()
+
 else()
         add_cxx_flag(-std=c++14)
 endif()
