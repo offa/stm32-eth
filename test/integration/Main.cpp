@@ -35,7 +35,6 @@ int main(int argc, char* argv[])
     eth::SpiWriter writer;
 
     eth::W5100Device device(writer);
-    device.init();
     device.setGatewayAddress({192, 168, 1, 1});
     device.setIpAddress({192, 168, 1, 8});
     device.setSubnetMask({255, 255, 255, 0});
