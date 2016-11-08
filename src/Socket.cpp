@@ -42,7 +42,7 @@ namespace eth
             m_device.writeSocketSourcePort(m_handle, port);
             m_device.executeSocketCommand(m_handle, SocketCommand::open);
 
-            while( m_device.readSocketStatusRegister(m_handle) == SocketStatus::closed )
+            while( getStatus() == SocketStatus::closed )
             {
                 // Wait for completion
             }
@@ -61,7 +61,7 @@ namespace eth
         m_device.executeSocketCommand(m_handle, SocketCommand::close);
         m_device.writeSocketInterruptRegister(m_handle, SocketInterrupt(0xff));
 
-        while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::closed )
+        while( getStatus() != SocketStatus::closed )
         {
             // Wait for completion
         }
@@ -138,9 +138,9 @@ namespace eth
         m_device.setDestPort(m_handle, port);
         m_device.executeSocketCommand(m_handle, SocketCommand::connect);
 
-        while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::established )
+        while( getStatus() != SocketStatus::established )
         {
-            if( m_device.readSocketStatusRegister(m_handle) == SocketStatus::closed )
+            if( getStatus() == SocketStatus::closed )
             {
                 return Status::closed;
             }
@@ -158,7 +158,7 @@ namespace eth
     {
         m_device.executeSocketCommand(m_handle, SocketCommand::disconnect);
 
-        while( m_device.readSocketStatusRegister(m_handle) != SocketStatus::closed )
+        while( getStatus() != SocketStatus::closed )
         {
             if( isPendingInterrupt(SocketInterrupt::Mask::timeout) == true )
             {
