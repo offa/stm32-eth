@@ -143,7 +143,7 @@ namespace eth
                 return Status::closed;
             }
 
-            if( isPendingInterrupt(SocketInterrupt::Mask::timeout) == true )
+            if( isTimeouted() == true )
             {
                 return Status::timeout;
             }
@@ -158,7 +158,7 @@ namespace eth
 
         while( getStatus() != SocketStatus::closed )
         {
-            if( isPendingInterrupt(SocketInterrupt::Mask::timeout) == true )
+            if( isTimeouted() == true )
             {
                 return Status::timeout;
             }
@@ -210,10 +210,10 @@ namespace eth
         return available;
     }
 
-    bool Socket::isPendingInterrupt(SocketInterrupt::Mask mask) const
+    bool Socket::isTimeouted() const
     {
         const auto value = m_device.readSocketInterruptRegister(m_handle);
-        return value.test(mask);
+        return value.test(SocketInterrupt::Mask::timeout);
     }
 
 }
