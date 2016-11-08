@@ -25,11 +25,8 @@
 #include "SpiWriter.h"
 
 
-int main(int argc, char* argv[])
+int main()
 {
-    (void) argc;
-    (void) argv;
-
     HAL_Init();
 
     eth::SpiWriter writer;

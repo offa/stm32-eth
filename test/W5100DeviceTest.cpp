@@ -138,7 +138,6 @@ TEST_GROUP(W5100DeviceTest)
 
 TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
 {
-
     constexpr uint16_t addressModeReg = 0x0000;
     constexpr uint8_t resetBit = 7;
     constexpr uint8_t valueReset = 1 << resetBit;
