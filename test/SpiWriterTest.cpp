@@ -36,6 +36,7 @@ TEST_GROUP(SpiWriterTest)
 
         auto f = gsl::finally([] { mock().enable(); });
         mock().disable();
+
         spi = std::make_unique<eth::SpiWriter>();
     }
 

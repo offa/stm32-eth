@@ -58,6 +58,7 @@ namespace eth
 
     W5100Device::W5100Device(SpiWriter& writer) : m_writer(writer)
     {
+        init();
     }
 
     void W5100Device::init()
@@ -192,6 +193,7 @@ namespace eth
         }
 
         writeSocketReceiveReadPointer(s, (readPointer + size));
+
         return size;
     }
 
@@ -238,6 +240,7 @@ namespace eth
     {
         const auto byte1 = read(reg);
         const auto byte0 = read(reg.address(), 1);
+
         return byte::to<uint16_t>(byte1, byte0);
     }
 

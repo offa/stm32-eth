@@ -40,8 +40,17 @@ TEST_GROUP(W5100DeviceTest)
 {
     void setup() override
     {
-        device = std::make_unique<W5100Device>(writer);
         mock().strictOrder();
+
+        auto f = gsl::finally([this]
+        {
+            mock().enable();
+            writerMock.setData("write::count", 0);
+        });
+
+        mock().disable();
+
+        device = std::make_unique<W5100Device>(writer);
     }
 
     void teardown() override
@@ -121,7 +130,7 @@ TEST_GROUP(W5100DeviceTest)
     }
 
 
-    std::unique_ptr<eth::W5100Device> device;
+    std::unique_ptr<W5100Device> device;
     SpiWriter writer;
     MockSupport& writerMock = mock("SpiWriter");
     static constexpr eth::SocketHandle socket = 0;
@@ -129,6 +138,7 @@ TEST_GROUP(W5100DeviceTest)
 
 TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
 {
+
     constexpr uint16_t addressModeReg = 0x0000;
     constexpr uint8_t resetBit = 7;
     constexpr uint8_t valueReset = 1 << resetBit;
@@ -140,7 +150,7 @@ TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
     expectWrite(addressTxSize, valueMemorySize);
     expectWrite(addressRxSize, valueMemorySize);
 
-    device->init();
+    W5100Device d(writer);
 }
 
 TEST(W5100DeviceTest, writeRegisterByte)

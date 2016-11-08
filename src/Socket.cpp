@@ -50,8 +50,6 @@ namespace eth
             return true;
         }
 
-
-
         return false;
     }
 

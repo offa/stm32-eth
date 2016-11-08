@@ -44,7 +44,6 @@ namespace eth
         explicit W5100Device(SpiWriter& writer);
         W5100Device(W5100Device&&) = default;
 
-        void init();
 
         void executeSocketCommand(SocketHandle s, SocketCommand cmd);
 
@@ -98,6 +97,8 @@ namespace eth
 
 
     private:
+
+        void init();
 
         void write(uint16_t addr, uint16_t offset, uint8_t data);
         uint8_t read(uint16_t addr, uint16_t offset);
