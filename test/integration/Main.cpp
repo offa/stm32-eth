@@ -71,8 +71,8 @@ int main()
         {
             if( socket.getStatus() == eth::SocketStatus::established )
             {
-                std::array<uint8_t, 6> msg{'a', 'b', 'c', 'd', '\n', '\r'};
-                auto n = socket.send(msg);
+                const std::array<uint8_t, 6> msg{'a', 'b', 'c', 'd', '\n', '\r'};
+                const auto n = socket.send(msg);
 
                 if( n != msg.size() )
                 {
@@ -83,7 +83,6 @@ int main()
                     trace_puts("send() ok");
                 }
             }
-
         }
 
     }
