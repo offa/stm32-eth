@@ -1,10 +1,9 @@
 {
-   static-init-destr
+   malloc - call_init
    Memcheck:Leak
    match-leak-kinds: reachable
-   fun:*alloc
+   fun:malloc
    ...
-   obj:*/*.so*
+   fun:call_init
    ...
 }
-
