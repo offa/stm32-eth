@@ -3,6 +3,7 @@
 set -ex
 
 LTO_ENABLED=${LTO_ENABLED:=OFF}
+BUILD_TYPE=${BUILD_TYPE:=Release}
 
 if [ ! -v GSL_INCLUDE_DIR ]; then
     if [ -d "dependencies/gsl" ]; then
@@ -26,8 +27,6 @@ if [ "$CXX" == "arm-none-eabi-g++" ]; then
         make eth-stm32.size
     fi
 else
-    BUILD_TYPE=${BUILD_TYPE:=Release}
-
     cmake -DUNITTEST_VERBOSE=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
     make
     make unittest
