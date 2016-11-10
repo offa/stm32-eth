@@ -28,8 +28,7 @@ namespace eth
         static inline void incrementCalls(const ::SimpleString& name)
         {
             int count = mock("SpiWriter").getData(name).getUnsignedIntValue();
-            ++count;
-            mock("SpiWriter").setData(name, count);
+            mock("SpiWriter").setData(name, ++count);
         }
     }
 
