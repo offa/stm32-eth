@@ -28,6 +28,13 @@
 namespace eth
 {
 
+    constexpr bool connectionReady(SocketStatus status)
+    {
+        return ( status == SocketStatus::established )
+                || ( status == SocketStatus::closeWait );
+    }
+
+
     Socket::Socket(SocketHandle handle, W5100Device& device) : m_handle(handle), m_device(device)
     {
     }

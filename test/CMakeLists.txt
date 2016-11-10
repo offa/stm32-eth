@@ -1,5 +1,4 @@
 
-
 find_package(Threads REQUIRED)
 find_package(CppUTest REQUIRED)
 
@@ -54,6 +53,7 @@ list(APPEND SPIWRITERTEST_SRC SpiWriterTest.cpp
                             $<TARGET_OBJECTS:platform-mock>
                             )
 _add_test(SpiWriterTest SPIWRITERTEST_SRC)
+
 
 
 set(TEST_FLAGS -c)

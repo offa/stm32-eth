@@ -67,6 +67,7 @@ namespace eth
             m_value |= static_cast<uint8_t>(mask);
         }
 
+
     private:
 
         uint8_t m_value;

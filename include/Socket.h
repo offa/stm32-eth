@@ -73,12 +73,6 @@ namespace eth
         uint16_t waitForData() const;
         bool isTimeouted() const;
 
-        static constexpr bool connectionReady(SocketStatus status)
-        {
-            return ( status == SocketStatus::established )
-                    || ( status == SocketStatus::closeWait );
-        }
-
 
         const SocketHandle m_handle;
         W5100Device& m_device;
