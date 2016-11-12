@@ -54,11 +54,9 @@ TEST_GROUP(SocketTest)
         mock().clear();
     }
 
-    void expectClose(eth::SocketHandle handle)
+    void expectClose(eth::SocketHandle handle) const
     {
-        deviceMock.expectOneCall("executeSocketCommand")
-            .withParameter("socket", handle)
-            .withParameter("value", static_cast<int>(SocketCommand::close));
+        expectSocketCommand(handle, SocketCommand::close);
         deviceMock.expectOneCall("writeSocketInterruptRegister")
             .withParameter("socket", handle)
             .withParameter("value", 0xff);
@@ -82,6 +80,13 @@ TEST_GROUP(SocketTest)
         deviceMock.expectOneCall("readSocketStatusRegister")
             .withParameter("socket", s)
             .andReturnValue(static_cast<uint8_t>(status));
+    }
+
+    void expectSocketCommand(SocketHandle s, SocketCommand cmd) const
+    {
+        deviceMock.expectOneCall("executeSocketCommand")
+            .withParameter("socket", s)
+            .withParameter("value", static_cast<uint8_t>(cmd));
     }
 
     std::vector<uint8_t> createBuffer(size_t size) const
@@ -175,9 +180,7 @@ TEST(SocketTest, openOpensSocket)
     expectClose(socketHandle);
     deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::open));
+    expectSocketCommand(socketHandle, SocketCommand::open);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     CHECK_TRUE(socket->open(protocol, port, flag));
 }
@@ -221,9 +224,7 @@ TEST(SocketTest, listenReturnsErrorIfStatusNotInit)
 TEST(SocketTest, listenListens)
 {
     expectSocketStatusRead(socketHandle, SocketStatus::init);
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::listen));
+    expectSocketCommand(socketHandle, SocketCommand::listen);
     CHECK_TRUE(socket->listen());
 }
 
@@ -355,9 +356,7 @@ TEST(SocketTest, sendSendsDataAndCommand)
         .withParameter("socket", socketHandle)
         .withMemoryBufferParameter("buffer", buffer.data(), buffer.size())
         .withParameter("size", buffer.size());
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::send));
+    expectSocketCommand(socketHandle, SocketCommand::send);
 
     const auto result = socket->send(buffer);
     CHECK_EQUAL(buffer.size(), result);
@@ -474,8 +473,7 @@ TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
     mock("W5100Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
-    deviceMock.expectOneCall("executeSocketCommand")
-        .ignoreOtherParameters();
+    deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
     std::array<uint8_t, defaultSize> data;
     const auto result = socket->receive(data);
@@ -520,9 +518,7 @@ TEST(SocketTest, receiveSendsCommandAfterReceive)
     deviceMock.expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::receive));
+    expectSocketCommand(socketHandle, SocketCommand::receive);
 
     std::array<uint8_t, defaultSize> data;
     const auto result = socket->receive(data);
@@ -564,10 +560,7 @@ TEST(SocketTest, receiveWaitsForDataAvailable)
         .withParameter("size", defaultSize)
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::receive));
-
+    expectSocketCommand(socketHandle, SocketCommand::receive);
 
     std::array<uint8_t, defaultSize> data;
     const auto result = socket->receive(data);
@@ -593,9 +586,7 @@ TEST(SocketTest, connect)
     deviceMock.expectOneCall("setDestPort")
                 .withParameter("socket", socketHandle)
                 .withParameter("port", port);
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::connect));
+    expectSocketCommand(socketHandle, SocketCommand::connect);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
 
     const auto rtn = socket->connect(addr, port);
@@ -652,9 +643,7 @@ TEST(SocketTest, connectErrorOnTimeout)
 
 TEST(SocketTest, disconnect)
 {
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::disconnect));
+    expectSocketCommand(socketHandle, SocketCommand::disconnect);
     expectSocketStatusRead(socketHandle, SocketStatus::closed);
 
     const auto rtn = socket->disconnect();
@@ -663,10 +652,7 @@ TEST(SocketTest, disconnect)
 
 TEST(SocketTest, disconnectWaitsForClosedStatus)
 {
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::disconnect));
-
+    expectSocketCommand(socketHandle, SocketCommand::disconnect);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     expectSocketInterruptRead(socketHandle, 0x00u);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
@@ -679,9 +665,7 @@ TEST(SocketTest, disconnectWaitsForClosedStatus)
 
 TEST(SocketTest, disconnectErrorOnTimeout)
 {
-    deviceMock.expectOneCall("executeSocketCommand")
-        .withParameter("socket", socketHandle)
-        .withParameter("value", static_cast<int>(SocketCommand::disconnect));
+    expectSocketCommand(socketHandle, SocketCommand::disconnect);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     expectSocketInterruptRead(socketHandle, SocketInterrupt::Mask::timeout);
 
