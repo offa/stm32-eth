@@ -34,6 +34,7 @@ using eth::SocketStatus;
 using eth::SocketCommand;
 using eth::SocketInterrupt;
 using eth::Socket;
+using eth::SocketHandle;
 using eth::Protocol;
 using eth::W5100Device;
 using eth::SpiWriter;
@@ -66,6 +67,18 @@ TEST_GROUP(SocketTest)
             .andReturnValue(static_cast<int>(SocketStatus::closed));
     }
 
+    void expectSocketInterruptRead(SocketHandle s, uint8_t value) const
+    {
+        deviceMock.expectOneCall("readSocketInterruptRegister")
+            .withParameter("socket", s)
+            .andReturnValue(value);
+    }
+
+    void expectSocketInterruptRead(SocketHandle s, SocketInterrupt::Mask value) const
+    {
+        expectSocketInterruptRead(s, static_cast<uint8_t>(value));
+    }
+
     std::vector<uint8_t> createBuffer(size_t size) const
     {
         std::vector<uint8_t> buffer(size);
@@ -79,7 +92,7 @@ TEST_GROUP(SocketTest)
     W5100Device device{spi};
     MockSupport& deviceMock = mock("W5100Device");
     MockSupport& platformMock = mock("platform");
-    static constexpr eth::SocketHandle socketHandle = 0;
+    static constexpr SocketHandle socketHandle = 0;
     static constexpr uint16_t port = 1234;
     static constexpr Protocol protocol = Protocol::tcp;
     static constexpr uint8_t flag = 0;
@@ -672,9 +685,7 @@ TEST(SocketTest, connectWaitsForEstablishedStatus)
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::init));
-    deviceMock.expectOneCall("readSocketInterruptRegister")
-        .withParameter("socket", socketHandle)
-        .andReturnValue(0x00u);
+    expectSocketInterruptRead(socketHandle, 0x00u);
 
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
@@ -682,9 +693,7 @@ TEST(SocketTest, connectWaitsForEstablishedStatus)
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::init));
-    deviceMock.expectOneCall("readSocketInterruptRegister")
-        .withParameter("socket", socketHandle)
-        .andReturnValue(0x00u);
+    expectSocketInterruptRead(socketHandle, 0x00u);
 
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
@@ -725,9 +734,7 @@ TEST(SocketTest, connectErrorOnTimeout)
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::init));
-    deviceMock.expectOneCall("readSocketInterruptRegister")
-        .withParameter("socket", socketHandle)
-        .andReturnValue(static_cast<int>(SocketInterrupt::Mask::timeout));
+    expectSocketInterruptRead(socketHandle, SocketInterrupt::Mask::timeout);
 
     const auto rtn = socket->connect(addr, 4567);
     CHECK_EQUAL(Socket::Status::timeout, rtn);
@@ -755,15 +762,11 @@ TEST(SocketTest, disconnectWaitsForClosedStatus)
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    deviceMock.expectOneCall("readSocketInterruptRegister")
-        .withParameter("socket", socketHandle)
-        .andReturnValue(0x00u);
+    expectSocketInterruptRead(socketHandle, 0x00u);
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    deviceMock.expectOneCall("readSocketInterruptRegister")
-        .withParameter("socket", socketHandle)
-        .andReturnValue(0x00u);
+    expectSocketInterruptRead(socketHandle, 0x00u);
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::closed));
@@ -780,9 +783,7 @@ TEST(SocketTest, disconnectErrorOnTimeout)
     deviceMock.expectOneCall("readSocketStatusRegister")
         .withParameter("socket", socketHandle)
         .andReturnValue(static_cast<int>(SocketStatus::established));
-    deviceMock.expectOneCall("readSocketInterruptRegister")
-        .withParameter("socket", socketHandle)
-        .andReturnValue(static_cast<int>(SocketInterrupt::Mask::timeout));
+    expectSocketInterruptRead(socketHandle, SocketInterrupt::Mask::timeout);
 
     const auto rtn = socket->disconnect();
     CHECK_EQUAL(Socket::Status::timeout, rtn);
