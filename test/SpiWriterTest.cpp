@@ -85,7 +85,6 @@ TEST_GROUP(SpiWriterTest)
     std::unique_ptr<eth::SpiWriter> spi;
     MockSupport& halSpiMock = mock("HAL_SPI");
     MockSupport& halGpioMock = mock("HAL_GPIO");
-    MockSupport& platformMock = mock("platform");
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
     static constexpr uint32_t timeout = 0xffff'ffff;
@@ -101,7 +100,6 @@ TEST(SpiWriterTest, initSetupsGpioPins)
                             GPIO_PULLUP, GPIO_SPEED_LOW,
                             GPIO_AF5_SPI2};
 
-    platformMock.expectOneCall("spiClockEnable");
     halGpioMock.expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &init);
@@ -127,7 +125,6 @@ TEST(SpiWriterTest, initSetupsSpi)
                             SPI_CRCCALCULATION_DISABLED,
                             0};
 
-    platformMock.expectOneCall("spiClockEnable");
     halGpioMock.expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
     halSpiMock.expectOneCall("HAL_SPI_Init")
         .withPointerParameter("hspi.instance", SPI2)

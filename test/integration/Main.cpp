@@ -24,6 +24,12 @@
 #include "W5100Device.h"
 #include "SpiWriter.h"
 
+void spiClockEnable()
+{
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_SPI2_CLK_ENABLE();
+}
+
 
 int main()
 {

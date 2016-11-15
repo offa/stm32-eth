@@ -35,7 +35,6 @@
 
 namespace platform
 {
-    void spiClockEnable();
     void wait(uint32_t timeMs);
 }
 

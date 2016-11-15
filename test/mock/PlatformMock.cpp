@@ -23,10 +23,6 @@
 
 namespace platform
 {
-    void spiClockEnable()
-    {
-        mock("platform").actualCall("spiClockEnable");
-    }
 
     void wait(uint32_t timeMs)
     {
