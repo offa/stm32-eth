@@ -40,6 +40,7 @@ namespace eth
         enum class Status : uint8_t
         {
             ok,
+            failed,
             closed,
             timeout
         };

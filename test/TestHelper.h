@@ -43,7 +43,9 @@ inline SimpleString StringFrom(eth::Socket::Status status)
     switch(status)
     {
         case Socket::Status::ok:
-            return "Ok";
+            return "ok";
+        case Socket::Status::failed:
+            return "failed";
         case Socket::Status::closed:
             return "closed";
         case Socket::Status::timeout:
