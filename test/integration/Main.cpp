@@ -59,7 +59,7 @@ int main()
         }
 
 
-        if( socket.listen() != eth::SocketStatus::ok )
+        if( socket.listen() != eth::Socket::Status::ok )
         {
             trace_puts("listen() failed");
         }
