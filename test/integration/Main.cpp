@@ -49,7 +49,7 @@ int main()
 
     while(true)
     {
-        if( socket.open(eth::Protocol::tcp, port, 0) == false )
+        if( socket.open(eth::Protocol::tcp, port, 0) != eth::Socket::Status::ok )
         {
             trace_puts("socket() failed");
         }
@@ -59,7 +59,7 @@ int main()
         }
 
 
-        if( socket.listen() == false )
+        if( socket.listen() != eth::SocketStatus::ok )
         {
             trace_puts("listen() failed");
         }
