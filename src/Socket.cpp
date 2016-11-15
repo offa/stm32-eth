@@ -39,7 +39,7 @@ namespace eth
     {
     }
 
-    bool Socket::open(Protocol protocol, uint16_t port, uint8_t flag)
+    Socket::Status Socket::open(Protocol protocol, uint16_t port, uint8_t flag)
     {
         if( protocol == Protocol::tcp )
         {
@@ -54,10 +54,10 @@ namespace eth
                 // Wait for completion
             }
 
-            return true;
+            return Status::ok;
         }
 
-        return false;
+        return Status::failed;
     }
 
     void Socket::close()
@@ -72,16 +72,16 @@ namespace eth
         }
     }
 
-    bool Socket::listen()
+    Socket::Status Socket::listen()
     {
         if( getStatus() != SocketStatus::init )
         {
-            return false;
+            return Status::closed;
         }
 
         m_device.executeSocketCommand(m_handle, SocketCommand::listen);
 
-        return true;
+        return Status::ok;
     }
 
     void Socket::accept()

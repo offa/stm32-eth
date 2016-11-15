@@ -113,7 +113,8 @@ TEST_GROUP(SocketTest)
 TEST(SocketTest, openReturnsErrorOnUnsupportedProtocol)
 {
     constexpr Protocol invalidProtocol = Protocol::pppoe;
-    CHECK_FALSE(socket->open(invalidProtocol, port, flag));
+    const auto result = socket->open(invalidProtocol, port, flag);
+    CHECK_EQUAL(Socket::Status::failed, result);
 }
 
 TEST(SocketTest, openReturnsSuccess)
@@ -123,7 +124,9 @@ TEST(SocketTest, openReturnsSuccess)
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    CHECK_TRUE(socket->open(protocol, port, flag));
+
+    const auto result = socket->open(protocol, port, flag);
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, openResetsSocketFirst)
@@ -133,7 +136,9 @@ TEST(SocketTest, openResetsSocketFirst)
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    CHECK_TRUE(socket->open(protocol, port, flag));
+
+    const auto result = socket->open(protocol, port, flag);
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, openSetsProtocol)
@@ -146,7 +151,9 @@ TEST(SocketTest, openSetsProtocol)
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    CHECK_TRUE(socket->open(protocol, port, flag));
+
+    const auto result = socket->open(protocol, port, flag);
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, openSetsFlag)
@@ -160,7 +167,9 @@ TEST(SocketTest, openSetsFlag)
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    CHECK_TRUE(socket->open(protocol, port, flagValue));
+
+    const auto result = socket->open(protocol, port, flagValue);
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, openSetsPort)
@@ -172,7 +181,9 @@ TEST(SocketTest, openSetsPort)
         .withParameter("value", port);
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    CHECK_TRUE(socket->open(protocol, port, flag));
+
+    const auto result = socket->open(protocol, port, flag);
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, openOpensSocket)
@@ -182,7 +193,9 @@ TEST(SocketTest, openOpensSocket)
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     expectSocketCommand(socketHandle, SocketCommand::open);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    CHECK_TRUE(socket->open(protocol, port, flag));
+
+    const auto result = socket->open(protocol, port, flag);
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, openWaitsForStatus)
@@ -195,7 +208,8 @@ TEST(SocketTest, openWaitsForStatus)
     expectSocketStatusRead(socketHandle, SocketStatus::closed);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
 
-    CHECK_TRUE(socket->open(protocol, port, flag));
+    const auto result = socket->open(protocol, port, flag);
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, close)
@@ -218,14 +232,18 @@ TEST(SocketTest, closeWaitsForCloseStatus)
 TEST(SocketTest, listenReturnsErrorIfStatusNotInit)
 {
     expectSocketStatusRead(socketHandle, SocketStatus::closed);
-    CHECK_FALSE(socket->listen());
+
+    const auto result = socket->listen();
+    CHECK_EQUAL(Socket::Status::closed, result);
 }
 
 TEST(SocketTest, listenListens)
 {
     expectSocketStatusRead(socketHandle, SocketStatus::init);
     expectSocketCommand(socketHandle, SocketCommand::listen);
-    CHECK_TRUE(socket->listen());
+
+    const auto result = socket->listen();
+    CHECK_EQUAL(Socket::Status::ok, result);
 }
 
 TEST(SocketTest, acceptWaitsBetweenStatusCheck)

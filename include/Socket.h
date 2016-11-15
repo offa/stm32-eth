@@ -50,9 +50,9 @@ namespace eth
         Socket(Socket&&) = default;
 
 
-        bool open(Protocol protocol, uint16_t port, uint8_t flag);
+        Status open(Protocol protocol, uint16_t port, uint8_t flag);
         void close();
-        bool listen();
+        Status listen();
         void accept();
         uint16_t send(const gsl::span<const uint8_t> buffer);
         uint16_t receive(gsl::span<uint8_t> buffer);
