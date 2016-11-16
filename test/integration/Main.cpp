@@ -34,6 +34,7 @@ void spiClockEnable()
 int main()
 {
     HAL_Init();
+    spiClockEnable();
 
     eth::SpiWriter writer;
 
