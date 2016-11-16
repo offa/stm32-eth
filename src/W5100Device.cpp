@@ -128,21 +128,21 @@ namespace eth
 
     uint16_t W5100Device::readFreesize(W5100Register freesizeReg)
     {
-        uint16_t val = 0;
-        uint16_t val1 = 0;
+        uint16_t firstRead = 0;
+        uint16_t secondRead = 0;
 
         do
         {
-            val1 = readWord(freesizeReg);
+            firstRead = readWord(freesizeReg);
 
-            if( val1 != 0 )
+            if( firstRead != 0 )
             {
-                val = readWord(freesizeReg);
+                secondRead = readWord(freesizeReg);
             }
         }
-        while( val != val1 );
+        while( secondRead != firstRead );
 
-        return val;
+        return secondRead;
     }
 
     void W5100Device::sendData(SocketHandle s, const gsl::span<const uint8_t> buffer)
