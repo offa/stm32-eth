@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](LICENSE)
 ![C++](https://img.shields.io/badge/c++-14-green.svg)
 
-Ethernet connectivity for *Stm32F4xx* Boards using W5100 devices.
+Ethernet connectivity for *Stm32F* Boards using W5100 ethernetcontroller..
 
 
 ## Requirements
@@ -32,7 +32,7 @@ Executing tests using CTest: `make test` or `ctest`. For `unittest` it's possibl
 
 ## Integration Test
 
-Integration Test for *Stm32F4xx* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
+Integration Test for *Stm32F* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
 
 
 ## Flashing (OpenOCD)
