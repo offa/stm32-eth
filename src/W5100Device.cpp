@@ -28,30 +28,23 @@ namespace eth
     namespace
     {
 
-        template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
-        constexpr uint16_t getTransmitBufferAddress()
+        template<size_t baseAddress, size_t index,
+                std::enable_if_t<(index < supportedSockets), int> = 0>
+        constexpr uint16_t toBufferAddress()
         {
-            constexpr uint16_t baseAddress = 0x4000;
-            return baseAddress + W5100Device::getTransmitBufferSize() * index;
-        }
-
-        template<size_t index, std::enable_if_t<(index < supportedSockets), int> = 0>
-        constexpr uint16_t getReceiveBufferAddress()
-        {
-            constexpr uint16_t baseAddress = 0x6000;
             return baseAddress + W5100Device::getReceiveBufferSize() * index;
         }
 
         constexpr std::array<uint16_t, supportedSockets> transmitBufferBaseAddress{{
-                                                            getTransmitBufferAddress<0>(),
-                                                            getTransmitBufferAddress<1>(),
-                                                            getTransmitBufferAddress<2>(),
-                                                            getTransmitBufferAddress<3>() }};
+                                                            toBufferAddress<0x4000, 0>(),
+                                                            toBufferAddress<0x4000, 1>(),
+                                                            toBufferAddress<0x4000, 2>(),
+                                                            toBufferAddress<0x4000, 3>() }};
         constexpr std::array<uint16_t, supportedSockets> receiveBufferBaseAddress{{
-                                                            getReceiveBufferAddress<0>(),
-                                                            getReceiveBufferAddress<1>(),
-                                                            getReceiveBufferAddress<2>(),
-                                                            getReceiveBufferAddress<3>() }};
+                                                            toBufferAddress<0x6000, 0>(),
+                                                            toBufferAddress<0x6000, 1>(),
+                                                            toBufferAddress<0x6000, 2>(),
+                                                            toBufferAddress<0x6000, 3>() }};
     }
 
 
