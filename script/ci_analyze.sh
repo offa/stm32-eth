@@ -10,12 +10,12 @@ mkdir ${BUILD_DIR} && cd ${BUILD_DIR}
 cmake -DUNITTEST_JUNIT=ON -DCOVERAGE=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 make
 
-## Coverage 
+## Coverage
 make coverage-clean
 make unittest
 make coverage
 
-python ${LCOV_COBERTURA}/lcov_cobertura.py coverage/stm32-eth.info --base-dir ../src --output coverage/coverage.xml --demangle
+python ${LCOV_COBERTURA}/lcov_cobertura.py coverage/stm32-eth.info --base-dir .. --output coverage/coverage.xml --demangle
 cd -
 
 

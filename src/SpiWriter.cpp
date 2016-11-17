@@ -30,7 +30,6 @@ namespace eth
         init();
     }
 
-
     void SpiWriter::init()
     {
         GPIO_InitTypeDef gpioSpi{(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
