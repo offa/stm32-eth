@@ -32,7 +32,7 @@ namespace eth
                 std::enable_if_t<(index < supportedSockets), int> = 0>
         constexpr uint16_t toBufferAddress()
         {
-            return baseAddress + bufferSize * index;
+            return baseAddress + ( bufferSize * index );
         }
 
         constexpr std::array<uint16_t, supportedSockets> transmitBufferBaseAddress{{
