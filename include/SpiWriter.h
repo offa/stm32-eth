@@ -40,6 +40,7 @@ namespace eth
 
         Handle& nativeHandle();
 
+
    private:
 
         void init();

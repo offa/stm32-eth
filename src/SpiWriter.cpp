@@ -63,26 +63,26 @@ namespace eth
 
     void SpiWriter::write(uint16_t address, uint8_t data)
     {
-        std::array<uint8_t, 4> a = {{ 0xf0,
+        std::array<uint8_t, 4> packet = {{ 0xf0,
             byte::get<1>(address),
             byte::get<0>(address),
             data
         }};
 
         setSlaveSelect();
-        HAL_SPI_Transmit(&m_handle, a.data(), a.size(), timeout);
+        HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
         resetSlaveSelect();
     }
 
     uint8_t SpiWriter::read(uint16_t address)
     {
-        std::array<uint8_t, 3> a = {{ 0x0f,
+        std::array<uint8_t, 3> packet = {{ 0x0f,
             byte::get<1>(address),
             byte::get<0>(address)
         }};
 
         setSlaveSelect();
-        HAL_SPI_Transmit(&m_handle, a.data(), a.size(), timeout);
+        HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
         uint8_t buffer;
         HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
