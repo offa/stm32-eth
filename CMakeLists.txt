@@ -21,7 +21,13 @@ message(STATUS "Enable LTO : ${LTO}")
 option(INTEGRATION_TEST "Build Integration Tests" OFF)
 message(STATUS "Build Integration Tests : ${INTEGRATION_TEST}")
 
-option(GSL_CONTRACT_UNENFORCED "GSL contract violations unenforced" OFF)
+if( CMAKE_CROSSCOMPILING )
+    set(CONTRACTS_UNENFORCED ON)
+else()
+    set(CONTRACTS_UNENFORCED OFF)
+endif()
+
+option(GSL_CONTRACT_UNENFORCED "GSL contract violations unenforced" ${CONTRACTS_UNENFORCED})
 message(STATUS "Unenforced GSL contracts : ${GSL_CONTRACT_UNENFORCED}")
 
 
