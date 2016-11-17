@@ -58,7 +58,7 @@ namespace eth
         constexpr T to(uint8_t valueN, Ts... values)
         {
             constexpr auto shift = sizeof...(values) * 8;
-            auto lower = to<T>(values...);
+            const auto lower = to<T>(values...);
             return ( valueN << shift ) | lower ;
         }
 
