@@ -28,23 +28,23 @@ namespace eth
     namespace
     {
 
-        template<size_t baseAddress, size_t index,
+        template<uint16_t bufferSize, uint16_t baseAddress, size_t index,
                 std::enable_if_t<(index < supportedSockets), int> = 0>
         constexpr uint16_t toBufferAddress()
         {
-            return baseAddress + W5100Device::getReceiveBufferSize() * index;
+            return baseAddress + bufferSize * index;
         }
 
         constexpr std::array<uint16_t, supportedSockets> transmitBufferBaseAddress{{
-                                                            toBufferAddress<0x4000, 0>(),
-                                                            toBufferAddress<0x4000, 1>(),
-                                                            toBufferAddress<0x4000, 2>(),
-                                                            toBufferAddress<0x4000, 3>() }};
+                                                  toBufferAddress<W5100Device::getTransmitBufferSize(), 0x4000, 0>(),
+                                                  toBufferAddress<W5100Device::getTransmitBufferSize(), 0x4000, 1>(),
+                                                  toBufferAddress<W5100Device::getTransmitBufferSize(), 0x4000, 2>(),
+                                                  toBufferAddress<W5100Device::getTransmitBufferSize(), 0x4000, 3>() }};
         constexpr std::array<uint16_t, supportedSockets> receiveBufferBaseAddress{{
-                                                            toBufferAddress<0x6000, 0>(),
-                                                            toBufferAddress<0x6000, 1>(),
-                                                            toBufferAddress<0x6000, 2>(),
-                                                            toBufferAddress<0x6000, 3>() }};
+                                                  toBufferAddress<W5100Device::getReceiveBufferSize(), 0x6000, 0>(),
+                                                  toBufferAddress<W5100Device::getReceiveBufferSize(), 0x6000, 1>(),
+                                                  toBufferAddress<W5100Device::getReceiveBufferSize(), 0x6000, 2>(),
+                                                  toBufferAddress<W5100Device::getReceiveBufferSize(), 0x6000, 3>() }};
     }
 
 

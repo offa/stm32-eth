@@ -93,6 +93,7 @@ namespace eth
             return receiveBufferSize;
         }
 
+
         W5100Device& operator=(W5100Device&&) = default;
 
 
