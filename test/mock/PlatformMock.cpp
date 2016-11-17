@@ -27,7 +27,7 @@ namespace platform
     void wait(std::chrono::milliseconds t)
     {
         mock("platform").actualCall("wait")
-            .withParameter("timeMs", t.count());
+            .withParameter("timeMs", static_cast<unsigned int>(t.count()));
 
     }
 }
