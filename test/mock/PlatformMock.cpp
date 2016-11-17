@@ -24,10 +24,10 @@
 namespace platform
 {
 
-    void wait(uint32_t timeMs)
+    void wait(std::chrono::milliseconds t)
     {
         mock("platform").actualCall("wait")
-            .withParameter("timeMs", timeMs);
+            .withParameter("timeMs", t.count());
 
     }
 }

@@ -22,10 +22,9 @@
 
 namespace platform
 {
-
-    void wait(uint32_t timeMs)
+    void wait(std::chrono::milliseconds t)
     {
-        HAL_Delay(timeMs);
+        HAL_Delay(t.count());
     }
 
 }

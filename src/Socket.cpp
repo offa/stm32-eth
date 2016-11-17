@@ -88,8 +88,8 @@ namespace eth
     {
         while( getStatus() == SocketStatus::listen )
         {
-            constexpr uint32_t waitTimeMs = 100;
-            platform::wait(waitTimeMs);
+            using namespace std::chrono_literals;
+            platform::wait(100ms);
         }
     }
 

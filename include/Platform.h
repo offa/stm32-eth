@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <stm32f4xx_hal.h>
 
 
@@ -35,6 +36,6 @@
 
 namespace platform
 {
-    void wait(uint32_t timeMs);
+    void wait(std::chrono::milliseconds t);
 }
 
