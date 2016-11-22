@@ -46,35 +46,17 @@ int main()
 
     constexpr eth::SocketHandle handle = 0;
     eth::Socket socket(handle, device);
-    constexpr uint16_t port = 5000;
-
-    trace_puts("Server: 192.168.1.8:5000");
 
     while(true)
     {
-        if( socket.open(eth::Protocol::tcp, port, 0) != eth::Socket::Status::ok )
+        if( socket.connect({192, 168, 1, 6}, 5000) != eth::Socket::Status::ok )
         {
-            trace_puts("socket() failed");
+            trace_puts("connect() failed");
         }
         else
         {
-            trace_puts("socket() ok");
+            trace_puts("connect() ok");
         }
-
-
-        if( socket.listen() != eth::Socket::Status::ok )
-        {
-            trace_puts("listen() failed");
-        }
-        else
-        {
-            trace_puts("listen() ok");
-        }
-
-
-        socket.accept();
-        trace_puts("accept() done");
-
 
         while(true)
         {
@@ -89,13 +71,8 @@ int main()
                 }
                 else
                 {
-                    trace_printf("send() ok (%d / %d)\n", n, msg.size());
+                    trace_puts("send() ok");
                 }
-
-
-                std::array<uint8_t, 10> buffer;
-                const auto received = socket.receive(buffer);
-                trace_printf("receive(): %d\n", received);
             }
         }
 
