@@ -39,6 +39,10 @@ namespace eth
     {
     }
 
+    Socket::~Socket() {
+        closeImpl();
+    }
+
     Socket::Status Socket::open(Protocol protocol, uint16_t port, uint8_t flag)
     {
         if( protocol == Protocol::tcp )
@@ -62,9 +66,7 @@ namespace eth
 
     void Socket::close()
     {
-        // TODO: Safe close in dtor
-        m_device.executeSocketCommand(m_handle, SocketCommand::close);
-        m_device.writeSocketInterruptRegister(m_handle, SocketInterrupt(0xff));
+        closeImpl();
 
         while( getStatus() != SocketStatus::closed )
         {
@@ -221,6 +223,12 @@ namespace eth
     {
         const auto value = m_device.readSocketInterruptRegister(m_handle);
         return value.test(SocketInterrupt::Mask::timeout);
+    }
+
+    void Socket::closeImpl()
+    {
+        m_device.executeSocketCommand(m_handle, SocketCommand::close);
+        m_device.writeSocketInterruptRegister(m_handle, SocketInterrupt(0xff));
     }
 
 }

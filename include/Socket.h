@@ -48,6 +48,7 @@ namespace eth
 
         Socket(SocketHandle handle, W5100Device& device);
         Socket(Socket&&) = default;
+        ~Socket();
 
 
         Status open(Protocol protocol, uint16_t port, uint8_t flag);
@@ -73,6 +74,7 @@ namespace eth
         uint16_t waitForBuffer(uint16_t size) const;
         uint16_t waitForData() const;
         bool isTimeouted() const;
+        void closeImpl();
 
 
         const SocketHandle m_handle;

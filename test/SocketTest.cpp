@@ -50,11 +50,12 @@ TEST_GROUP(SocketTest)
 
     void teardown() override
     {
+        ignoreDestruction();
         mock().checkExpectations();
         mock().clear();
     }
 
-    void expectClose(eth::SocketHandle handle) const
+    void expectClose(SocketHandle handle) const
     {
         expectSocketCommand(handle, SocketCommand::close);
         deviceMock.expectOneCall("writeSocketInterruptRegister")
@@ -94,6 +95,13 @@ TEST_GROUP(SocketTest)
         std::vector<uint8_t> buffer(size);
         std::iota(buffer.begin(), buffer.end(), 0);
         return buffer;
+    }
+
+    void ignoreDestruction()
+    {
+        auto f = gsl::finally([] { mock().enable(); });
+        mock().disable();
+        socket.reset();
     }
 
 
@@ -227,6 +235,15 @@ TEST(SocketTest, closeWaitsForCloseStatus)
     expectSocketStatusRead(socketHandle, SocketStatus::closed);
 
     socket->close();
+}
+
+TEST(SocketTest, closedOnDestruction)
+{
+    expectSocketCommand(socketHandle, SocketCommand::close);
+    deviceMock.expectOneCall("writeSocketInterruptRegister")
+        .withParameter("socket", socketHandle)
+        .withParameter("value", 0xff);
+    Socket s(socketHandle, device);
 }
 
 TEST(SocketTest, listenReturnsErrorIfStatusNotInit)
