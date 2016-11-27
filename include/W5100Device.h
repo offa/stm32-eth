@@ -117,10 +117,8 @@ namespace eth
 
 
         SpiWriter& m_writer;
-        static constexpr uint8_t opcodeWrite = 0xf0;
-        static constexpr uint8_t opcodeRead = 0x0f;
         static constexpr uint16_t transmitBufferSize = 2048;
-        static constexpr uint16_t receiveBufferSize = 2048;
+        static constexpr uint16_t receiveBufferSize = transmitBufferSize;
     };
 
 }
