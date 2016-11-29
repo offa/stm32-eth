@@ -44,8 +44,7 @@ int main()
     device.setSubnetMask({255, 255, 255, 0});
     device.setMacAddress({0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef});
 
-    constexpr eth::SocketHandle handle = 0;
-    eth::Socket socket(handle, device);
+    eth::Socket socket(0, device);
     constexpr uint16_t port = 5000;
 
     trace_puts("Server: 192.168.1.8:5000");
@@ -80,23 +79,27 @@ int main()
         {
             if( socket.getStatus() == eth::SocketStatus::established )
             {
-                const std::array<uint8_t, 6> msg{'a', 'b', 'c', 'd', '\n', '\r'};
-                const auto n = socket.send(msg);
+                std::array<uint8_t, 20> buffer;
 
-                if( n != msg.size() )
-                {
-                    trace_puts("send() failed");
-                }
-                else
-                {
-                    trace_printf("send() ok (%d / %d)\n", n, msg.size());
-                }
-
-
-                std::array<uint8_t, 10> buffer;
                 const auto received = socket.receive(buffer);
                 trace_printf("receive(): %d\n", received);
+
+                if( received > 0 )
+                {
+                    std::array<uint8_t, 9> resp{{ 'r', 'e', 'c', 'e', 'i', 'v', 'e', 'd', '\n' }};
+                    const auto n = socket.send(resp);
+
+                    if( n != received )
+                    {
+                        trace_printf("send() failed (%d)\n", n);
+                    }
+                    else
+                    {
+                        trace_printf("send() ok (%d / %d)\n", n, buffer.size());
+                    }
+                }
             }
+
         }
 
     }
