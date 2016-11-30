@@ -41,7 +41,8 @@ namespace eth
 
 
         template<class T, class U,
-            std::enable_if_t<(std::is_convertible<std::remove_cv_t<U>, uint8_t>::value == false), int> = 0>
+            std::enable_if_t<(std::is_convertible<std::remove_cv_t<U>, uint8_t>::value == false)
+                            || (std::is_integral<U>::value == false), int> = 0>
         constexpr T to(U);
 
         template<class T,
