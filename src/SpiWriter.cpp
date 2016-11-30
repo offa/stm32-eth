@@ -24,6 +24,27 @@
 
 namespace eth
 {
+    namespace
+    {
+        enum class OpCode : uint8_t
+        {
+            read = 0x0f,
+            write = 0xf0
+        };
+
+
+        template<OpCode opcode, class... Ts>
+        constexpr std::array<uint8_t, 3 + sizeof...(Ts)> makePacket(uint16_t address, Ts&&... params)
+        {
+            return {{ static_cast<uint8_t>(opcode),
+                    byte::get<1>(address),
+                    byte::get<0>(address),
+                    params... }};
+        }
+
+    }
+
+
 
     SpiWriter::SpiWriter()
     {
@@ -62,11 +83,7 @@ namespace eth
 
     void SpiWriter::write(uint16_t address, uint8_t data)
     {
-        std::array<uint8_t, 4> packet = {{ 0xf0,
-            byte::get<1>(address),
-            byte::get<0>(address),
-            data
-        }};
+        auto packet = makePacket<OpCode::write>(address, data);
 
         setSlaveSelect();
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
@@ -75,10 +92,7 @@ namespace eth
 
     uint8_t SpiWriter::read(uint16_t address)
     {
-        std::array<uint8_t, 3> packet = {{ 0x0f,
-            byte::get<1>(address),
-            byte::get<0>(address)
-        }};
+        auto packet = makePacket<OpCode::read>(address);
 
         setSlaveSelect();
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
