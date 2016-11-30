@@ -65,15 +65,12 @@ TEST(ByteTest, toByteUint8)
 TEST(ByteTest, toByteUint16)
 {
     constexpr uint8_t b0 = 0xcd;
-    constexpr uint8_t b1 = 0xab;
-    CHECK_EQUAL(0xabcd, byte::to<uint16_t>(b1, b0));
+    CHECK_EQUAL(0xabcd, byte::to<uint16_t>(0xab, b0));
 }
 
 TEST(ByteTest, toByteUint32)
 {
     constexpr uint8_t b0 = 0x01;
-    constexpr uint8_t b1 = 0xef;
-    constexpr uint8_t b2 = 0xcd;
     constexpr uint8_t b3 = 0xab;
-    CHECK_EQUAL(0xabcdef01, byte::to<uint32_t>(b3, b2, b1, b0));
+    CHECK_EQUAL(0xabcdef01, byte::to<uint32_t>(b3, 0xcd, 0xef, b0));
 }
