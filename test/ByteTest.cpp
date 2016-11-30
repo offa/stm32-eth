@@ -74,3 +74,11 @@ TEST(ByteTest, toByteUint32)
     constexpr uint8_t b3 = 0xab;
     CHECK_EQUAL(0xabcdef01, byte::to<uint32_t>(b3, 0xcd, 0xef, b0));
 }
+
+TEST(ByteTest, toByteUint32WithLessThanSize)
+{
+    constexpr uint8_t b0 = 0x01;
+    constexpr uint8_t b1 = 0x02;
+    CHECK_EQUAL(0x0201, byte::to<uint32_t>(b1, b0));
+}
+
