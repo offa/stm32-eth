@@ -55,8 +55,7 @@ namespace eth
             static_assert(isByteConvertible<T>::value, "Invalid type for 'U'");
         }
 
-        template<class T,
-            class U,
+        template<class T, class U,
             std::enable_if_t<isByteConvertible<U>::value, int> = 0,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
@@ -66,13 +65,11 @@ namespace eth
         }
 
 
-        template<class T,
-            class U,
+        template<class T, class U, class... Us,
             std::enable_if_t<isByteConvertible<U>::value, int> = 0,
-            class... Ts,
             std::enable_if_t<std::is_integral<T>::value
-                                && ( sizeof(T) >= (sizeof...(Ts) + sizeof(uint8_t)) ), int> = 0>
-        constexpr T to(U valueN, Ts... values)
+                                && ( sizeof(T) >= (sizeof...(Us) + sizeof(uint8_t)) ), int> = 0>
+        constexpr T to(U valueN, Us... values)
         {
             constexpr auto shift = sizeof...(values) * 8;
             const auto lower = to<T>(values...);
