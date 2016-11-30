@@ -52,7 +52,7 @@ namespace eth
             std::enable_if_t<!isByteConvertible<U>::value, int> = 0>
         constexpr void to(U)
         {
-            static_assert(isByteConvertible<T>::value, "Invalid type for 'U'");
+            static_assert(isByteConvertible<U>::value, "Invalid type for 'U'");
         }
 
         template<class T, class U,
