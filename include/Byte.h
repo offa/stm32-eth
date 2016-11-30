@@ -29,6 +29,14 @@ namespace eth
     namespace byte
     {
 
+        template<class T>
+        struct isByteConvertible
+        {
+            static constexpr bool value = std::is_convertible<std::remove_cv_t<T>, uint8_t>::value
+                                            && std::is_integral<T>::value;
+        };
+
+
         template<size_t pos, class T,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( pos < sizeof(T) ), int> = 0>
@@ -41,22 +49,30 @@ namespace eth
 
 
         template<class T, class U,
-            std::enable_if_t<(std::is_convertible<std::remove_cv_t<U>, uint8_t>::value == false)
-                            || (std::is_integral<U>::value == false), int> = 0>
-        constexpr T to(U);
+            std::enable_if_t<!isByteConvertible<U>::value, int> = 0>
+        constexpr void to(U)
+        {
+            static_assert(isByteConvertible<T>::value, "Invalid type for 'U'");
+        }
 
         template<class T,
+            class U,
+            std::enable_if_t<isByteConvertible<U>::value, int> = 0,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
-        constexpr T to(uint8_t value)
+        constexpr T to(U value)
         {
             return value;
         }
 
-        template<class T, class... Ts,
+
+        template<class T,
+            class U,
+            std::enable_if_t<isByteConvertible<U>::value, int> = 0,
+            class... Ts,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= (sizeof...(Ts) + sizeof(uint8_t)) ), int> = 0>
-        constexpr T to(uint8_t valueN, Ts... values)
+        constexpr T to(U valueN, Ts... values)
         {
             constexpr auto shift = sizeof...(values) * 8;
             const auto lower = to<T>(values...);
