@@ -106,15 +106,6 @@ namespace eth
 
         uint16_t readFreesize(W5100Register freesizeReg);
 
-        uint16_t readSocketTransmitWritePointer(SocketHandle s);
-        void writeSocketTransmitWritePointer(SocketHandle s, uint16_t value);
-
-        uint16_t readSocketReceiveReadPointer(SocketHandle s);
-        void writeSocketReceiveReadPointer(SocketHandle s, uint16_t value);
-
-        void writeTransmitMemorySizeRegister(uint8_t value);
-        void writeReceiveMemorySizeRegister(uint8_t value);
-
 
         SpiWriter& m_writer;
         static constexpr uint16_t transmitBufferSize = 2048;

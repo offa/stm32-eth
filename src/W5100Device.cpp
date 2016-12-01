@@ -50,8 +50,8 @@ namespace eth
         writeModeRegister(Mode::reset);
 
         constexpr uint8_t memorySize = 0x55;
-        writeTransmitMemorySizeRegister(memorySize);
-        writeReceiveMemorySizeRegister(memorySize);
+        write(w5100::transmitMemorySize, memorySize);
+        write(w5100::receiveMemorySize, memorySize);
     }
 
     void W5100Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
@@ -133,7 +133,7 @@ namespace eth
     {
         constexpr uint16_t transmitBufferMask = 0x07ff;
         const auto size = buffer.length();
-        const uint16_t writePointer = readSocketTransmitWritePointer(s);
+        const uint16_t writePointer = readWord(w5100::socketTransmitWritePointer(s));
         const uint16_t offset = writePointer & transmitBufferMask;
         const uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
@@ -150,14 +150,14 @@ namespace eth
             write(W5100Register(destAddress, size), buffer);
         }
 
-        writeSocketTransmitWritePointer(s, (writePointer + size));
+        write(w5100::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
     }
 
     uint16_t W5100Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
     {
         constexpr uint16_t receiveBufferMask = 0x07ff;
         const auto size = buffer.length();
-        const uint16_t readPointer = readSocketReceiveReadPointer(s);
+        const uint16_t readPointer = readWord(w5100::socketReceiveReadPointer(s));
         const uint16_t offset = readPointer & receiveBufferMask;
         const uint16_t destAddress = offset + toReceiveBufferAddress(s);
         const auto reg = makeRegister<uint8_t>(destAddress);
@@ -176,7 +176,7 @@ namespace eth
             read(reg, buffer);
         }
 
-        writeSocketReceiveReadPointer(s, (readPointer + size));
+        write(w5100::socketReceiveReadPointer(s), static_cast<uint16_t>(readPointer + size));
 
         return size;
     }
@@ -273,36 +273,6 @@ namespace eth
     void W5100Device::setDestPort(SocketHandle s, uint16_t port)
     {
         write(w5100::socketDestPort(s), port);
-    }
-
-    uint16_t W5100Device::readSocketTransmitWritePointer(SocketHandle s)
-    {
-        return readWord(w5100::socketTransmitWritePointer(s));
-    }
-
-    void W5100Device::writeSocketTransmitWritePointer(SocketHandle s, uint16_t value)
-    {
-        write(w5100::socketTransmitWritePointer(s), value);
-    }
-
-    uint16_t W5100Device::readSocketReceiveReadPointer(SocketHandle s)
-    {
-        return readWord(w5100::socketReceiveReadPointer(s));
-    }
-
-    void W5100Device::writeSocketReceiveReadPointer(SocketHandle s, uint16_t value)
-    {
-        write(w5100::socketReceiveReadPointer(s), value);
-    }
-
-    void W5100Device::writeTransmitMemorySizeRegister(uint8_t value)
-    {
-        write(w5100::transmitMemorySize, value);
-    }
-
-    void W5100Device::writeReceiveMemorySizeRegister(uint8_t value)
-    {
-        write(w5100::receiveMemorySize, value);
     }
 
 }
