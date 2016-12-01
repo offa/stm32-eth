@@ -101,13 +101,6 @@ namespace eth
                     .returnUnsignedIntValue();
     }
 
-    SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)
-    {
-        return static_cast<SocketCommand>(mock("W5100Device").actualCall("readSocketCommandRegister")
-                .withParameter("socket", s)
-                .returnUnsignedIntValue());
-    }
-
     void W5100Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
     {
         mock("W5100Device").actualCall("setDestIpAddress")

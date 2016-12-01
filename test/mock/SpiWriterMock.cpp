@@ -55,14 +55,4 @@ namespace eth
                 .returnUnsignedIntValue();
     }
 
-    void SpiWriter::setSlaveSelect()
-    {
-        mock("SpiWriter").actualCall("setSlaveSelect");
-    }
-
-    void SpiWriter::resetSlaveSelect()
-    {
-        mock("SpiWriter").actualCall("resetSlaveSelect");
-    }
-
 }
