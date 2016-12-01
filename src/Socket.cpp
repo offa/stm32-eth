@@ -36,8 +36,8 @@ namespace eth
                     || ( status == SocketStatus::closeWait );
         }
 
-        template<class Fn1, class Fn2, class Fn3>
-        uint16_t waitFor(Fn1 getDataFn, Fn2 conditionFn, Fn3 statusCheckFn)
+        template<class Fn1, class Fn2>
+        uint16_t waitFor(Fn1 getDataFn, Fn2 statusCheckFn, uint16_t size)
         {
             uint16_t freeSize = 0;
 
@@ -50,7 +50,7 @@ namespace eth
                     return 0;
                 }
             }
-            while( conditionFn(freeSize) == false );
+            while( freeSize < size );
 
             return freeSize;
         }
@@ -128,9 +128,8 @@ namespace eth
 
         const uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), uint16_t(buffer.length()));
         const auto freeSize = waitFor([this] { return m_device.getTransmitFreeSize(m_handle); },
-                                        [sendSize](auto n) { return n >= sendSize; },
-                                        [this] { return connectionReady(getStatus()); }
-                                        );
+                                        [this] { return connectionReady(getStatus()); },
+                                        sendSize);
 
         if( freeSize == 0 )
         {
@@ -151,9 +150,8 @@ namespace eth
         }
 
         const uint16_t available = waitFor([this] { return m_device.getReceiveFreeSize(m_handle); },
-                                            [](auto n) { return n != 0; },
-                                            [this] { return connectionReady(getStatus()); }
-                                            );
+                                            [this] { return connectionReady(getStatus()); },
+                                            1);
 
 
         if( available == 0 )
