@@ -99,8 +99,6 @@ namespace eth
 
     private:
 
-        void init();
-
         void write(uint16_t addr, uint16_t offset, uint8_t data);
         uint8_t read(uint16_t addr, uint16_t offset);
 

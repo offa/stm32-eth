@@ -42,11 +42,6 @@ namespace eth
 
     W5100Device::W5100Device(SpiWriter& writer) : m_writer(writer)
     {
-        init();
-    }
-
-    void W5100Device::init()
-    {
         writeModeRegister(Mode::reset);
 
         constexpr uint8_t memorySize = 0x55;
