@@ -27,12 +27,36 @@
 
 namespace eth
 {
-
-    constexpr bool connectionReady(SocketStatus status)
+    namespace
     {
-        return ( status == SocketStatus::established )
-                || ( status == SocketStatus::closeWait );
+
+        constexpr bool connectionReady(SocketStatus status)
+        {
+            return ( status == SocketStatus::established )
+                    || ( status == SocketStatus::closeWait );
+        }
+
+        template<class Fn1, class Fn2, class Fn3>
+        uint16_t waitFor(Fn1 getDataFn, Fn2 conditionFn, Fn3 statusCheckFn)
+        {
+            uint16_t freeSize = 0;
+
+            do
+            {
+                freeSize = getDataFn();
+
+                if( statusCheckFn() == false )
+                {
+                    return 0;
+                }
+            }
+            while( conditionFn(freeSize) == false );
+
+            return freeSize;
+        }
+
     }
+
 
 
     Socket::Socket(SocketHandle handle, W5100Device& device) : m_handle(handle), m_device(device)
@@ -103,7 +127,10 @@ namespace eth
         }
 
         const uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), uint16_t(buffer.length()));
-        const auto freeSize = waitForBuffer(sendSize);
+        const auto freeSize = waitFor([this] { return m_device.getTransmitFreeSize(m_handle); },
+                                        [sendSize](auto n) { return n >= sendSize; },
+                                        [this] { return connectionReady(getStatus()); }
+                                        );
 
         if( freeSize == 0 )
         {
@@ -123,7 +150,11 @@ namespace eth
             return 0;
         }
 
-        const uint16_t available = waitForData();
+        const uint16_t available = waitFor([this] { return m_device.getReceiveFreeSize(m_handle); },
+                                            [](auto n) { return n != 0; },
+                                            [this] { return connectionReady(getStatus()); }
+                                            );
+
 
         if( available == 0 )
         {
@@ -179,44 +210,6 @@ namespace eth
     SocketStatus Socket::getStatus() const
     {
         return m_device.readSocketStatusRegister(m_handle);
-    }
-
-    uint16_t Socket::waitForBuffer(uint16_t size) const
-    {
-        uint16_t freeSize = 0;
-
-        do
-        {
-            freeSize = m_device.getTransmitFreeSize(m_handle);
-            const SocketStatus status = getStatus();
-
-            if( connectionReady(status) == false )
-            {
-                return 0;
-            }
-        }
-        while( freeSize < size );
-
-        return freeSize;
-    }
-
-    uint16_t Socket::waitForData() const
-    {
-        uint16_t available = 0;
-
-        do
-        {
-            available = m_device.getReceiveFreeSize(m_handle);
-            const SocketStatus status = getStatus();
-
-            if( connectionReady(status) == false )
-            {
-                return 0;
-            }
-        }
-        while( available == 0 );
-
-        return available;
     }
 
     bool Socket::isTimeouted() const

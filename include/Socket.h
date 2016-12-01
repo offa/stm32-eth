@@ -71,8 +71,6 @@ namespace eth
 
     private:
 
-        uint16_t waitForBuffer(uint16_t size) const;
-        uint16_t waitForData() const;
         bool isTimeouted() const;
         void closeImpl();
 
