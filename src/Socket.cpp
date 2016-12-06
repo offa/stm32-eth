@@ -36,8 +36,8 @@ namespace eth
                     || ( status == SocketStatus::closeWait );
         }
 
-        template<class Fn1, class Fn2>
-        uint16_t waitFor(Fn1 getDataFn, Fn2 statusCheckFn, uint16_t size)
+        template<class DataFn, class StatusFn>
+        uint16_t waitFor(DataFn getDataFn, StatusFn statusCheckFn, uint16_t size)
         {
             uint16_t freeSize = 0;
 
