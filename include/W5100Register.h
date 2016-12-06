@@ -63,7 +63,7 @@ namespace eth
     {
         constexpr uint16_t baseAddress = 0x0400;
         constexpr uint16_t channelRegisterMapSize = 0x0100;
-        return makeRegister<T>(baseAddress + s * channelRegisterMapSize + address);
+        return makeRegister<T>(baseAddress + s.get() * channelRegisterMapSize + address);
     }
 
 }

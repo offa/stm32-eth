@@ -25,9 +25,43 @@
 namespace eth
 {
 
-    using SocketHandle = uint8_t;
-
     static constexpr uint8_t supportedSockets = 4;
+
+
+
+    class SocketHandle
+    {
+    public:
+
+        using value_type = uint8_t;
+
+
+        constexpr explicit SocketHandle(value_type id) : m_id(id)
+        {
+        }
+
+
+        constexpr value_type get() const
+        {
+            return 0;
+        }
+
+
+    private:
+
+
+        const value_type m_id;
+
+    };
+
+
+
+    // TODO: Make range-safe
+    template<SocketHandle::value_type id>
+    static constexpr auto makeHandle()
+    {
+        return SocketHandle(id);
+    }
 
 }
 
