@@ -26,6 +26,7 @@ endmacro()
 list(APPEND COMMONTEST_SRC RegisterValueTest.cpp
                                     SocketInterruptTest.cpp
                                     ByteTest.cpp
+                                    SocketHandleTest.cpp
                                     )
 _add_test(CommonTest COMMONTEST_SRC)
 

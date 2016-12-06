@@ -44,7 +44,7 @@ int main()
     device.setSubnetMask({255, 255, 255, 0});
     device.setMacAddress({0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef});
 
-    eth::Socket socket(0, device);
+    eth::Socket socket(eth::makeHandle<0>(), device);
     constexpr uint16_t port = 5000;
 
     trace_puts("Server: 192.168.1.8:5000");

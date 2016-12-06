@@ -44,8 +44,7 @@ int main()
     device.setSubnetMask({255, 255, 255, 0});
     device.setMacAddress({0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef});
 
-    constexpr eth::SocketHandle handle = 0;
-    eth::Socket socket(handle, device);
+    eth::Socket socket(eth::makeHandle<0>(), device);
 
     while(true)
     {

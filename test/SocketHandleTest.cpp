@@ -18,50 +18,26 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "SocketHandle.h"
+#include <CppUTest/TestHarness.h>
 
-#include <stdint.h>
+using namespace eth;
 
-namespace eth
+TEST_GROUP(SocketHandleTest)
 {
-
-    static constexpr uint8_t supportedSockets = 4;
-
-
-
-    class SocketHandle
+    void setup() override
     {
-    public:
-
-        using value_type = uint8_t;
-
-
-        constexpr explicit SocketHandle(value_type id) : m_id(id)
-        {
-        }
-
-
-        constexpr value_type get() const
-        {
-            return m_id;
-        }
-
-
-    private:
-
-
-        const value_type m_id;
-
-    };
-
-
-
-    // TODO: Make range-safe
-    template<SocketHandle::value_type id>
-    constexpr auto makeHandle()
-    {
-        return SocketHandle(id);
     }
 
-}
+    void teardown() override
+    {
+    }
+};
 
+TEST(SocketHandleTest, creation)
+{
+    constexpr auto handle = SocketHandle(1);
+    constexpr auto handle2 = makeHandle<2>();
+    CHECK_EQUAL(1, handle.get());
+    CHECK_EQUAL(2, handle2.get());
+}
