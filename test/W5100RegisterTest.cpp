@@ -20,9 +20,11 @@
 
 #include "W5100Register.h"
 #include "SocketHandle.h"
+#include <array>
+#include <gsl/span>
 #include <CppUTest/TestHarness.h>
 
-using eth::W5100Register;
+using namespace eth;
 
 TEST_GROUP(W5100RegisterTest)
 {
@@ -44,6 +46,27 @@ TEST(W5100RegisterTest, address)
 
 TEST(W5100RegisterTest, makeRegister)
 {
-    constexpr auto reg = eth::makeRegister<uint32_t>(0xaabb);
+    constexpr auto reg = makeRegister<uint32_t>(0xaabb);
     CHECK_EQUAL(0xaabb, reg.address());
 }
+
+TEST(W5100RegisterTest, makeSocketRegister)
+{
+    constexpr uint16_t address = 0xaabb;
+    constexpr uint16_t expected = 0x0400 + ( 1 * 0x0100 ) + address;
+    constexpr auto reg = makeSocketRegister<uint32_t>(makeHandle<1>(), address);
+    CHECK_EQUAL(expected, reg.address());
+}
+
+TEST(W5100RegisterTest, registerOfArray)
+{
+    const auto reg = makeRegister<std::array<uint8_t, 4>>(0x0011);
+    CHECK_EQUAL(0x0011, reg.address());
+}
+
+TEST(W5100RegisterTest, registerOfSpan)
+{
+    const auto reg = makeRegister<gsl::span<uint8_t>>(0x1122);
+    CHECK_EQUAL(0x1122, reg.address());
+}
+
