@@ -168,7 +168,7 @@ namespace eth
         return receiveSize;
     }
 
-    Socket::Status Socket::connect(std::array<uint8_t,4> address, uint16_t port)
+    Socket::Status Socket::connect(std::array<uint8_t, 4> address, uint16_t port)
     {
         m_device.setDestIpAddress(m_handle, address);
         m_device.setDestPort(m_handle, port);

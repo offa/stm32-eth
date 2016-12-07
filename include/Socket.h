@@ -60,7 +60,7 @@ namespace eth
 
 
 
-        Status connect(std::array<uint8_t,4> address, uint16_t port);
+        Status connect(std::array<uint8_t, 4> address, uint16_t port);
         Status disconnect();
 
         SocketStatus getStatus() const;
