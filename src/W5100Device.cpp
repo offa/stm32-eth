@@ -232,7 +232,6 @@ namespace eth
         });
 
         return offset;
-
     }
 
     void W5100Device::writeModeRegister(Mode value)

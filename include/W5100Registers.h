@@ -21,7 +21,7 @@
 #pragma once
 
 #include "W5100Register.h"
-#include <gsl/span>
+#include <array>
 
 namespace eth
 {
@@ -33,10 +33,10 @@ namespace eth
         constexpr auto transmitMemorySize = makeRegister<uint8_t>(0x001b);
         constexpr auto receiveMemorySize = makeRegister<uint8_t>(0x001a);
 
-        constexpr auto gatewayAddress = makeRegister<gsl::span<const uint8_t>>(0x0001);
-        constexpr auto subnetMask = makeRegister<gsl::span<const uint8_t>>(0x0005);
-        constexpr auto sourceMacAddress = makeRegister<gsl::span<const uint8_t>>(0x0009);
-        constexpr auto sourceIpAddress = makeRegister<gsl::span<const uint8_t>>(0x000f);
+        constexpr auto gatewayAddress = makeRegister<std::array<uint8_t, 4>>(0x0001);
+        constexpr auto subnetMask = makeRegister<std::array<uint8_t, 4>>(0x0005);
+        constexpr auto sourceMacAddress = makeRegister<std::array<uint8_t, 6>>(0x0009);
+        constexpr auto sourceIpAddress = makeRegister<std::array<uint8_t, 4>>(0x000f);
 
 
 
@@ -87,7 +87,7 @@ namespace eth
 
         constexpr auto socketDestIpAddress(SocketHandle s)
         {
-            return makeSocketRegister<gsl::span<const uint8_t>>(s, 0x000c);
+            return makeSocketRegister<std::array<uint8_t, 4>>(s, 0x000c);
         }
 
         constexpr auto socketDestPort(SocketHandle s)

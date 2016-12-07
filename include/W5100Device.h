@@ -68,6 +68,17 @@ namespace eth
         void write(W5100Register<uint16_t> reg, uint16_t data);
         void write(W5100Register<gsl::span<const uint8_t>> reg, const gsl::span<const uint8_t> buffer);
 
+        template<size_t size>
+        void write(W5100Register<std::array<uint8_t, size>> reg, std::array<uint8_t, size> buffer)
+        {
+            uint16_t offset = 0;
+            std::for_each(buffer.cbegin(), buffer.cend(), [&](uint8_t data)
+            {
+                write(reg.address(), offset++, data);
+            });
+        }
+
+
         uint8_t read(W5100Register<uint8_t> reg);
         uint16_t readWord(W5100Register<uint16_t> reg);
         uint16_t read(W5100Register<gsl::span<uint8_t>> reg, gsl::span<uint8_t> buffer);
