@@ -132,9 +132,7 @@ TEST_GROUP(W5100DeviceTest)
 
     static constexpr uint16_t toAddress(eth::SocketHandle s, uint16_t address)
     {
-        constexpr uint16_t socketBaseAddress = 0x0400;
-        constexpr uint16_t socketChannelSize = 0x0100;
-        return socketBaseAddress + ( s.get() * socketChannelSize ) + address;
+        return eth::socketAddress<uint8_t>(s, address).address();
     }
 
 
