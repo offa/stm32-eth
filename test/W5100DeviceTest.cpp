@@ -186,7 +186,7 @@ TEST(W5100DeviceTest, writeSpan)
     constexpr uint16_t size = 10;
     const auto data = createBuffer(size);
     auto span = gsl::make_span(data);
-    auto reg = asRegister(0xa1b2, span);
+    const auto reg = asRegister(0xa1b2, span);
 
     expectWrite(0xa1b2, span);
     device->write(reg, span);
@@ -196,12 +196,11 @@ TEST(W5100DeviceTest, writeBuffer)
 {
     constexpr uint16_t size = 10;
     const auto data = createBuffer(size);
-    auto span = gsl::make_span(data);
-    auto reg = asRegister(0xa1b2, span);
+    const auto reg = asRegister(0xa1b2, data);
 
     writerMock.ignoreOtherCalls();
 
-    device->write(reg, span);
+    device->write(reg, data);
     checkWriteCalls(size);
 }
 
@@ -245,8 +244,7 @@ TEST(W5100DeviceTest, readRegisterSpan)
     expectRead(0xddee, data);
 
     std::array<uint8_t, size> buffer;
-    auto span = gsl::make_span(buffer);
-    auto reg = asRegister(0xddee, span);
+    const auto reg = asRegister(0xddee, buffer);
 
     const auto result = device->read(reg, buffer);
     CHECK_EQUAL(size, result);

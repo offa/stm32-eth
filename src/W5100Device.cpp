@@ -214,17 +214,6 @@ namespace eth
         return byte::to<uint16_t>(byte1, byte0);
     }
 
-    uint16_t W5100Device::read(W5100Register<gsl::span<uint8_t>> reg, gsl::span<uint8_t> buffer)
-    {
-        uint16_t offset = 0;
-        std::generate(buffer.begin(), buffer.end(), [&]
-        {
-            return read(reg.address(), offset++);
-        });
-
-        return offset;
-    }
-
     void W5100Device::writeModeRegister(Mode value)
     {
         write(w5100::mode, static_cast<uint8_t>(value));

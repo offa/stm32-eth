@@ -80,7 +80,18 @@ namespace eth
 
         uint8_t read(W5100Register<uint8_t> reg);
         uint16_t readWord(W5100Register<uint16_t> reg);
-        uint16_t read(W5100Register<gsl::span<uint8_t>> reg, gsl::span<uint8_t> buffer);
+
+        template<class T>
+        uint16_t read(W5100Register<T> reg, T& buffer)
+        {
+            uint16_t offset = 0;
+            std::generate(buffer.begin(), buffer.end(), [&]
+            {
+                return read(reg.address(), offset++);
+            });
+
+            return offset;
+        }
 
         void writeModeRegister(Mode value);
 
