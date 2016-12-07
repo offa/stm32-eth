@@ -41,57 +41,57 @@ namespace eth
 
         constexpr W5100Register socketMode(SocketHandle s)
         {
-            return socketAddress<uint8_t>(s, 0x0000);
+            return makeSocketRegister<uint8_t>(s, 0x0000);
         }
 
         constexpr W5100Register socketSourcePort(SocketHandle s)
         {
-            return socketAddress<uint16_t>(s, 0x0004);
+            return makeSocketRegister<uint16_t>(s, 0x0004);
         }
 
         constexpr W5100Register socketInterrupt(SocketHandle s)
         {
-            return socketAddress<uint8_t>(s, 0x0002);
+            return makeSocketRegister<uint8_t>(s, 0x0002);
         }
 
         constexpr W5100Register socketCommand(SocketHandle s)
         {
-            return socketAddress<uint8_t>(s, 0x0001);
+            return makeSocketRegister<uint8_t>(s, 0x0001);
         }
 
         constexpr W5100Register socketStatus(SocketHandle s)
         {
-            return socketAddress<uint8_t>(s, 0x0003);
+            return makeSocketRegister<uint8_t>(s, 0x0003);
         }
 
         constexpr W5100Register socketTransmitFreeSize(SocketHandle s)
         {
-            return socketAddress<uint16_t>(s, 0x0020);
+            return makeSocketRegister<uint16_t>(s, 0x0020);
         }
 
         constexpr W5100Register socketReceiveFreeSize(SocketHandle s)
         {
-            return socketAddress<uint16_t>(s, 0x0026);
+            return makeSocketRegister<uint16_t>(s, 0x0026);
         }
 
         constexpr W5100Register socketTransmitWritePointer(SocketHandle s)
         {
-            return socketAddress<uint16_t>(s, 0x0024);
+            return makeSocketRegister<uint16_t>(s, 0x0024);
         }
 
         constexpr W5100Register socketReceiveReadPointer(SocketHandle s)
         {
-            return socketAddress<uint16_t>(s, 0x0028);
+            return makeSocketRegister<uint16_t>(s, 0x0028);
         }
 
         constexpr W5100Register socketDestIpAddress(SocketHandle s)
         {
-            return socketAddress<uint8_t>(s, 0x000c);
+            return makeSocketRegister<uint8_t>(s, 0x000c);
         }
 
         constexpr W5100Register socketDestPort(SocketHandle s)
         {
-            return socketAddress<uint8_t>(s, 0x0010);
+            return makeSocketRegister<uint8_t>(s, 0x0010);
         }
 
     }
