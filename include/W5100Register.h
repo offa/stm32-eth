@@ -26,36 +26,36 @@
 namespace eth
 {
 
+    template<class T>
     class W5100Register
     {
     public:
 
-        constexpr W5100Register(uint16_t address, uint16_t size) : m_address(address), m_size(size)
+        using value_type = T;
+
+
+        constexpr W5100Register(uint16_t address) : m_address(address)
         {
         }
+
 
         constexpr uint16_t address() const
         {
             return m_address;
         }
 
-        constexpr uint16_t size() const
-        {
-            return m_size;
-        }
 
 
     private:
 
         const uint16_t m_address;
-        const uint16_t m_size;
     };
 
 
     template<class T>
     constexpr auto makeRegister(uint16_t address)
     {
-        return W5100Register(address, sizeof(T));
+        return W5100Register<T>(address);
     }
 
     template<class T>

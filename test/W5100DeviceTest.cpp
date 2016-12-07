@@ -130,6 +130,12 @@ TEST_GROUP(W5100DeviceTest)
         return buffer;
     }
 
+    template<class T>
+    W5100Register<T> asRegister(uint16_t address, T) const
+    {
+        return makeRegister<T>(address);
+    }
+
     static constexpr uint16_t toAddress(eth::SocketHandle s, uint16_t address)
     {
         return eth::makeSocketRegister<uint8_t>(s, address).address();
@@ -178,9 +184,9 @@ TEST(W5100DeviceTest, writeRegisterTwoByte)
 TEST(W5100DeviceTest, writeSpan)
 {
     constexpr uint16_t size = 10;
-    constexpr W5100Register reg(0xa1b2, size);
-    auto data = createBuffer(size);
-    const gsl::span<uint8_t> span(data);
+    const auto data = createBuffer(size);
+    auto span = gsl::make_span(data);
+    auto reg = asRegister(0xa1b2, span);
 
     expectWrite(0xa1b2, span);
     device->write(reg, span);
@@ -189,20 +195,22 @@ TEST(W5100DeviceTest, writeSpan)
 TEST(W5100DeviceTest, writeBuffer)
 {
     constexpr uint16_t size = 10;
-    constexpr W5100Register reg(0xa1b2, size);
-    auto data = createBuffer(size);
+    const auto data = createBuffer(size);
+    auto span = gsl::make_span(data);
+    auto reg = asRegister(0xa1b2, span);
 
     writerMock.ignoreOtherCalls();
 
-    device->write(reg, data);
+    device->write(reg, span);
     checkWriteCalls(size);
 }
 
 TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 {
     constexpr uint16_t size = 10;
-    constexpr W5100Register reg(0xa1b2, size);
-    auto data = createBuffer(size);
+    const auto data = createBuffer(size);
+    auto span = gsl::make_span(data);
+    auto reg = asRegister(0xa1b2, span);
 
     writerMock.ignoreOtherCalls();
 
@@ -233,11 +241,13 @@ TEST(W5100DeviceTest, readRegisterTwoByte)
 TEST(W5100DeviceTest, readRegisterSpan)
 {
     constexpr uint16_t size = 10;
-    constexpr W5100Register reg(0xddee, size);
-    auto data = createBuffer(size);
+    const auto data = createBuffer(size);
     expectRead(0xddee, data);
 
     std::array<uint8_t, size> buffer;
+    auto span = gsl::make_span(buffer);
+    auto reg = asRegister(0xddee, span);
+
     const auto result = device->read(reg, buffer);
     CHECK_EQUAL(size, result);
     CHECK_TRUE(std::equal(data.begin(), data.end(), buffer.begin()));

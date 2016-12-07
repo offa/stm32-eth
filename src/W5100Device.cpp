@@ -105,7 +105,7 @@ namespace eth
         return readFreesize(w5100::socketReceiveFreeSize(s));
     }
 
-    uint16_t W5100Device::readFreesize(W5100Register freesizeReg)
+    uint16_t W5100Device::readFreesize(W5100Register<uint16_t> freesizeReg)
     {
         uint16_t firstRead = 0;
         uint16_t secondRead = 0;
@@ -137,12 +137,12 @@ namespace eth
             const uint16_t transmitSize = transmitBufferSize - offset;
             const auto remaining = size - transmitSize;
 
-            write(W5100Register(destAddress, transmitSize), buffer.first(transmitSize));
-            write(W5100Register(toTransmitBufferAddress(s), remaining), buffer.last(remaining));
+            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.first(transmitSize));
+            write(W5100Register<gsl::span<const uint8_t>>(toTransmitBufferAddress(s)), buffer.last(remaining));
         }
         else
         {
-            write(W5100Register(destAddress, size), buffer);
+            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer);
         }
 
         write(w5100::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
@@ -155,7 +155,7 @@ namespace eth
         const uint16_t readPointer = readWord(w5100::socketReceiveReadPointer(s));
         const uint16_t offset = readPointer & receiveBufferMask;
         const uint16_t destAddress = offset + toReceiveBufferAddress(s);
-        const auto reg = makeRegister<uint8_t>(destAddress);
+        const auto reg = makeRegister<gsl::span<uint8_t>>(destAddress);
 
         if( offset + size > receiveBufferSize )
         {
@@ -182,18 +182,18 @@ namespace eth
         m_writer.write(address, data);
     }
 
-    void W5100Device::write(W5100Register reg, uint8_t data)
+    void W5100Device::write(W5100Register<uint8_t> reg, uint8_t data)
     {
         write(reg.address(), 0, data);
     }
 
-    void W5100Device::write(W5100Register reg, uint16_t data)
+    void W5100Device::write(W5100Register<uint16_t> reg, uint16_t data)
     {
         write(reg.address(), 0, byte::get<1>(data));
         write(reg.address(), 1, byte::get<0>(data));
     }
 
-    void W5100Device::write(W5100Register reg, const gsl::span<const uint8_t> buffer)
+    void W5100Device::write(W5100Register<gsl::span<const uint8_t>> reg, const gsl::span<const uint8_t> buffer)
     {
         uint16_t offset = 0;
         std::for_each(buffer.cbegin(), buffer.cend(), [&](uint8_t data)
@@ -210,20 +210,20 @@ namespace eth
         return data;
     }
 
-    uint8_t W5100Device::read(W5100Register reg)
+    uint8_t W5100Device::read(W5100Register<uint8_t> reg)
     {
         return read(reg.address(), 0);
     }
 
-    uint16_t W5100Device::readWord(W5100Register reg)
+    uint16_t W5100Device::readWord(W5100Register<uint16_t> reg)
     {
-        const auto byte1 = read(reg);
+        const auto byte1 = read(reg.address(), 0);
         const auto byte0 = read(reg.address(), 1);
 
         return byte::to<uint16_t>(byte1, byte0);
     }
 
-    uint16_t W5100Device::read(W5100Register reg, gsl::span<uint8_t> buffer)
+    uint16_t W5100Device::read(W5100Register<gsl::span<uint8_t>> reg, gsl::span<uint8_t> buffer)
     {
         uint16_t offset = 0;
         std::generate(buffer.begin(), buffer.end(), [&]

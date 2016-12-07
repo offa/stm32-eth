@@ -64,13 +64,13 @@ namespace eth
         void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
         uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
-        void write(W5100Register reg, uint8_t data);
-        void write(W5100Register reg, uint16_t data);
-        void write(W5100Register reg, const gsl::span<const uint8_t> buffer);
+        void write(W5100Register<uint8_t> reg, uint8_t data);
+        void write(W5100Register<uint16_t> reg, uint16_t data);
+        void write(W5100Register<gsl::span<const uint8_t>> reg, const gsl::span<const uint8_t> buffer);
 
-        uint8_t read(W5100Register reg);
-        uint16_t readWord(W5100Register reg);
-        uint16_t read(W5100Register reg, gsl::span<uint8_t> buffer);
+        uint8_t read(W5100Register<uint8_t> reg);
+        uint16_t readWord(W5100Register<uint16_t> reg);
+        uint16_t read(W5100Register<gsl::span<uint8_t>> reg, gsl::span<uint8_t> buffer);
 
         void writeModeRegister(Mode value);
 
@@ -102,7 +102,7 @@ namespace eth
         void write(uint16_t addr, uint16_t offset, uint8_t data);
         uint8_t read(uint16_t addr, uint16_t offset);
 
-        uint16_t readFreesize(W5100Register freesizeReg);
+        uint16_t readFreesize(W5100Register<uint16_t> freesizeReg);
 
 
         SpiWriter& m_writer;

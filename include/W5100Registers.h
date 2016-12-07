@@ -21,6 +21,7 @@
 #pragma once
 
 #include "W5100Register.h"
+#include <gsl/span>
 
 namespace eth
 {
@@ -28,70 +29,70 @@ namespace eth
     namespace w5100
     {
 
-        constexpr W5100Register mode = makeRegister<uint8_t>(0x0000);
-        constexpr W5100Register transmitMemorySize = makeRegister<uint8_t>(0x001b);
-        constexpr W5100Register receiveMemorySize = makeRegister<uint8_t>(0x001a);
+        constexpr auto mode = makeRegister<uint8_t>(0x0000);
+        constexpr auto transmitMemorySize = makeRegister<uint8_t>(0x001b);
+        constexpr auto receiveMemorySize = makeRegister<uint8_t>(0x001a);
 
-        constexpr W5100Register gatewayAddress = makeRegister<uint8_t>(0x0001);
-        constexpr W5100Register subnetMask = makeRegister<uint8_t>(0x0005);
-        constexpr W5100Register sourceMacAddress = makeRegister<uint8_t>(0x0009);
-        constexpr W5100Register sourceIpAddress = makeRegister<uint8_t>(0x000f);
+        constexpr auto gatewayAddress = makeRegister<gsl::span<const uint8_t>>(0x0001);
+        constexpr auto subnetMask = makeRegister<gsl::span<const uint8_t>>(0x0005);
+        constexpr auto sourceMacAddress = makeRegister<gsl::span<const uint8_t>>(0x0009);
+        constexpr auto sourceIpAddress = makeRegister<gsl::span<const uint8_t>>(0x000f);
 
 
 
-        constexpr W5100Register socketMode(SocketHandle s)
+        constexpr auto socketMode(SocketHandle s)
         {
             return makeSocketRegister<uint8_t>(s, 0x0000);
         }
 
-        constexpr W5100Register socketSourcePort(SocketHandle s)
+        constexpr auto socketSourcePort(SocketHandle s)
         {
             return makeSocketRegister<uint16_t>(s, 0x0004);
         }
 
-        constexpr W5100Register socketInterrupt(SocketHandle s)
+        constexpr auto socketInterrupt(SocketHandle s)
         {
             return makeSocketRegister<uint8_t>(s, 0x0002);
         }
 
-        constexpr W5100Register socketCommand(SocketHandle s)
+        constexpr auto socketCommand(SocketHandle s)
         {
             return makeSocketRegister<uint8_t>(s, 0x0001);
         }
 
-        constexpr W5100Register socketStatus(SocketHandle s)
+        constexpr auto socketStatus(SocketHandle s)
         {
             return makeSocketRegister<uint8_t>(s, 0x0003);
         }
 
-        constexpr W5100Register socketTransmitFreeSize(SocketHandle s)
+        constexpr auto socketTransmitFreeSize(SocketHandle s)
         {
             return makeSocketRegister<uint16_t>(s, 0x0020);
         }
 
-        constexpr W5100Register socketReceiveFreeSize(SocketHandle s)
+        constexpr auto socketReceiveFreeSize(SocketHandle s)
         {
             return makeSocketRegister<uint16_t>(s, 0x0026);
         }
 
-        constexpr W5100Register socketTransmitWritePointer(SocketHandle s)
+        constexpr auto socketTransmitWritePointer(SocketHandle s)
         {
             return makeSocketRegister<uint16_t>(s, 0x0024);
         }
 
-        constexpr W5100Register socketReceiveReadPointer(SocketHandle s)
+        constexpr auto socketReceiveReadPointer(SocketHandle s)
         {
             return makeSocketRegister<uint16_t>(s, 0x0028);
         }
 
-        constexpr W5100Register socketDestIpAddress(SocketHandle s)
+        constexpr auto socketDestIpAddress(SocketHandle s)
         {
-            return makeSocketRegister<uint8_t>(s, 0x000c);
+            return makeSocketRegister<gsl::span<const uint8_t>>(s, 0x000c);
         }
 
-        constexpr W5100Register socketDestPort(SocketHandle s)
+        constexpr auto socketDestPort(SocketHandle s)
         {
-            return makeSocketRegister<uint8_t>(s, 0x0010);
+            return makeSocketRegister<uint16_t>(s, 0x0010);
         }
 
     }
