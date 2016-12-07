@@ -134,7 +134,7 @@ TEST_GROUP(W5100DeviceTest)
     {
         constexpr uint16_t socketBaseAddress = 0x0400;
         constexpr uint16_t socketChannelSize = 0x0100;
-        return socketBaseAddress + s.get() * socketChannelSize + address;
+        return socketBaseAddress + ( s.get() * socketChannelSize ) + address;
     }
 
 
