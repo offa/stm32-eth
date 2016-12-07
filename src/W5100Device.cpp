@@ -193,15 +193,6 @@ namespace eth
         write(reg.address(), 1, byte::get<0>(data));
     }
 
-    void W5100Device::write(W5100Register<gsl::span<const uint8_t>> reg, const gsl::span<const uint8_t> buffer)
-    {
-        uint16_t offset = 0;
-        std::for_each(buffer.cbegin(), buffer.cend(), [&](uint8_t data)
-        {
-            write(reg.address(), offset++, data);
-        });
-    }
-
     uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
     {
         const auto address = addr + offset;
