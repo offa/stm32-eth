@@ -159,7 +159,7 @@ namespace eth
         if( offset + size > receiveBufferSize )
         {
             const auto first = receiveBufferSize - offset;
-            auto border = buffer.begin() + first;
+            auto border = std::next(buffer.begin(), first);
 
             read(reg, buffer.begin(), border);
             read(reg, border, buffer.end());
@@ -176,8 +176,7 @@ namespace eth
 
     void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
     {
-        const auto address = addr + offset;
-        m_writer.write(address, data);
+        m_writer.write(addr + offset, data);
     }
 
     void W5100Device::write(W5100Register<uint8_t> reg, uint8_t data)
@@ -193,10 +192,7 @@ namespace eth
 
     uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
     {
-        const auto address = addr + offset;
-        const auto data = m_writer.read(address);
-
-        return data;
+        return m_writer.read(addr + offset);
     }
 
     uint8_t W5100Device::read(W5100Register<uint8_t> reg)
