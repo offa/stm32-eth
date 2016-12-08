@@ -67,11 +67,11 @@ namespace eth
         void write(W5100Register<uint8_t> reg, uint8_t data);
         void write(W5100Register<uint16_t> reg, uint16_t data);
 
-        template<class T>
-        void write(W5100Register<T> reg, const T& buffer)
+        template<class T, class Iterator> // TODO: Check Iteratortype
+        void write(W5100Register<T> reg, Iterator begin, Iterator end)
         {
             uint16_t offset = 0;
-            std::for_each(buffer.cbegin(), buffer.cend(), [&](uint8_t data)
+            std::for_each(begin, end, [&](uint8_t data)
             {
                 write(reg.address(), offset++, data);
             });
@@ -81,11 +81,11 @@ namespace eth
         uint8_t read(W5100Register<uint8_t> reg);
         uint16_t readWord(W5100Register<uint16_t> reg);
 
-        template<class T>
-        uint16_t read(W5100Register<T> reg, T& buffer)
+        template<class T, class Iterator>
+        uint16_t read(W5100Register<T> reg, Iterator begin, Iterator end)
         {
             uint16_t offset = 0;
-            std::generate(buffer.begin(), buffer.end(), [&]
+            std::generate(begin, end, [&]
             {
                 return read(reg.address(), offset++);
             });

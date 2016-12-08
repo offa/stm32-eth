@@ -189,7 +189,7 @@ TEST(W5100DeviceTest, writeSpan)
     const auto reg = asRegister(0xa1b2, span);
 
     expectWrite(0xa1b2, span);
-    device->write(reg, span);
+    device->write(reg, span.cbegin(), span.cend());
 }
 
 TEST(W5100DeviceTest, writeBuffer)
@@ -200,7 +200,7 @@ TEST(W5100DeviceTest, writeBuffer)
 
     writerMock.ignoreOtherCalls();
 
-    device->write(reg, data);
+    device->write(reg, data.cbegin(), data.cend());
     checkWriteCalls(size);
 }
 
@@ -213,7 +213,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 
     writerMock.ignoreOtherCalls();
 
-    device->write(reg, {data.data(), size});
+    device->write(reg, data.data(), data.data() + size);
     checkWriteCalls(size);
 }
 
@@ -246,7 +246,7 @@ TEST(W5100DeviceTest, readRegisterSpan)
     std::array<uint8_t, size> buffer;
     const auto reg = asRegister(0xddee, buffer);
 
-    const auto result = device->read(reg, buffer);
+    const auto result = device->read(reg, buffer.begin(), buffer.end());
     CHECK_EQUAL(size, result);
     CHECK_TRUE(std::equal(data.begin(), data.end(), buffer.begin()));
 }

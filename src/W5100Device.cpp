@@ -137,12 +137,12 @@ namespace eth
             const uint16_t transmitSize = transmitBufferSize - offset;
             const auto remaining = size - transmitSize;
 
-            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.first(transmitSize));
-            write(W5100Register<gsl::span<const uint8_t>>(toTransmitBufferAddress(s)), buffer.last(remaining));
+            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), buffer.cbegin() + transmitSize); // TODO
+            write(W5100Register<gsl::span<const uint8_t>>(toTransmitBufferAddress(s)), buffer.cend() - remaining, buffer.cend());
         }
         else
         {
-            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer);
+            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), buffer.cend());
         }
 
         write(w5100::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
@@ -163,12 +163,12 @@ namespace eth
             auto border = buffer.first(first);
             auto end = buffer.last(size - first);
 
-            read(reg, border);
-            read(reg, end);
+            read(reg, buffer.begin(), buffer.begin() + first); // TODO
+            read(reg, buffer.begin() + first, buffer.end());
         }
         else
         {
-            read(reg, buffer);
+            read(reg, buffer.begin(), buffer.end());
         }
 
         write(w5100::socketReceiveReadPointer(s), static_cast<uint16_t>(readPointer + size));
@@ -221,27 +221,27 @@ namespace eth
 
     void W5100Device::setGatewayAddress(std::array<uint8_t, 4> addr)
     {
-        write(w5100::gatewayAddress, addr);
+        write(w5100::gatewayAddress, addr.cbegin(), addr.cend());
     }
 
     void W5100Device::setSubnetMask(std::array<uint8_t, 4> addr)
     {
-        write(w5100::subnetMask, addr);
+        write(w5100::subnetMask, addr.cbegin(), addr.cend());
     }
 
     void W5100Device::setMacAddress(std::array<uint8_t, 6> addr)
     {
-        write(w5100::sourceMacAddress, addr);
+        write(w5100::sourceMacAddress, addr.cbegin(), addr.cend());
     }
 
     void W5100Device::setIpAddress(std::array<uint8_t, 4> addr)
     {
-        write(w5100::sourceIpAddress, addr);
+        write(w5100::sourceIpAddress, addr.cbegin(), addr.cend());
     }
 
     void W5100Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
     {
-        write(w5100::socketDestIpAddress(s), addr);
+        write(w5100::socketDestIpAddress(s), addr.cbegin(), addr.cend());
     }
 
     void W5100Device::setDestPort(SocketHandle s, uint16_t port)
