@@ -160,7 +160,6 @@ namespace eth
         {
             const auto first = receiveBufferSize - offset;
             auto border = buffer.begin() + first;
-            auto end = buffer.last(size - first);
 
             read(reg, buffer.begin(), border);
             read(reg, border, buffer.end());
