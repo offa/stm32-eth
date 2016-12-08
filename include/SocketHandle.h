@@ -55,10 +55,10 @@ namespace eth
 
 
 
-    // TODO: Make range-safe
     template<SocketHandle::value_type id>
     constexpr auto makeHandle()
     {
+        static_assert(id < supportedSockets, "Socket-Id out of range");
         return SocketHandle(id);
     }
 
