@@ -76,7 +76,7 @@ namespace eth
 
     SocketInterrupt W5100Device::readSocketInterruptRegister(SocketHandle s)
     {
-        return SocketInterrupt(read(w5100::socketInterrupt(s)));
+        return static_cast<SocketInterrupt>(read(w5100::socketInterrupt(s)));
     }
 
     void W5100Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
