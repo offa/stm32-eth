@@ -54,7 +54,7 @@ TEST(W5100RegisterTest, makeSocketRegister)
 {
     constexpr uint16_t address = 0xaabb;
     constexpr uint16_t expected = 0x0400 + ( 1 * 0x0100 ) + address;
-    constexpr auto reg = makeSocketRegister<uint32_t>(makeHandle<1>(), address);
+    constexpr auto reg = makeRegister<uint32_t>(makeHandle<1>(), address);
     CHECK_EQUAL(expected, reg.address());
 }
 

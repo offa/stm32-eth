@@ -42,57 +42,57 @@ namespace eth
 
         constexpr auto socketMode(SocketHandle s)
         {
-            return makeSocketRegister<uint8_t>(s, 0x0000);
+            return makeRegister<uint8_t>(s, 0x0000);
         }
 
         constexpr auto socketSourcePort(SocketHandle s)
         {
-            return makeSocketRegister<uint16_t>(s, 0x0004);
+            return makeRegister<uint16_t>(s, 0x0004);
         }
 
         constexpr auto socketInterrupt(SocketHandle s)
         {
-            return makeSocketRegister<uint8_t>(s, 0x0002);
+            return makeRegister<uint8_t>(s, 0x0002);
         }
 
         constexpr auto socketCommand(SocketHandle s)
         {
-            return makeSocketRegister<uint8_t>(s, 0x0001);
+            return makeRegister<uint8_t>(s, 0x0001);
         }
 
         constexpr auto socketStatus(SocketHandle s)
         {
-            return makeSocketRegister<uint8_t>(s, 0x0003);
+            return makeRegister<uint8_t>(s, 0x0003);
         }
 
         constexpr auto socketTransmitFreeSize(SocketHandle s)
         {
-            return makeSocketRegister<uint16_t>(s, 0x0020);
+            return makeRegister<uint16_t>(s, 0x0020);
         }
 
         constexpr auto socketReceiveFreeSize(SocketHandle s)
         {
-            return makeSocketRegister<uint16_t>(s, 0x0026);
+            return makeRegister<uint16_t>(s, 0x0026);
         }
 
         constexpr auto socketTransmitWritePointer(SocketHandle s)
         {
-            return makeSocketRegister<uint16_t>(s, 0x0024);
+            return makeRegister<uint16_t>(s, 0x0024);
         }
 
         constexpr auto socketReceiveReadPointer(SocketHandle s)
         {
-            return makeSocketRegister<uint16_t>(s, 0x0028);
+            return makeRegister<uint16_t>(s, 0x0028);
         }
 
         constexpr auto socketDestIpAddress(SocketHandle s)
         {
-            return makeSocketRegister<std::array<uint8_t, 4>>(s, 0x000c);
+            return makeRegister<std::array<uint8_t, 4>>(s, 0x000c);
         }
 
         constexpr auto socketDestPort(SocketHandle s)
         {
-            return makeSocketRegister<uint16_t>(s, 0x0010);
+            return makeRegister<uint16_t>(s, 0x0010);
         }
 
     }

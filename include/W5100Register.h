@@ -59,7 +59,7 @@ namespace eth
     }
 
     template<class T>
-    constexpr auto makeSocketRegister(SocketHandle s, uint16_t address)
+    constexpr auto makeRegister(SocketHandle s, uint16_t address)
     {
         constexpr uint16_t baseAddress = 0x0400;
         constexpr uint16_t channelRegisterMapSize = 0x0100;

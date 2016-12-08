@@ -138,7 +138,7 @@ TEST_GROUP(W5100DeviceTest)
 
     static constexpr uint16_t toAddress(eth::SocketHandle s, uint16_t address)
     {
-        return eth::makeSocketRegister<uint8_t>(s, address).address();
+        return eth::makeRegister<uint8_t>(s, address).address();
     }
 
 
