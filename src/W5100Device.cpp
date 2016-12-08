@@ -134,11 +134,10 @@ namespace eth
 
         if( offset + size > transmitBufferSize )
         {
-            const uint16_t transmitSize = transmitBufferSize - offset;
-            const auto remaining = size - transmitSize;
-
-            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), buffer.cbegin() + transmitSize); // TODO
-            write(W5100Register<gsl::span<const uint8_t>>(toTransmitBufferAddress(s)), buffer.cend() - remaining, buffer.cend());
+            const uint16_t first = transmitBufferSize - offset;
+            const auto border = std::next(buffer.cbegin(), first);
+            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), border);
+            write(W5100Register<gsl::span<const uint8_t>>(toTransmitBufferAddress(s)), border, buffer.cend());
         }
         else
         {
@@ -160,11 +159,11 @@ namespace eth
         if( offset + size > receiveBufferSize )
         {
             const auto first = receiveBufferSize - offset;
-            auto border = buffer.first(first);
+            auto border = buffer.begin() + first;
             auto end = buffer.last(size - first);
 
-            read(reg, buffer.begin(), buffer.begin() + first); // TODO
-            read(reg, buffer.begin() + first, buffer.end());
+            read(reg, buffer.begin(), border);
+            read(reg, border, buffer.end());
         }
         else
         {

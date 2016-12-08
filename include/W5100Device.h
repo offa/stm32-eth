@@ -67,7 +67,7 @@ namespace eth
         void write(W5100Register<uint8_t> reg, uint8_t data);
         void write(W5100Register<uint16_t> reg, uint16_t data);
 
-        template<class T, class Iterator> // TODO: Check Iteratortype
+        template<class T, class Iterator>
         void write(W5100Register<T> reg, Iterator begin, Iterator end)
         {
             uint16_t offset = 0;
