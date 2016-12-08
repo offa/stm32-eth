@@ -136,8 +136,8 @@ namespace eth
         {
             const uint16_t first = transmitBufferSize - offset;
             const auto border = std::next(buffer.cbegin(), first);
-            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), border);
-            write(W5100Register<gsl::span<const uint8_t>>(toTransmitBufferAddress(s)), border, buffer.cend());
+            write(makeRegister<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), border);
+            write(makeRegister<gsl::span<const uint8_t>>(toTransmitBufferAddress(s)), border, buffer.cend());
         }
         else
         {
