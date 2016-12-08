@@ -27,12 +27,14 @@ namespace eth
 {
     namespace
     {
-        constexpr uint16_t toTransmitBufferAddress(SocketHandle s) {
+        constexpr uint16_t toTransmitBufferAddress(SocketHandle s)
+        {
             constexpr uint16_t baseAddress = 0x4000;
             return baseAddress + ( W5100Device::getTransmitBufferSize() * s.get() );
         }
 
-        constexpr uint16_t toReceiveBufferAddress(SocketHandle s) {
+        constexpr uint16_t toReceiveBufferAddress(SocketHandle s)
+        {
             constexpr uint16_t baseAddress = 0x6000;
             return baseAddress + ( W5100Device::getReceiveBufferSize() * s.get() );
         }
@@ -98,7 +100,6 @@ namespace eth
     {
         return readFreesize(w5100::socketTransmitFreeSize(s));
     }
-
 
     uint16_t W5100Device::getReceiveFreeSize(SocketHandle s)
     {
