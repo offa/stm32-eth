@@ -49,8 +49,8 @@ namespace eth
             writeModeRegister(Mode::reset);
 
             constexpr uint8_t memorySize = 0x55;
-            write(registers::transmitMemorySize, memorySize);
-            write(registers::receiveMemorySize, memorySize);
+            write_<uint8_t, 1>(registers::transmitMemorySize, memorySize);
+            write_<uint8_t, 1>(registers::receiveMemorySize, memorySize);
         }
 
         void Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
@@ -65,7 +65,7 @@ namespace eth
 
         void Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
         {
-            write(registers::socketMode(s), value);
+            write_<uint8_t, 1>(registers::socketMode(s), value);
         }
 
         void Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
@@ -75,7 +75,7 @@ namespace eth
 
         void Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
         {
-            write(registers::socketInterrupt(s), value.value());
+            write_<uint8_t, 1>(registers::socketInterrupt(s), value.value());
         }
 
         SocketInterrupt Device::readSocketInterruptRegister(SocketHandle s)
@@ -85,7 +85,7 @@ namespace eth
 
         void Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
         {
-            write(registers::socketCommand(s), static_cast<uint8_t>(value));
+            write_<uint8_t, 1>(registers::socketCommand(s), static_cast<uint8_t>(value));
         }
 
         SocketCommand Device::readSocketCommandRegister(SocketHandle s)
@@ -182,11 +182,6 @@ namespace eth
             m_writer.write(addr + offset, data);
         }
 
-        void Device::write(Register<uint8_t> reg, uint8_t data)
-        {
-            write_<uint8_t, sizeof(uint8_t)>(reg, data);
-        }
-
         void Device::write(Register<uint16_t> reg, uint16_t data)
         {
             write_<uint16_t, sizeof(uint16_t)>(reg, data);
@@ -212,7 +207,7 @@ namespace eth
 
         void Device::writeModeRegister(Mode value)
         {
-            write(registers::mode, static_cast<uint8_t>(value));
+            write_<uint8_t, sizeof(uint8_t)>(registers::mode, static_cast<uint8_t>(value));
         }
 
         void Device::setGatewayAddress(std::array<uint8_t, 4> addr)
