@@ -38,7 +38,7 @@ int main()
 
     eth::SpiWriter writer;
 
-    eth::W5100Device device(writer);
+    eth::w5100::Device device(writer);
     device.setGatewayAddress({192, 168, 1, 1});
     device.setIpAddress({192, 168, 1, 8});
     device.setSubnetMask({255, 255, 255, 0});
