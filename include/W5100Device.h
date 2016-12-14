@@ -37,12 +37,15 @@ namespace eth
     class SpiWriter;
 
 
-    class W5100Device
+namespace w5100
+{
+
+    class Device
     {
     public:
 
-        explicit W5100Device(SpiWriter& writer);
-        W5100Device(W5100Device&&) = default;
+        explicit Device(SpiWriter& writer);
+        Device(Device&&) = default;
 
 
         void executeSocketCommand(SocketHandle s, SocketCommand cmd);
@@ -115,7 +118,7 @@ namespace eth
         }
 
 
-        W5100Device& operator=(W5100Device&&) = default;
+        Device& operator=(Device&&) = default;
 
 
     private:
@@ -131,5 +134,6 @@ namespace eth
         static constexpr uint16_t receiveBufferSize = transmitBufferSize;
     };
 
+}
 }
 

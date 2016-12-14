@@ -27,7 +27,7 @@
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
-using eth::W5100Device;
+using eth::w5100::Device;
 using eth::SpiWriter;
 using eth::SocketHandle;
 using eth::SocketCommand;
@@ -58,7 +58,7 @@ TEST_GROUP(W5100DeviceTest)
 
         mock().disable();
 
-        device = std::make_unique<W5100Device>(writer);
+        device = std::make_unique<Device>(writer);
     }
 
     void teardown() override
@@ -142,7 +142,7 @@ TEST_GROUP(W5100DeviceTest)
     }
 
 
-    std::unique_ptr<W5100Device> device;
+    std::unique_ptr<Device> device;
     SpiWriter writer;
     MockSupport& writerMock = mock("SpiWriter");
 };
@@ -160,7 +160,7 @@ TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
     expectWrite(addressTxSize, valueMemorySize);
     expectWrite(addressRxSize, valueMemorySize);
 
-    W5100Device d(writer);
+    Device d(writer);
 }
 
 TEST(W5100DeviceTest, writeRegisterByte)
@@ -403,7 +403,7 @@ TEST(W5100DeviceTest, receiveData)
 TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
 {
     constexpr auto ptrReads = sizeof(uint16_t);
-    constexpr uint16_t size = eth::W5100Device::getReceiveBufferSize() + 2;
+    constexpr uint16_t size = Device::getReceiveBufferSize() + 2;
     auto buffer = createBuffer(size);
     writerMock.ignoreOtherCalls();
 

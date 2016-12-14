@@ -25,24 +25,27 @@
 
 namespace eth
 {
+namespace w5100
+{
+
     namespace
     {
         constexpr uint16_t toTransmitBufferAddress(SocketHandle s)
         {
             constexpr uint16_t baseAddress = 0x4000;
-            return baseAddress + ( W5100Device::getTransmitBufferSize() * s.get() );
+            return baseAddress + ( Device::getTransmitBufferSize() * s.get() );
         }
 
         constexpr uint16_t toReceiveBufferAddress(SocketHandle s)
         {
             constexpr uint16_t baseAddress = 0x6000;
-            return baseAddress + ( W5100Device::getReceiveBufferSize() * s.get() );
+            return baseAddress + ( Device::getReceiveBufferSize() * s.get() );
         }
     }
 
 
 
-    W5100Device::W5100Device(SpiWriter& writer) : m_writer(writer)
+    Device::Device(SpiWriter& writer) : m_writer(writer)
     {
         writeModeRegister(Mode::reset);
 
@@ -51,7 +54,7 @@ namespace eth
         write(w5100::receiveMemorySize, memorySize);
     }
 
-    void W5100Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
+    void Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
     {
         writeSocketCommandRegister(s, cmd);
 
@@ -61,52 +64,52 @@ namespace eth
         }
     }
 
-    void W5100Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
+    void Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
         write(w5100::socketMode(s), value);
     }
 
-    void W5100Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
+    void Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
         write(w5100::socketSourcePort(s), value);
     }
 
-    void W5100Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
+    void Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
     {
         write(w5100::socketInterrupt(s), value.value());
     }
 
-    SocketInterrupt W5100Device::readSocketInterruptRegister(SocketHandle s)
+    SocketInterrupt Device::readSocketInterruptRegister(SocketHandle s)
     {
         return static_cast<SocketInterrupt>(read(w5100::socketInterrupt(s)));
     }
 
-    void W5100Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
+    void Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
     {
         write(w5100::socketCommand(s), static_cast<uint8_t>(value));
     }
 
-    SocketCommand W5100Device::readSocketCommandRegister(SocketHandle s)
+    SocketCommand Device::readSocketCommandRegister(SocketHandle s)
     {
         return static_cast<SocketCommand>(read(w5100::socketCommand(s)));
     }
 
-    SocketStatus W5100Device::readSocketStatusRegister(SocketHandle s)
+    SocketStatus Device::readSocketStatusRegister(SocketHandle s)
     {
         return static_cast<SocketStatus>(read(w5100::socketStatus(s)));
     }
 
-    uint16_t W5100Device::getTransmitFreeSize(SocketHandle s)
+    uint16_t Device::getTransmitFreeSize(SocketHandle s)
     {
         return readFreesize(w5100::socketTransmitFreeSize(s));
     }
 
-    uint16_t W5100Device::getReceiveFreeSize(SocketHandle s)
+    uint16_t Device::getReceiveFreeSize(SocketHandle s)
     {
         return readFreesize(w5100::socketReceiveFreeSize(s));
     }
 
-    uint16_t W5100Device::readFreesize(W5100Register<uint16_t> freesizeReg)
+    uint16_t Device::readFreesize(W5100Register<uint16_t> freesizeReg)
     {
         uint16_t firstRead = 0;
         uint16_t secondRead = 0;
@@ -125,7 +128,7 @@ namespace eth
         return secondRead;
     }
 
-    void W5100Device::sendData(SocketHandle s, const gsl::span<const uint8_t> buffer)
+    void Device::sendData(SocketHandle s, const gsl::span<const uint8_t> buffer)
     {
         constexpr uint16_t transmitBufferMask = 0x07ff;
         const auto size = buffer.length();
@@ -148,7 +151,7 @@ namespace eth
         write(w5100::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
     }
 
-    uint16_t W5100Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
+    uint16_t Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
     {
         constexpr uint16_t receiveBufferMask = 0x07ff;
         const auto size = buffer.length();
@@ -175,33 +178,33 @@ namespace eth
         return size;
     }
 
-    void W5100Device::write(uint16_t addr, uint16_t offset, uint8_t data)
+    void Device::write(uint16_t addr, uint16_t offset, uint8_t data)
     {
         m_writer.write(addr + offset, data);
     }
 
-    void W5100Device::write(W5100Register<uint8_t> reg, uint8_t data)
+    void Device::write(W5100Register<uint8_t> reg, uint8_t data)
     {
         write(reg.address(), 0, data);
     }
 
-    void W5100Device::write(W5100Register<uint16_t> reg, uint16_t data)
+    void Device::write(W5100Register<uint16_t> reg, uint16_t data)
     {
         write(reg.address(), 0, byte::get<1>(data));
         write(reg.address(), 1, byte::get<0>(data));
     }
 
-    uint8_t W5100Device::read(uint16_t addr, uint16_t offset)
+    uint8_t Device::read(uint16_t addr, uint16_t offset)
     {
         return m_writer.read(addr + offset);
     }
 
-    uint8_t W5100Device::read(W5100Register<uint8_t> reg)
+    uint8_t Device::read(W5100Register<uint8_t> reg)
     {
         return read(reg.address(), 0);
     }
 
-    uint16_t W5100Device::readWord(W5100Register<uint16_t> reg)
+    uint16_t Device::readWord(W5100Register<uint16_t> reg)
     {
         const auto byte1 = read(reg.address(), 0);
         const auto byte0 = read(reg.address(), 1);
@@ -209,39 +212,40 @@ namespace eth
         return byte::to<uint16_t>(byte1, byte0);
     }
 
-    void W5100Device::writeModeRegister(Mode value)
+    void Device::writeModeRegister(Mode value)
     {
         write(w5100::mode, static_cast<uint8_t>(value));
     }
 
-    void W5100Device::setGatewayAddress(std::array<uint8_t, 4> addr)
+    void Device::setGatewayAddress(std::array<uint8_t, 4> addr)
     {
         write(w5100::gatewayAddress, addr.cbegin(), addr.cend());
     }
 
-    void W5100Device::setSubnetMask(std::array<uint8_t, 4> addr)
+    void Device::setSubnetMask(std::array<uint8_t, 4> addr)
     {
         write(w5100::subnetMask, addr.cbegin(), addr.cend());
     }
 
-    void W5100Device::setMacAddress(std::array<uint8_t, 6> addr)
+    void Device::setMacAddress(std::array<uint8_t, 6> addr)
     {
         write(w5100::sourceMacAddress, addr.cbegin(), addr.cend());
     }
 
-    void W5100Device::setIpAddress(std::array<uint8_t, 4> addr)
+    void Device::setIpAddress(std::array<uint8_t, 4> addr)
     {
         write(w5100::sourceIpAddress, addr.cbegin(), addr.cend());
     }
 
-    void W5100Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
+    void Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
     {
         write(w5100::socketDestIpAddress(s), addr.cbegin(), addr.cend());
     }
 
-    void W5100Device::setDestPort(SocketHandle s, uint16_t port)
+    void Device::setDestPort(SocketHandle s, uint16_t port)
     {
         write(w5100::socketDestPort(s), port);
     }
 
+}
 }

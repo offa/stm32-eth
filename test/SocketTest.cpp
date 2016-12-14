@@ -36,7 +36,7 @@ using eth::SocketInterrupt;
 using eth::Socket;
 using eth::SocketHandle;
 using eth::Protocol;
-using eth::W5100Device;
+using eth::w5100::Device;
 using eth::SpiWriter;
 
 
@@ -114,8 +114,8 @@ TEST_GROUP(SocketTest)
 
     std::unique_ptr<Socket> socket;
     SpiWriter spi;
-    W5100Device device{spi};
-    MockSupport& deviceMock = mock("W5100Device");
+    Device device{spi};
+    MockSupport& deviceMock = mock("Device");
     MockSupport& platformMock = mock("platform");
     static constexpr uint16_t port = 1234;
     static constexpr Protocol protocol = Protocol::tcp;
@@ -434,7 +434,7 @@ TEST(SocketTest, receiveReturnsBytesReceived)
     auto buffer = createBuffer(defaultSize);
     deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("W5100Device").expectOneCall("receiveData")
+    mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(static_cast<uint16_t>(buffer.size()));
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -465,7 +465,7 @@ TEST(SocketTest, receiveLimitsBuffer)
         .ignoreOtherParameters()
         .andReturnValue(maxReceiveSize);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("W5100Device").expectOneCall("receiveData")
+    mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(maxReceiveSize);
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -482,7 +482,7 @@ TEST(SocketTest, receiveLimitsBufferToReceiveFreeSize)
         .ignoreOtherParameters()
         .andReturnValue(size);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("W5100Device").expectOneCall("receiveData")
+    mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(size);
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -496,7 +496,7 @@ TEST(SocketTest, receiveChecksStatusFlagIfEstablished)
     auto buffer = createBuffer(defaultSize);
     deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("W5100Device").expectOneCall("receiveData")
+    mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -511,7 +511,7 @@ TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
     auto buffer = createBuffer(defaultSize);
     deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
     expectSocketStatusRead(socketHandle, SocketStatus::closeWait);
-    mock("W5100Device").expectOneCall("receiveData")
+    mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();

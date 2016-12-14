@@ -30,7 +30,10 @@
 
 namespace eth
 {
-    class W5100Device;
+    namespace w5100
+    {
+        class Device;
+    }
 
 
     class Socket
@@ -46,7 +49,7 @@ namespace eth
         };
 
 
-        Socket(SocketHandle handle, W5100Device& device);
+        Socket(SocketHandle handle, w5100::Device& device);
         Socket(Socket&&) = default;
         ~Socket();
 
@@ -76,7 +79,7 @@ namespace eth
 
 
         const SocketHandle m_handle;
-        W5100Device& m_device;
+        w5100::Device& m_device;
     };
 
 }

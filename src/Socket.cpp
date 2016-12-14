@@ -59,7 +59,7 @@ namespace eth
 
 
 
-    Socket::Socket(SocketHandle handle, W5100Device& device) : m_handle(handle), m_device(device)
+    Socket::Socket(SocketHandle handle, w5100::Device& device) : m_handle(handle), m_device(device)
     {
     }
 
