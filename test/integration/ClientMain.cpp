@@ -21,7 +21,7 @@
 #include <stm32f4xx_hal.h>
 #include <diag/Trace.h>
 #include "Socket.h"
-#include "W5100Device.h"
+#include "w5100/Device.h"
 #include "SpiWriter.h"
 
 void spiClockEnable()
