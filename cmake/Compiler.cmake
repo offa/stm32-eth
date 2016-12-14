@@ -80,17 +80,7 @@ endif()
 
 
 
-if( NOT CMAKE_CROSSCOMPILING )
-#   try_compile(CM4_MACRO_WORKS "${CMAKE_BINARY_DIR}/temp"
-#                               "${CMAKE_MODULE_PATH}/Cm4MacroTest.cpp"
-#                               COMPILE_DEFINITIONS -std=c++14
-#                               )
-
-#    if( NOT CM4_MACRO_WORKS )
-#       message(STATUS "Compiler needs Workaround for Cortex-M4 macros")
-#       add_definitions(-DCM4_MACRO_WORKAROUND_NEEDED)
-#   endif()
-
-else()
+if( CMAKE_CROSSCOMPILING )
     set(CMAKE_EXECUTABLE_SUFFIX ".elf")
 endif()
+

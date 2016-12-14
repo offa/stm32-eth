@@ -23,17 +23,6 @@
 #include <chrono>
 #include <stm32f4xx_hal.h>
 
-
-/*
- * Workaround for macros defined by 'core_cm4.h' conflicting
- * with identifiers used internally by the compiler (issue #1).
- */
-#ifdef CM4_MACRO_WORKAROUND_NEEDED
-# undef __I
-# undef __O
-#endif /* CM4_MACRO_WORKAROUND_NEEDED */
-
-
 namespace platform
 {
     void wait(std::chrono::milliseconds t);
