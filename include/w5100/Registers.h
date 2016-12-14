@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "W5100Register.h"
+#include "w5100/Register.h"
 #include <array>
 
 namespace eth

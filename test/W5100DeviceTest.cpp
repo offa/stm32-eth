@@ -18,7 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "W5100Device.h"
+#include "w5100/Device.h"
 #include "SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>

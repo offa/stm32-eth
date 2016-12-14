@@ -18,7 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "W5100Register.h"
+#include "w5100/Register.h"
 #include "SocketHandle.h"
 #include <array>
 #include <gsl/span>

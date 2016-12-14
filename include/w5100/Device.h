@@ -25,7 +25,7 @@
 #include "SocketStatus.h"
 #include "SocketInterrupt.h"
 #include "Mode.h"
-#include "W5100Register.h"
+#include "w5100/Register.h"
 #include <array>
 #include <algorithm>
 #include <iterator>

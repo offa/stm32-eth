@@ -18,8 +18,8 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "W5100Device.h"
-#include "W5100Registers.h"
+#include "w5100/Device.h"
+#include "w5100/Registers.h"
 #include "SpiWriter.h"
 #include "Byte.h"
 

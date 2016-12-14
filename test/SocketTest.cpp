@@ -22,7 +22,7 @@
 #include "SocketStatus.h"
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
-#include "W5100Device.h"
+#include "w5100/Device.h"
 #include "SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>
