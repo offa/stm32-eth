@@ -68,13 +68,14 @@ namespace eth
             void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
             uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
-            // TODO: Limit T to unsigned integral types
+            // TODO: Limit types for T
             template<class T, size_t n = sizeof(T),
                     std::enable_if_t<(n > 0), int> = 0>
             void write(Register<T> reg, T data)
             {
-                write(reg.address(), sizeof(T) - n, byte::get<n-1>(data));
-                write<T, n-1>(reg, data);
+                constexpr auto next = n - 1;
+                write(reg.address(), sizeof(T) - n, byte::get<next>(data));
+                write<T, next>(reg, data);
             }
 
             template<class T, size_t n = sizeof(T),
