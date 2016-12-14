@@ -50,8 +50,8 @@ namespace w5100
         writeModeRegister(Mode::reset);
 
         constexpr uint8_t memorySize = 0x55;
-        write(w5100::transmitMemorySize, memorySize);
-        write(w5100::receiveMemorySize, memorySize);
+        write(registers::transmitMemorySize, memorySize);
+        write(registers::receiveMemorySize, memorySize);
     }
 
     void Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
@@ -66,47 +66,47 @@ namespace w5100
 
     void Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
-        write(w5100::socketMode(s), value);
+        write(registers::socketMode(s), value);
     }
 
     void Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
-        write(w5100::socketSourcePort(s), value);
+        write(registers::socketSourcePort(s), value);
     }
 
     void Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
     {
-        write(w5100::socketInterrupt(s), value.value());
+        write(registers::socketInterrupt(s), value.value());
     }
 
     SocketInterrupt Device::readSocketInterruptRegister(SocketHandle s)
     {
-        return static_cast<SocketInterrupt>(read(w5100::socketInterrupt(s)));
+        return static_cast<SocketInterrupt>(read(registers::socketInterrupt(s)));
     }
 
     void Device::writeSocketCommandRegister(SocketHandle s, SocketCommand value)
     {
-        write(w5100::socketCommand(s), static_cast<uint8_t>(value));
+        write(registers::socketCommand(s), static_cast<uint8_t>(value));
     }
 
     SocketCommand Device::readSocketCommandRegister(SocketHandle s)
     {
-        return static_cast<SocketCommand>(read(w5100::socketCommand(s)));
+        return static_cast<SocketCommand>(read(registers::socketCommand(s)));
     }
 
     SocketStatus Device::readSocketStatusRegister(SocketHandle s)
     {
-        return static_cast<SocketStatus>(read(w5100::socketStatus(s)));
+        return static_cast<SocketStatus>(read(registers::socketStatus(s)));
     }
 
     uint16_t Device::getTransmitFreeSize(SocketHandle s)
     {
-        return readFreesize(w5100::socketTransmitFreeSize(s));
+        return readFreesize(registers::socketTransmitFreeSize(s));
     }
 
     uint16_t Device::getReceiveFreeSize(SocketHandle s)
     {
-        return readFreesize(w5100::socketReceiveFreeSize(s));
+        return readFreesize(registers::socketReceiveFreeSize(s));
     }
 
     uint16_t Device::readFreesize(Register<uint16_t> freesizeReg)
@@ -132,7 +132,7 @@ namespace w5100
     {
         constexpr uint16_t transmitBufferMask = 0x07ff;
         const auto size = buffer.length();
-        const uint16_t writePointer = readWord(w5100::socketTransmitWritePointer(s));
+        const uint16_t writePointer = readWord(registers::socketTransmitWritePointer(s));
         const uint16_t offset = writePointer & transmitBufferMask;
         const uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
@@ -148,14 +148,14 @@ namespace w5100
             write(Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), buffer.cend());
         }
 
-        write(w5100::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
+        write(registers::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
     }
 
     uint16_t Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
     {
         constexpr uint16_t receiveBufferMask = 0x07ff;
         const auto size = buffer.length();
-        const uint16_t readPointer = readWord(w5100::socketReceiveReadPointer(s));
+        const uint16_t readPointer = readWord(registers::socketReceiveReadPointer(s));
         const uint16_t offset = readPointer & receiveBufferMask;
         const uint16_t destAddress = offset + toReceiveBufferAddress(s);
         const auto reg = makeRegister<gsl::span<uint8_t>>(destAddress);
@@ -173,7 +173,7 @@ namespace w5100
             read(reg, buffer.begin(), buffer.end());
         }
 
-        write(w5100::socketReceiveReadPointer(s), static_cast<uint16_t>(readPointer + size));
+        write(registers::socketReceiveReadPointer(s), static_cast<uint16_t>(readPointer + size));
 
         return size;
     }
@@ -214,37 +214,37 @@ namespace w5100
 
     void Device::writeModeRegister(Mode value)
     {
-        write(w5100::mode, static_cast<uint8_t>(value));
+        write(registers::mode, static_cast<uint8_t>(value));
     }
 
     void Device::setGatewayAddress(std::array<uint8_t, 4> addr)
     {
-        write(w5100::gatewayAddress, addr.cbegin(), addr.cend());
+        write(registers::gatewayAddress, addr.cbegin(), addr.cend());
     }
 
     void Device::setSubnetMask(std::array<uint8_t, 4> addr)
     {
-        write(w5100::subnetMask, addr.cbegin(), addr.cend());
+        write(registers::subnetMask, addr.cbegin(), addr.cend());
     }
 
     void Device::setMacAddress(std::array<uint8_t, 6> addr)
     {
-        write(w5100::sourceMacAddress, addr.cbegin(), addr.cend());
+        write(registers::sourceMacAddress, addr.cbegin(), addr.cend());
     }
 
     void Device::setIpAddress(std::array<uint8_t, 4> addr)
     {
-        write(w5100::sourceIpAddress, addr.cbegin(), addr.cend());
+        write(registers::sourceIpAddress, addr.cbegin(), addr.cend());
     }
 
     void Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
     {
-        write(w5100::socketDestIpAddress(s), addr.cbegin(), addr.cend());
+        write(registers::socketDestIpAddress(s), addr.cbegin(), addr.cend());
     }
 
     void Device::setDestPort(SocketHandle s, uint16_t port)
     {
-        write(w5100::socketDestPort(s), port);
+        write(registers::socketDestPort(s), port);
     }
 
 }
