@@ -70,7 +70,7 @@ namespace eth
 
             // TODO: Limit T to unsigned integral types
             template<class T, size_t n = sizeof(T),
-                std::enable_if_t<(n > 0), int> = 0>
+                    std::enable_if_t<(n > 0), int> = 0>
             void write(Register<T> reg, T data)
             {
                 write(reg.address(), sizeof(T) - n, byte::get<n-1>(data));
@@ -78,12 +78,9 @@ namespace eth
             }
 
             template<class T, size_t n = sizeof(T),
-                std::enable_if_t<(n == 0), int> = 0>
-            void write(Register<T> reg, T data)
+                    std::enable_if_t<(n == 0), int> = 0>
+            void write(Register<T>, T)
             {
-                // TODO: Cleanup
-                (void) reg;
-                (void) data;
             }
 
             template<class T, class Iterator>
