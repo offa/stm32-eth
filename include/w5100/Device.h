@@ -69,19 +69,17 @@ namespace eth
             uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
             // TODO: Limit T to unsigned integral types
-            // TODO: Rename method
-            // TODO: Reduce template parameters passed by the caller
-            template<class T, size_t n,
+            template<class T, size_t n = sizeof(T),
                 std::enable_if_t<(n > 0), int> = 0>
-            void write_(Register<T> reg, T data)
+            void write(Register<T> reg, T data)
             {
                 write(reg.address(), sizeof(T) - n, byte::get<n-1>(data));
-                write_<T, n-1>(reg, data);
+                write<T, n-1>(reg, data);
             }
 
-            template<class T, size_t n,
+            template<class T, size_t n = sizeof(T),
                 std::enable_if_t<(n == 0), int> = 0>
-            void write_(Register<T> reg, T data)
+            void write(Register<T> reg, T data)
             {
                 // TODO: Cleanup
                 (void) reg;
