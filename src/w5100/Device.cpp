@@ -70,7 +70,7 @@ namespace eth
 
         void Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
         {
-            write(registers::socketSourcePort(s), value);
+            write_<uint16_t, 2>(registers::socketSourcePort(s), value);
         }
 
         void Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
@@ -147,7 +147,7 @@ namespace eth
                 write(Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), buffer.cend());
             }
 
-            write(registers::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
+            write_<uint16_t, 2>(registers::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
         }
 
         uint16_t Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
@@ -172,7 +172,7 @@ namespace eth
                 read(reg, buffer.begin(), buffer.end());
             }
 
-            write(registers::socketReceiveReadPointer(s), static_cast<uint16_t>(readPointer + size));
+            write_<uint16_t, 2>(registers::socketReceiveReadPointer(s), static_cast<uint16_t>(readPointer + size));
 
             return size;
         }
@@ -180,11 +180,6 @@ namespace eth
         void Device::write(uint16_t addr, uint16_t offset, uint8_t data)
         {
             m_writer.write(addr + offset, data);
-        }
-
-        void Device::write(Register<uint16_t> reg, uint16_t data)
-        {
-            write_<uint16_t, sizeof(uint16_t)>(reg, data);
         }
 
         uint8_t Device::read(uint16_t addr, uint16_t offset)
@@ -237,7 +232,7 @@ namespace eth
 
         void Device::setDestPort(SocketHandle s, uint16_t port)
         {
-            write(registers::socketDestPort(s), port);
+            write_<uint16_t, 2>(registers::socketDestPort(s), port);
         }
 
     }

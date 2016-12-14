@@ -88,9 +88,6 @@ namespace eth
                 (void) data;
             }
 
-
-            void write(Register<uint16_t> reg, uint16_t data);
-
             template<class T, class Iterator>
             void write(Register<T> reg, Iterator begin, Iterator end)
             {
