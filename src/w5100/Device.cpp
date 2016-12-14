@@ -21,7 +21,6 @@
 #include "w5100/Device.h"
 #include "w5100/Registers.h"
 #include "SpiWriter.h"
-#include "Byte.h"
 
 namespace eth
 {
@@ -185,13 +184,12 @@ namespace eth
 
         void Device::write(Register<uint8_t> reg, uint8_t data)
         {
-            write(reg.address(), 0, data);
+            write_<uint8_t, sizeof(uint8_t)>(reg, data);
         }
 
         void Device::write(Register<uint16_t> reg, uint16_t data)
         {
-            write(reg.address(), 0, byte::get<1>(data));
-            write(reg.address(), 1, byte::get<0>(data));
+            write_<uint16_t, sizeof(uint16_t)>(reg, data);
         }
 
         uint8_t Device::read(uint16_t addr, uint16_t offset)

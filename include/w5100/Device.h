@@ -26,6 +26,7 @@
 #include "SocketInterrupt.h"
 #include "Mode.h"
 #include "w5100/Register.h"
+#include "Byte.h"
 #include <array>
 #include <algorithm>
 #include <iterator>
@@ -66,6 +67,25 @@ namespace eth
 
             void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
             uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
+
+            // TODO: Limit T to unsigned integral types
+            template<class T, size_t n,
+                std::enable_if_t<(n > 0), int> = 0>
+            void write_(Register<T> reg, T data)
+            {
+                write(reg.address(), sizeof(T) - n, byte::get<n-1>(data));
+                write_<T, n-1>(reg, data);
+            }
+
+            template<class T, size_t n,
+                std::enable_if_t<(n == 0), int> = 0>
+            void write_(Register<T> reg, T data)
+            {
+                // TODO: Cleanup
+                (void) reg;
+                (void) data;
+            }
+
 
             void write(Register<uint8_t> reg, uint8_t data);
             void write(Register<uint16_t> reg, uint16_t data);
