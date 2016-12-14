@@ -37,103 +37,103 @@ namespace eth
     class SpiWriter;
 
 
-namespace w5100
-{
-
-    class Device
+    namespace w5100
     {
-    public:
 
-        explicit Device(SpiWriter& writer);
-        Device(Device&&) = default;
-
-
-        void executeSocketCommand(SocketHandle s, SocketCommand cmd);
-
-        void writeSocketModeRegister(SocketHandle s, uint8_t value);
-        void writeSocketSourcePort(SocketHandle s, uint16_t value);
-
-        void writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value);
-        SocketInterrupt readSocketInterruptRegister(SocketHandle s);
-
-        void writeSocketCommandRegister(SocketHandle s, SocketCommand value);
-        SocketCommand readSocketCommandRegister(SocketHandle s);
-
-        SocketStatus readSocketStatusRegister(SocketHandle s);
-
-        uint16_t getTransmitFreeSize(SocketHandle s);
-        uint16_t getReceiveFreeSize(SocketHandle s);
-
-        void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
-        uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
-
-        void write(Register<uint8_t> reg, uint8_t data);
-        void write(Register<uint16_t> reg, uint16_t data);
-
-        template<class T, class Iterator>
-        void write(Register<T> reg, Iterator begin, Iterator end)
+        class Device
         {
-            uint16_t offset = 0;
-            std::for_each(begin, end, [&](uint8_t data)
+        public:
+
+            explicit Device(SpiWriter& writer);
+            Device(Device&&) = default;
+
+
+            void executeSocketCommand(SocketHandle s, SocketCommand cmd);
+
+            void writeSocketModeRegister(SocketHandle s, uint8_t value);
+            void writeSocketSourcePort(SocketHandle s, uint16_t value);
+
+            void writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value);
+            SocketInterrupt readSocketInterruptRegister(SocketHandle s);
+
+            void writeSocketCommandRegister(SocketHandle s, SocketCommand value);
+            SocketCommand readSocketCommandRegister(SocketHandle s);
+
+            SocketStatus readSocketStatusRegister(SocketHandle s);
+
+            uint16_t getTransmitFreeSize(SocketHandle s);
+            uint16_t getReceiveFreeSize(SocketHandle s);
+
+            void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
+            uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
+
+            void write(Register<uint8_t> reg, uint8_t data);
+            void write(Register<uint16_t> reg, uint16_t data);
+
+            template<class T, class Iterator>
+            void write(Register<T> reg, Iterator begin, Iterator end)
             {
-                write(reg.address(), offset++, data);
-            });
+                uint16_t offset = 0;
+                std::for_each(begin, end, [&](uint8_t data)
+                {
+                    write(reg.address(), offset++, data);
+                });
 
-        }
+            }
 
-        uint8_t read(Register<uint8_t> reg);
-        uint16_t readWord(Register<uint16_t> reg);
+            uint8_t read(Register<uint8_t> reg);
+            uint16_t readWord(Register<uint16_t> reg);
 
-        template<class T, class Iterator>
-        uint16_t read(Register<T> reg, Iterator begin, Iterator end)
-        {
-            uint16_t offset = 0;
-            std::generate(begin, end, [&]
+            template<class T, class Iterator>
+            uint16_t read(Register<T> reg, Iterator begin, Iterator end)
             {
-                return read(reg.address(), offset++);
-            });
+                uint16_t offset = 0;
+                std::generate(begin, end, [&]
+                {
+                    return read(reg.address(), offset++);
+                });
 
-            return offset;
-        }
+                return offset;
+            }
 
-        void writeModeRegister(Mode value);
+            void writeModeRegister(Mode value);
 
-        void setGatewayAddress(std::array<uint8_t, 4> addr);
-        void setSubnetMask(std::array<uint8_t, 4> addr);
-        void setMacAddress(std::array<uint8_t, 6> addr);
-        void setIpAddress(std::array<uint8_t, 4> addr);
+            void setGatewayAddress(std::array<uint8_t, 4> addr);
+            void setSubnetMask(std::array<uint8_t, 4> addr);
+            void setMacAddress(std::array<uint8_t, 6> addr);
+            void setIpAddress(std::array<uint8_t, 4> addr);
 
-        void setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr);
-        void setDestPort(SocketHandle s, uint16_t port);
-
-
-        static constexpr uint16_t getTransmitBufferSize()
-        {
-            return transmitBufferSize;
-        }
-
-        static constexpr uint16_t getReceiveBufferSize()
-        {
-            return receiveBufferSize;
-        }
+            void setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr);
+            void setDestPort(SocketHandle s, uint16_t port);
 
 
-        Device& operator=(Device&&) = default;
+            static constexpr uint16_t getTransmitBufferSize()
+            {
+                return transmitBufferSize;
+            }
+
+            static constexpr uint16_t getReceiveBufferSize()
+            {
+                return receiveBufferSize;
+            }
 
 
-    private:
-
-        void write(uint16_t addr, uint16_t offset, uint8_t data);
-        uint8_t read(uint16_t addr, uint16_t offset);
-
-        uint16_t readFreesize(Register<uint16_t> freesizeReg);
+            Device& operator=(Device&&) = default;
 
 
-        SpiWriter& m_writer;
-        static constexpr uint16_t transmitBufferSize = 2048;
-        static constexpr uint16_t receiveBufferSize = transmitBufferSize;
-    };
+        private:
 
-}
+            void write(uint16_t addr, uint16_t offset, uint8_t data);
+            uint8_t read(uint16_t addr, uint16_t offset);
+
+            uint16_t readFreesize(Register<uint16_t> freesizeReg);
+
+
+            SpiWriter& m_writer;
+            static constexpr uint16_t transmitBufferSize = 2048;
+            static constexpr uint16_t receiveBufferSize = transmitBufferSize;
+        };
+
+    }
 }
 

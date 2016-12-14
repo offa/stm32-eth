@@ -25,7 +25,6 @@
 
 namespace eth
 {
-
     namespace w5100
     {
         namespace registers
@@ -97,8 +96,6 @@ namespace eth
                 return makeRegister<uint16_t>(s, 0x0010);
             }
 
-
         }
-
     }
 }
