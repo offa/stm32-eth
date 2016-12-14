@@ -33,13 +33,13 @@ namespace eth
             constexpr uint16_t toTransmitBufferAddress(SocketHandle s)
             {
                 constexpr uint16_t baseAddress = 0x4000;
-                return baseAddress + ( Device::getTransmitBufferSize() * s.get() );
+                return baseAddress + ( Device::getTransmitBufferSize() * s.value() );
             }
 
             constexpr uint16_t toReceiveBufferAddress(SocketHandle s)
             {
                 constexpr uint16_t baseAddress = 0x6000;
-                return baseAddress + ( Device::getReceiveBufferSize() * s.get() );
+                return baseAddress + ( Device::getReceiveBufferSize() * s.value() );
             }
         }
 

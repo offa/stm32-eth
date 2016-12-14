@@ -66,7 +66,7 @@ TEST_GROUP(SocketTest)
     {
         expectSocketCommand(handle, SocketCommand::close);
         deviceMock.expectOneCall("writeSocketInterruptRegister")
-            .withParameter("socket", handle.get())
+            .withParameter("socket", handle.value())
             .withParameter("value", 0xff);
         expectSocketStatusRead(handle, SocketStatus::closed);
     }
@@ -74,7 +74,7 @@ TEST_GROUP(SocketTest)
     void expectSocketInterruptRead(SocketHandle s, uint8_t value) const
     {
         deviceMock.expectOneCall("readSocketInterruptRegister")
-            .withParameter("socket", s.get())
+            .withParameter("socket", s.value())
             .andReturnValue(value);
     }
 
@@ -86,14 +86,14 @@ TEST_GROUP(SocketTest)
     void expectSocketStatusRead(SocketHandle s, SocketStatus status) const
     {
         deviceMock.expectOneCall("readSocketStatusRegister")
-            .withParameter("socket", s.get())
+            .withParameter("socket", s.value())
             .andReturnValue(static_cast<uint8_t>(status));
     }
 
     void expectSocketCommand(SocketHandle s, SocketCommand cmd) const
     {
         deviceMock.expectOneCall("executeSocketCommand")
-            .withParameter("socket", s.get())
+            .withParameter("socket", s.value())
             .withParameter("value", static_cast<uint8_t>(cmd));
     }
 
@@ -160,7 +160,7 @@ TEST(SocketTest, openSetsProtocol)
     constexpr uint8_t value = static_cast<uint8_t>(protocol) | flag;
     expectClose(socketHandle);
     deviceMock.expectOneCall("writeSocketModeRegister")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .withParameter("value", value);
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -176,7 +176,7 @@ TEST(SocketTest, openSetsFlag)
     constexpr uint8_t value = static_cast<uint8_t>(protocol) | flagValue;
     expectClose(socketHandle);
     deviceMock.expectOneCall("writeSocketModeRegister")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .withParameter("value", value);
     deviceMock.expectOneCall("writeSocketSourcePort").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -191,7 +191,7 @@ TEST(SocketTest, openSetsPort)
     expectClose(socketHandle);
     deviceMock.expectOneCall("writeSocketModeRegister").ignoreOtherParameters();
     deviceMock.expectOneCall("writeSocketSourcePort")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .withParameter("value", port);
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::established);
@@ -247,7 +247,7 @@ TEST(SocketTest, closedOnDestruction)
 {
     expectSocketCommand(socketHandle, SocketCommand::close);
     deviceMock.expectOneCall("writeSocketInterruptRegister")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .withParameter("value", 0xff);
     Socket s(socketHandle, device);
 }
@@ -330,7 +330,7 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
 {
     constexpr uint16_t freeSize = defaultSize + 2;
     deviceMock.expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .andReturnValue(freeSize);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     deviceMock.expectOneCall("sendData").ignoreOtherParameters();
@@ -345,7 +345,7 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfCloseWait)
 {
     constexpr uint16_t freeSize = defaultSize + 2;
     deviceMock.expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .andReturnValue(freeSize);
     expectSocketStatusRead(socketHandle, SocketStatus::closeWait);
     deviceMock.expectOneCall("sendData").ignoreOtherParameters();
@@ -360,11 +360,11 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagNotEnoughFreeMemory)
 {
     constexpr uint16_t freeSize = defaultSize;
     deviceMock.expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .andReturnValue(freeSize - 2);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     deviceMock.expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .andReturnValue(freeSize);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     deviceMock.expectOneCall("sendData").ignoreOtherParameters();
@@ -379,7 +379,7 @@ TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
 {
     constexpr uint16_t freeSize = defaultSize + 2;
     deviceMock.expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .andReturnValue(freeSize);
     expectSocketStatusRead(socketHandle, SocketStatus::init);
 
@@ -394,7 +394,7 @@ TEST(SocketTest, sendSendsDataAndCommand)
     deviceMock.expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     deviceMock.expectOneCall("sendData")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .withMemoryBufferParameter("buffer", buffer.data(), buffer.size())
         .withParameter("size", buffer.size());
     expectSocketCommand(socketHandle, SocketCommand::send);
@@ -539,7 +539,7 @@ TEST(SocketTest, receiveReceivesData)
     deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     deviceMock.expectOneCall("receiveData")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .withOutputParameterReturning("buffer", buffer.data(), buffer.size())
         .withParameter("size", buffer.size())
         .andReturnValue(defaultSize);
@@ -597,7 +597,7 @@ TEST(SocketTest, receiveWaitsForDataAvailable)
         .andReturnValue(defaultSize);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
     deviceMock.expectOneCall("receiveData")
-        .withParameter("socket", socketHandle.get())
+        .withParameter("socket", socketHandle.value())
         .withParameter("size", defaultSize)
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
@@ -622,10 +622,10 @@ TEST(SocketTest, connect)
     constexpr uint16_t port = 4567;
 
     deviceMock.expectOneCall("setDestIpAddress")
-                .withParameter("socket", socketHandle.get())
+                .withParameter("socket", socketHandle.value())
                 .withMemoryBufferParameter("buffer", addr.data(), addr.size());
     deviceMock.expectOneCall("setDestPort")
-                .withParameter("socket", socketHandle.get())
+                .withParameter("socket", socketHandle.value())
                 .withParameter("port", port);
     expectSocketCommand(socketHandle, SocketCommand::connect);
     expectSocketStatusRead(socketHandle, SocketStatus::established);

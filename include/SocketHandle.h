@@ -41,7 +41,7 @@ namespace eth
         }
 
 
-        constexpr value_type get() const
+        constexpr value_type value() const
         {
             return m_id;
         }

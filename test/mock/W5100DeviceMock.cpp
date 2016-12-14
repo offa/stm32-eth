@@ -33,28 +33,28 @@ namespace w5100
     void Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
     {
         mock("Device").actualCall("writeSocketModeRegister")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .withParameter("value", value);
     }
 
     void Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
     {
         mock("Device").actualCall("writeSocketSourcePort")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .withParameter("value", value);
     }
 
     void Device::writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value)
     {
         mock("Device").actualCall("writeSocketInterruptRegister")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .withParameter("value", value.value());
     }
 
     SocketInterrupt Device::readSocketInterruptRegister(SocketHandle s)
     {
         const auto value =  mock("Device").actualCall("readSocketInterruptRegister")
-                                .withParameter("socket", s.get())
+                                .withParameter("socket", s.value())
                                 .returnUnsignedIntValue();
         return SocketInterrupt(value);
     }
@@ -62,35 +62,35 @@ namespace w5100
     void Device::executeSocketCommand(SocketHandle s, SocketCommand cmd)
     {
         mock("Device").actualCall("executeSocketCommand")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .withParameter("value", static_cast<uint8_t>(cmd));
     }
 
     SocketStatus Device::readSocketStatusRegister(SocketHandle s)
     {
         return static_cast<SocketStatus>(mock("Device").actualCall("readSocketStatusRegister")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .returnUnsignedIntValue());
     }
 
     uint16_t Device::getTransmitFreeSize(SocketHandle s)
     {
         return mock("Device").actualCall("getTransmitFreeSize")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .returnUnsignedIntValue();
     }
 
     uint16_t Device::getReceiveFreeSize(SocketHandle s)
     {
         return mock("Device").actualCall("getReceiveFreeSize")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .returnUnsignedIntValue();
     }
 
     void Device::sendData(SocketHandle s, const gsl::span<const uint8_t> buffer)
     {
         mock("Device").actualCall("sendData")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .withMemoryBufferParameter("buffer", buffer.data(), buffer.length())
                 .withParameter("size", buffer.length());
     }
@@ -98,7 +98,7 @@ namespace w5100
     uint16_t Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
     {
         return mock("Device").actualCall("receiveData")
-                    .withParameter("socket", s.get())
+                    .withParameter("socket", s.value())
                     .withOutputParameter("buffer", buffer.data())
                     .withParameter("size", buffer.length())
                     .returnUnsignedIntValue();
@@ -107,14 +107,14 @@ namespace w5100
     void Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
     {
         mock("Device").actualCall("setDestIpAddress")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .withMemoryBufferParameter("buffer", addr.data(), addr.size());
     }
 
     void Device::setDestPort(SocketHandle s, uint16_t port)
     {
         mock("Device").actualCall("setDestPort")
-                .withParameter("socket", s.get())
+                .withParameter("socket", s.value())
                 .withParameter("port", port);
     }
 

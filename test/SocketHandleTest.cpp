@@ -38,6 +38,6 @@ TEST(SocketHandleTest, creation)
 {
     constexpr auto handle = SocketHandle(1);
     constexpr auto handle2 = makeHandle<2>();
-    CHECK_EQUAL(1, handle.get());
-    CHECK_EQUAL(2, handle2.get());
+    CHECK_EQUAL(1, handle.value());
+    CHECK_EQUAL(2, handle2.value());
 }
