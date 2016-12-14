@@ -33,9 +33,9 @@ using eth::SocketHandle;
 using eth::SocketCommand;
 using eth::SocketStatus;
 using eth::Mode;
-using eth::W5100Register;
+using eth::w5100::Register;
 using eth::SocketInterrupt;
-using eth::makeRegister;
+using eth::w5100::makeRegister;
 
 
 namespace
@@ -131,14 +131,14 @@ TEST_GROUP(W5100DeviceTest)
     }
 
     template<class T>
-    W5100Register<T> asRegister(uint16_t address, T) const
+    Register<T> asRegister(uint16_t address, T) const
     {
         return makeRegister<T>(address);
     }
 
     static constexpr uint16_t toAddress(eth::SocketHandle s, uint16_t address)
     {
-        return eth::makeRegister<uint8_t>(s, address).address();
+        return makeRegister<uint8_t>(s, address).address();
     }
 
 

@@ -109,7 +109,7 @@ namespace w5100
         return readFreesize(w5100::socketReceiveFreeSize(s));
     }
 
-    uint16_t Device::readFreesize(W5100Register<uint16_t> freesizeReg)
+    uint16_t Device::readFreesize(Register<uint16_t> freesizeReg)
     {
         uint16_t firstRead = 0;
         uint16_t secondRead = 0;
@@ -145,7 +145,7 @@ namespace w5100
         }
         else
         {
-            write(W5100Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), buffer.cend());
+            write(Register<gsl::span<const uint8_t>>(destAddress), buffer.cbegin(), buffer.cend());
         }
 
         write(w5100::socketTransmitWritePointer(s), static_cast<uint16_t>(writePointer + size));
@@ -183,12 +183,12 @@ namespace w5100
         m_writer.write(addr + offset, data);
     }
 
-    void Device::write(W5100Register<uint8_t> reg, uint8_t data)
+    void Device::write(Register<uint8_t> reg, uint8_t data)
     {
         write(reg.address(), 0, data);
     }
 
-    void Device::write(W5100Register<uint16_t> reg, uint16_t data)
+    void Device::write(Register<uint16_t> reg, uint16_t data)
     {
         write(reg.address(), 0, byte::get<1>(data));
         write(reg.address(), 1, byte::get<0>(data));
@@ -199,12 +199,12 @@ namespace w5100
         return m_writer.read(addr + offset);
     }
 
-    uint8_t Device::read(W5100Register<uint8_t> reg)
+    uint8_t Device::read(Register<uint8_t> reg)
     {
         return read(reg.address(), 0);
     }
 
-    uint16_t Device::readWord(W5100Register<uint16_t> reg)
+    uint16_t Device::readWord(Register<uint16_t> reg)
     {
         const auto byte1 = read(reg.address(), 0);
         const auto byte0 = read(reg.address(), 1);

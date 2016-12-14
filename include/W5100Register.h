@@ -25,16 +25,18 @@
 
 namespace eth
 {
+namespace w5100
+{
 
     template<class T>
-    class W5100Register
+    class Register
     {
     public:
 
         using value_type = T;
 
 
-        constexpr W5100Register(uint16_t address) : m_address(address)
+        constexpr Register(uint16_t address) : m_address(address)
         {
         }
 
@@ -55,7 +57,7 @@ namespace eth
     template<class T>
     constexpr auto makeRegister(uint16_t address)
     {
-        return W5100Register<T>(address);
+        return Register<T>(address);
     }
 
     template<class T>
@@ -67,4 +69,4 @@ namespace eth
     }
 
 }
-
+}

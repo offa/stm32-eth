@@ -67,11 +67,11 @@ namespace w5100
         void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
         uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
-        void write(W5100Register<uint8_t> reg, uint8_t data);
-        void write(W5100Register<uint16_t> reg, uint16_t data);
+        void write(Register<uint8_t> reg, uint8_t data);
+        void write(Register<uint16_t> reg, uint16_t data);
 
         template<class T, class Iterator>
-        void write(W5100Register<T> reg, Iterator begin, Iterator end)
+        void write(Register<T> reg, Iterator begin, Iterator end)
         {
             uint16_t offset = 0;
             std::for_each(begin, end, [&](uint8_t data)
@@ -81,11 +81,11 @@ namespace w5100
 
         }
 
-        uint8_t read(W5100Register<uint8_t> reg);
-        uint16_t readWord(W5100Register<uint16_t> reg);
+        uint8_t read(Register<uint8_t> reg);
+        uint16_t readWord(Register<uint16_t> reg);
 
         template<class T, class Iterator>
-        uint16_t read(W5100Register<T> reg, Iterator begin, Iterator end)
+        uint16_t read(Register<T> reg, Iterator begin, Iterator end)
         {
             uint16_t offset = 0;
             std::generate(begin, end, [&]
@@ -126,7 +126,7 @@ namespace w5100
         void write(uint16_t addr, uint16_t offset, uint8_t data);
         uint8_t read(uint16_t addr, uint16_t offset);
 
-        uint16_t readFreesize(W5100Register<uint16_t> freesizeReg);
+        uint16_t readFreesize(Register<uint16_t> freesizeReg);
 
 
         SpiWriter& m_writer;
