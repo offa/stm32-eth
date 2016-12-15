@@ -89,7 +89,7 @@ int main()
                     std::array<uint8_t, 9> resp{{ 'r', 'e', 'c', 'e', 'i', 'v', 'e', 'd', '\n' }};
                     const auto n = socket.send(resp);
 
-                    if( n != resp )
+                    if( n != resp.size() )
                     {
                         trace_printf("send() failed (%d)\n", n);
                     }
