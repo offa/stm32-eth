@@ -26,6 +26,7 @@
 #include "SocketInterrupt.h"
 #include "Mode.h"
 #include "w5100/Register.h"
+#include "Byte.h"
 #include <array>
 #include <algorithm>
 #include <iterator>
@@ -67,8 +68,22 @@ namespace eth
             void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
             uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
-            void write(Register<uint8_t> reg, uint8_t data);
-            void write(Register<uint16_t> reg, uint16_t data);
+            // TODO: Limit types for T
+            template<class T, size_t n = sizeof(T),
+                    std::enable_if_t<(n > 1), int> = 0>
+            void write(Register<T> reg, T data)
+            {
+                constexpr auto pos = n - 1;
+                write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
+                write<T, pos>(reg, data);
+            }
+
+            template<class T, size_t n = sizeof(T),
+                    std::enable_if_t<(n <= 1), int> = 0>
+            void write(Register<T> reg, T data)
+            {
+                write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
+            }
 
             template<class T, class Iterator>
             void write(Register<T> reg, Iterator begin, Iterator end)
@@ -78,11 +93,24 @@ namespace eth
                 {
                     write(reg.address(), offset++, data);
                 });
-
             }
 
-            uint8_t read(Register<uint8_t> reg);
-            uint16_t readWord(Register<uint16_t> reg);
+            template<class T, size_t n = sizeof(T),
+                    std::enable_if_t<(n > 1), int> = 0>
+            T read(Register<T> reg)
+            {
+                constexpr auto pos = sizeof(T) - n;
+                const auto byte0 = read(reg.address(), pos);
+                const auto byte1 = read<T, (pos + 1)>(reg);
+                return byte::to<T>(byte0, byte1);
+            }
+
+            template<class T, size_t n = sizeof(T),
+                    std::enable_if_t<(n <= 1), int> = 0>
+            T read(Register<T> reg)
+            {
+                return read(reg.address(), sizeof(T) - n);
+            }
 
             template<class T, class Iterator>
             uint16_t read(Register<T> reg, Iterator begin, Iterator end)

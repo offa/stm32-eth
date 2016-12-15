@@ -21,7 +21,6 @@
 #include "w5100/Device.h"
 #include "w5100/Registers.h"
 #include "SpiWriter.h"
-#include "Byte.h"
 
 namespace eth
 {
@@ -116,11 +115,11 @@ namespace eth
 
             do
             {
-                firstRead = readWord(freesizeReg);
+                firstRead = read(freesizeReg);
 
                 if( firstRead != 0 )
                 {
-                    secondRead = readWord(freesizeReg);
+                    secondRead = read(freesizeReg);
                 }
             }
             while( secondRead != firstRead );
@@ -132,7 +131,7 @@ namespace eth
         {
             constexpr uint16_t transmitBufferMask = 0x07ff;
             const auto size = buffer.length();
-            const uint16_t writePointer = readWord(registers::socketTransmitWritePointer(s));
+            const uint16_t writePointer = read(registers::socketTransmitWritePointer(s));
             const uint16_t offset = writePointer & transmitBufferMask;
             const uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
@@ -155,7 +154,7 @@ namespace eth
         {
             constexpr uint16_t receiveBufferMask = 0x07ff;
             const auto size = buffer.length();
-            const uint16_t readPointer = readWord(registers::socketReceiveReadPointer(s));
+            const uint16_t readPointer = read(registers::socketReceiveReadPointer(s));
             const uint16_t offset = readPointer & receiveBufferMask;
             const uint16_t destAddress = offset + toReceiveBufferAddress(s);
             const auto reg = makeRegister<gsl::span<uint8_t>>(destAddress);
@@ -183,33 +182,9 @@ namespace eth
             m_writer.write(addr + offset, data);
         }
 
-        void Device::write(Register<uint8_t> reg, uint8_t data)
-        {
-            write(reg.address(), 0, data);
-        }
-
-        void Device::write(Register<uint16_t> reg, uint16_t data)
-        {
-            write(reg.address(), 0, byte::get<1>(data));
-            write(reg.address(), 1, byte::get<0>(data));
-        }
-
         uint8_t Device::read(uint16_t addr, uint16_t offset)
         {
             return m_writer.read(addr + offset);
-        }
-
-        uint8_t Device::read(Register<uint8_t> reg)
-        {
-            return read(reg.address(), 0);
-        }
-
-        uint16_t Device::readWord(Register<uint16_t> reg)
-        {
-            const auto byte0 = read(reg.address(), 0);
-            const auto byte1 = read(reg.address(), 1);
-
-            return byte::to<uint16_t>(byte0, byte1);
         }
 
         void Device::writeModeRegister(Mode value)

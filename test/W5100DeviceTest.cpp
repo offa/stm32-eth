@@ -233,7 +233,7 @@ TEST(W5100DeviceTest, readRegisterTwoByte)
     constexpr uint16_t data = 0xef01;
     expectRead(0xddee, data);
 
-    const uint16_t result = device->readWord(reg);
+    const uint16_t result = device->read(reg);
     CHECK_EQUAL(data, result);
 }
 
