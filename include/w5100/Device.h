@@ -70,7 +70,7 @@ namespace eth
 
             // TODO: Limit types for T
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n > 0), int> = 0>
+                    std::enable_if_t<(n > 1), int> = 0>
             void write(Register<T> reg, T data)
             {
                 constexpr auto pos = n - 1;
@@ -79,9 +79,10 @@ namespace eth
             }
 
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n == 0), int> = 0>
-            void write(Register<T>, T)
+                    std::enable_if_t<(n <= 1), int> = 0>
+            void write(Register<T> reg, T data)
             {
+                write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
             }
 
             template<class T, class Iterator>
@@ -99,7 +100,7 @@ namespace eth
             T read(Register<T> reg)
             {
                 const auto byte0 = read(reg.address(), n);
-                const auto byte1 = read<T, n + 1>(reg);
+                const auto byte1 = read<T, (n + 1)>(reg);
                 return byte::to<T>(byte0, byte1);
             }
 
