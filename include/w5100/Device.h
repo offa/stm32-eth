@@ -95,20 +95,21 @@ namespace eth
                 });
             }
 
-            template<class T, size_t n = 0,
-                    std::enable_if_t<(n < sizeof(T) - 1), int> = 0>
+            template<class T, size_t n = sizeof(T),
+                    std::enable_if_t<(n > 1), int> = 0>
             T read(Register<T> reg)
             {
-                const auto byte0 = read(reg.address(), n);
-                const auto byte1 = read<T, (n + 1)>(reg);
+                constexpr auto pos = sizeof(T) - n;
+                const auto byte0 = read(reg.address(), pos);
+                const auto byte1 = read<T, (pos + 1)>(reg);
                 return byte::to<T>(byte0, byte1);
             }
 
-            template<class T, size_t n = 0,
-                    std::enable_if_t<(n >= sizeof(T) - 1), int> = 0>
+            template<class T, size_t n = sizeof(T),
+                    std::enable_if_t<(n <= 1), int> = 0>
             T read(Register<T> reg)
             {
-                return read(reg.address(), n);
+                return read(reg.address(), sizeof(T) - n);
             }
 
             template<class T, class Iterator>
