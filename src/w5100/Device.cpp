@@ -206,10 +206,10 @@ namespace eth
 
         uint16_t Device::readWord(Register<uint16_t> reg)
         {
-            const auto byte1 = read(reg.address(), 0);
-            const auto byte0 = read(reg.address(), 1);
+            const auto byte0 = read(reg.address(), 0);
+            const auto byte1 = read(reg.address(), 1);
 
-            return byte::to<uint16_t>(byte1, byte0);
+            return byte::to<uint16_t>(byte0, byte1);
         }
 
         void Device::writeModeRegister(Mode value)
