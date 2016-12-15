@@ -78,6 +78,11 @@ namespace eth
                 write<T, next>(reg, data);
             }
 
+            template<class T, size_t n = sizeof(T),
+                    std::enable_if_t<(n == 0), int> = 0>
+            void write(Register<T>, T)
+            {
+            }
 
             template<class T, class Iterator>
             void write(Register<T> reg, Iterator begin, Iterator end)
@@ -87,7 +92,22 @@ namespace eth
                 {
                     write(reg.address(), offset++, data);
                 });
+            }
 
+            template<class T, size_t n = 0,
+                    std::enable_if_t<(n < sizeof(T) - 1), int> = 0>
+            T read_(Register<T> reg)
+            {
+                const auto b0 = read(reg.address(), n);
+                const auto b1 = read_<T, n + 1>(reg);
+                return byte::to<T>(b0, b1);
+            }
+
+            template<class T, size_t n = 0,
+                    std::enable_if_t<(n >= sizeof(T) - 1), int> = 0>
+            T read_(Register<T> reg)
+            {
+                return read(reg.address(), n);
             }
 
             uint8_t read(Register<uint8_t> reg);
@@ -131,12 +151,6 @@ namespace eth
 
 
         private:
-
-            template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n == 0), int> = 0>
-            void write(Register<T>, T)
-            {
-            }
 
             void write(uint16_t addr, uint16_t offset, uint8_t data);
             uint8_t read(uint16_t addr, uint16_t offset);

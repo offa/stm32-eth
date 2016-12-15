@@ -189,15 +189,12 @@ namespace eth
 
         uint8_t Device::read(Register<uint8_t> reg)
         {
-            return read(reg.address(), 0);
+            return read_(reg);
         }
 
         uint16_t Device::readWord(Register<uint16_t> reg)
         {
-            const auto byte1 = read(reg.address(), 0);
-            const auto byte0 = read(reg.address(), 1);
-
-            return byte::to<uint16_t>(byte1, byte0);
+            return read_(reg);
         }
 
         void Device::writeModeRegister(Mode value)
