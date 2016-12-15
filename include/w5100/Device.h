@@ -73,9 +73,9 @@ namespace eth
                     std::enable_if_t<(n > 0), int> = 0>
             void write(Register<T> reg, T data)
             {
-                constexpr auto next = n - 1;
-                write(reg.address(), sizeof(T) - n, byte::get<next>(data));
-                write<T, next>(reg, data);
+                constexpr auto pos = n - 1;
+                write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
+                write<T, pos>(reg, data);
             }
 
             template<class T, size_t n = sizeof(T),
@@ -98,9 +98,9 @@ namespace eth
                     std::enable_if_t<(n < sizeof(T) - 1), int> = 0>
             T read(Register<T> reg)
             {
-                const auto b0 = read(reg.address(), n);
-                const auto b1 = read<T, n + 1>(reg);
-                return byte::to<T>(b0, b1);
+                const auto byte0 = read(reg.address(), n);
+                const auto byte1 = read<T, n + 1>(reg);
+                return byte::to<T>(byte0, byte1);
             }
 
             template<class T, size_t n = 0,
