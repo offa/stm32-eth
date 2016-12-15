@@ -115,11 +115,11 @@ namespace eth
 
             do
             {
-                firstRead = readWord(freesizeReg);
+                firstRead = read(freesizeReg);
 
                 if( firstRead != 0 )
                 {
-                    secondRead = readWord(freesizeReg);
+                    secondRead = read(freesizeReg);
                 }
             }
             while( secondRead != firstRead );
@@ -131,7 +131,7 @@ namespace eth
         {
             constexpr uint16_t transmitBufferMask = 0x07ff;
             const auto size = buffer.length();
-            const uint16_t writePointer = readWord(registers::socketTransmitWritePointer(s));
+            const uint16_t writePointer = read(registers::socketTransmitWritePointer(s));
             const uint16_t offset = writePointer & transmitBufferMask;
             const uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
@@ -154,7 +154,7 @@ namespace eth
         {
             constexpr uint16_t receiveBufferMask = 0x07ff;
             const auto size = buffer.length();
-            const uint16_t readPointer = readWord(registers::socketReceiveReadPointer(s));
+            const uint16_t readPointer = read(registers::socketReceiveReadPointer(s));
             const uint16_t offset = readPointer & receiveBufferMask;
             const uint16_t destAddress = offset + toReceiveBufferAddress(s);
             const auto reg = makeRegister<gsl::span<uint8_t>>(destAddress);
@@ -185,16 +185,6 @@ namespace eth
         uint8_t Device::read(uint16_t addr, uint16_t offset)
         {
             return m_writer.read(addr + offset);
-        }
-
-        uint8_t Device::read(Register<uint8_t> reg)
-        {
-            return read_(reg);
-        }
-
-        uint16_t Device::readWord(Register<uint16_t> reg)
-        {
-            return read_(reg);
         }
 
         void Device::writeModeRegister(Mode value)

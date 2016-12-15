@@ -96,22 +96,19 @@ namespace eth
 
             template<class T, size_t n = 0,
                     std::enable_if_t<(n < sizeof(T) - 1), int> = 0>
-            T read_(Register<T> reg)
+            T read(Register<T> reg)
             {
                 const auto b0 = read(reg.address(), n);
-                const auto b1 = read_<T, n + 1>(reg);
+                const auto b1 = read<T, n + 1>(reg);
                 return byte::to<T>(b0, b1);
             }
 
             template<class T, size_t n = 0,
                     std::enable_if_t<(n >= sizeof(T) - 1), int> = 0>
-            T read_(Register<T> reg)
+            T read(Register<T> reg)
             {
                 return read(reg.address(), n);
             }
-
-            uint8_t read(Register<uint8_t> reg);
-            uint16_t readWord(Register<uint16_t> reg);
 
             template<class T, class Iterator>
             uint16_t read(Register<T> reg, Iterator begin, Iterator end)
