@@ -56,6 +56,13 @@ TEST(ByteTest, getByteUint32)
     CHECK_EQUAL(0xab, byte::get<3>(value));
 }
 
+TEST(ByteTest, getByteWithLessValue)
+{
+    constexpr uint16_t value = 0xab;
+    CHECK_EQUAL(0xab, byte::get<0>(value));
+    CHECK_EQUAL(0x00, byte::get<1>(value));
+}
+
 TEST(ByteTest, toByteUint8)
 {
     constexpr uint8_t b0 = 0xab;
@@ -75,7 +82,7 @@ TEST(ByteTest, toByteUint32)
     CHECK_EQUAL(0xabcdef01, byte::to<uint32_t>(b3, 0xcd, 0xef, b0));
 }
 
-TEST(ByteTest, toByteUint32WithLessThanSize)
+TEST(ByteTest, toByteWithLessThanSize)
 {
     constexpr uint8_t b0 = 0x01;
     constexpr uint8_t b1 = 0x02;
