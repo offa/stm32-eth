@@ -30,11 +30,8 @@ namespace eth
     {
 
         template<class T>
-        struct isByteConvertible
-        {
-            static constexpr bool value = std::is_convertible<std::remove_cv_t<T>, uint8_t>::value
+        constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, uint8_t>::value
                                             && std::is_integral<T>::value;
-        };
 
 
         template<size_t pos, class T,
@@ -49,14 +46,14 @@ namespace eth
 
 
         template<class T, class U,
-            std::enable_if_t<!isByteConvertible<U>::value, int> = 0>
+            std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
         constexpr void to(U)
         {
-            static_assert(isByteConvertible<U>::value, "Invalid type for 'U'");
+            static_assert(is_byte_compatible_v<U>, "Invalid type for 'U'");
         }
 
         template<class T, class U,
-            std::enable_if_t<isByteConvertible<U>::value, int> = 0,
+            std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
         constexpr T to(U value)
@@ -66,7 +63,7 @@ namespace eth
 
 
         template<class T, class U, class... Us,
-            std::enable_if_t<isByteConvertible<U>::value, int> = 0,
+            std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= (sizeof...(Us) + sizeof(uint8_t)) ), int> = 0>
         constexpr T to(U valueN, Us... values)
