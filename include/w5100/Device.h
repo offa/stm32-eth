@@ -68,9 +68,9 @@ namespace eth
             void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
             uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
-            // TODO: Limit types for T
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n > 1), int> = 0>
+                    std::enable_if_t<(n > 1), int> = 0,
+                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
             void write(Register<T> reg, T data)
             {
                 constexpr auto pos = n - 1;
@@ -79,7 +79,8 @@ namespace eth
             }
 
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n <= 1), int> = 0>
+                    std::enable_if_t<(n <= 1), int> = 0,
+                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
             void write(Register<T> reg, T data)
             {
                 write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
@@ -96,7 +97,8 @@ namespace eth
             }
 
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n > 1), int> = 0>
+                    std::enable_if_t<(n > 1), int> = 0,
+                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
             T read(Register<T> reg)
             {
                 constexpr auto pos = sizeof(T) - n;
@@ -106,16 +108,17 @@ namespace eth
             }
 
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n <= 1), int> = 0>
+                    std::enable_if_t<(n <= 1), int> = 0,
+                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
             T read(Register<T> reg)
             {
                 return read(reg.address(), sizeof(T) - n);
             }
 
             template<class T, class Iterator>
-            uint16_t read(Register<T> reg, Iterator begin, Iterator end)
+            auto read(Register<T> reg, Iterator begin, Iterator end)
             {
-                uint16_t offset = 0;
+                size_t offset = 0;
                 std::generate(begin, end, [&]
                 {
                     return read(reg.address(), offset++);
