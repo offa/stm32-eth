@@ -69,7 +69,7 @@ namespace eth
             uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
 
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n > 1), int> = 0,
+                    std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
                     std::enable_if_t<std::is_integral<T>::value, int> = 0>
             void write(Register<T> reg, T data)
             {
@@ -97,7 +97,7 @@ namespace eth
             }
 
             template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n > 1), int> = 0,
+                    std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
                     std::enable_if_t<std::is_integral<T>::value, int> = 0>
             T read(Register<T> reg)
             {
