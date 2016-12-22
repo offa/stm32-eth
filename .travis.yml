@@ -56,30 +56,30 @@ matrix:
             - clang-3.6
             - libc++-dev
           sources: *sources
-    #- env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=Debug
-      #addons:
-        #apt:
-          #packages:
-            #- gcc-arm-embedded
-          #sources: *sources
-    #- env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=Release
-      #addons:
-        #apt:
-          #packages:
-            #- gcc-arm-embedded
-          #sources: *sources
-    #- env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
-      #addons:
-        #apt:
-          #packages:
-            #- gcc-arm-embedded
-          #sources: *sources
-    #- env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED=ON
-      #addons:
-        #apt:
-          #packages:
-            #- gcc-arm-embedded
-          #sources: *sources
+    - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=Debug
+      addons:
+        apt:
+          packages:
+            - gcc-arm-embedded
+          sources: *sources
+    - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=Release
+      addons:
+        apt:
+          packages:
+            - gcc-arm-embedded
+          sources: *sources
+    - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
+      addons:
+        apt:
+          packages:
+            - gcc-arm-embedded
+          sources: *sources
+    - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED=ON
+      addons:
+        apt:
+          packages:
+            - gcc-arm-embedded
+          sources: *sources
 
 script:
     - if [[ "$CXX" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi
