@@ -16,7 +16,6 @@ macro(_add_test _NAME _SRC_LIST)
     add_test(NAME ${_NAME} COMMAND ${_NAME})
     target_link_libraries(${_NAME} ${CppUTest_LIBRARY}
                                     ${CppUTest_Ext_LIBRARY}
-                                    ${CMAKE_THREAD_LIBS_INIT}
                                     )
     target_include_directories(${_NAME} SYSTEM PUBLIC ${CppUTest_INCLUDE_DIR})
 endmacro()
