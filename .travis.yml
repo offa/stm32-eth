@@ -1,7 +1,6 @@
 language: generic
 
 dist: trusty
-sudo: required
 
 cache:
     apt: true
