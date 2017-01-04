@@ -1,9 +1,20 @@
-//
-// This file is part of the µOS++ III distribution.
-// Copyright (c) 2014 Liviu Ionescu.
-//
-
-// ----------------------------------------------------------------------------
+/*
+ * This file is part of the µOS++ distribution.
+ *   (https://github.com/micro-os-plus)
+ * Copyright (c) 2015 Liviu Ionescu.
+ *
+ * µOS++ is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * µOS++ is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "cmsis_device.h"
 
@@ -14,10 +25,10 @@ extern unsigned int __vectors_start;
 // Forward declarations.
 
 void
-__initialize_hardware_early(void);
+__initialize_hardware_early (void);
 
 void
-__initialize_hardware(void);
+__initialize_hardware (void);
 
 // ----------------------------------------------------------------------------
 
@@ -30,17 +41,16 @@ __initialize_hardware(void);
 // After Reset the Cortex-M processor is in Thread mode,
 // priority is Privileged, and the Stack is set to Main.
 
-void
-__attribute__((weak))
-__initialize_hardware_early(void)
+void __attribute__((weak))
+__initialize_hardware_early (void)
 {
   // Call the CSMSIS system initialisation routine.
-  SystemInit();
+  SystemInit ();
 
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
+#if defined(__ARM_ARCH_7M__)
   // Set VTOR to the actual address, provided by the linker script.
   // Override the manual, possibly wrong, SystemInit() setting.
-  SCB->VTOR = (uint32_t)(&__vectors_start);
+  SCB->VTOR = (uint32_t) (&__vectors_start);
 #endif
 
   // The current version of SystemInit() leaves the value of the clock
@@ -75,13 +85,12 @@ __initialize_hardware_early(void)
 // Called from _start(), right after data & bss init, before
 // constructors.
 
-void
-__attribute__((weak))
-__initialize_hardware(void)
+void __attribute__((weak))
+__initialize_hardware (void)
 {
   // Call the CSMSIS system clock routine to store the clock frequency
   // in the SystemCoreClock global RAM location.
-  SystemCoreClockUpdate();
+  SystemCoreClockUpdate ();
 }
 
 // ----------------------------------------------------------------------------
