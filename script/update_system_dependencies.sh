@@ -38,8 +38,6 @@ load ${URL_CORTEXM_SRC} initialize-hardware.c
 load ${URL_CORTEXM_SRC} reset-hardware.c
 
 #mv -f exception-handlers.c exception_handlers.c        # XXX: Incompatible
-mv -f initialize-hardware.c _initialize_hardware.c
-mv -f reset-hardware.c _reset_hardware.c
 popd
 
 

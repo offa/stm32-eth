@@ -3,8 +3,8 @@ add_library(cmsis OBJECT cmsis/system_stm32f4xx.c
                         )
 
 add_library(cortexm OBJECT cortexm/exception_handlers.c
-                       cortexm/_initialize_hardware.c
-                       cortexm/_reset_hardware.c
+                       cortexm/initialize_hardware.c
+                       cortexm/reset_hardware.c
                        )
 
 add_library(newlib OBJECT newlib/assert.c
