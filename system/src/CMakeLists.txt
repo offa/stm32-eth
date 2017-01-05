@@ -16,19 +16,19 @@ add_library(newlib OBJECT newlib/assert.c
                        )
 
 add_library(hal OBJECT stm32f4-hal/stm32f4xx_hal.c
-                   stm32f4-hal/stm32f4xx_hal_cortex.c
-                   stm32f4-hal/stm32f4xx_hal_flash.c
-                   stm32f4-hal/stm32f4xx_hal_gpio.c
-                   stm32f4-hal/stm32f4xx_hal_iwdg.c
-                   stm32f4-hal/stm32f4xx_hal_pwr.c
-                   stm32f4-hal/stm32f4xx_hal_rcc.c
-                   stm32f4-hal/stm32f4xx_hal_spi.c
-                   stm32f4-hal/stm32f4xx_hal_tim.c
-                   stm32f4-hal/stm32f4xx_hal_dma.c
-)
+                    stm32f4-hal/stm32f4xx_hal_cortex.c
+                    stm32f4-hal/stm32f4xx_hal_flash.c
+                    stm32f4-hal/stm32f4xx_hal_gpio.c
+                    stm32f4-hal/stm32f4xx_hal_iwdg.c
+                    stm32f4-hal/stm32f4xx_hal_pwr.c
+                    stm32f4-hal/stm32f4xx_hal_rcc.c
+                    stm32f4-hal/stm32f4xx_hal_spi.c
+                    stm32f4-hal/stm32f4xx_hal_tim.c
+                    stm32f4-hal/stm32f4xx_hal_dma.c
+                    stm32f4xx_hal_msp_template.c
+                    )
 
 add_library(misc OBJECT _initialize_hardware.c
-                        stm32f4xx_hal_msp.c
                         )
 
 add_library(trace OBJECT diag/Trace.c

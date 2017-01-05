@@ -111,8 +111,6 @@ load ${URL_STM_HAL_SRC} stm32f4xx_ll_fmc.c
 load ${URL_STM_HAL_SRC} stm32f4xx_ll_fsmc.c
 load ${URL_STM_HAL_SRC} stm32f4xx_ll_sdmmc.c
 load ${URL_STM_HAL_SRC} stm32f4xx_ll_usb.c
-
-cp -vf stm32f4xx_hal_msp_template.c ../stm32f4xx_hal_msp.c
 popd
 
 
