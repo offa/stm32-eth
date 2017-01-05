@@ -25,7 +25,7 @@ add_library(hal OBJECT stm32f4-hal/stm32f4xx_hal.c
                     stm32f4-hal/stm32f4xx_hal_spi.c
                     stm32f4-hal/stm32f4xx_hal_tim.c
                     stm32f4-hal/stm32f4xx_hal_dma.c
-                    stm32f4xx_hal_msp_template.c
+                    stm32f4-hal/stm32f4xx_hal_msp_template.c
                     )
 
 add_library(misc OBJECT _initialize_hardware.c
