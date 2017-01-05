@@ -24,13 +24,7 @@ message(STATUS "Build system driver : ${BUILD_SYSTEM_DRIVER}")
 option(INTEGRATION_TEST "Build Integration Tests" OFF)
 message(STATUS "Build Integration Tests : ${INTEGRATION_TEST}")
 
-if( CMAKE_CROSSCOMPILING )
-    set(CONTRACTS_UNENFORCED ON)
-else()
-    set(CONTRACTS_UNENFORCED OFF)
-endif()
-
-option(GSL_CONTRACT_UNENFORCED "GSL contract violations unenforced" ${CONTRACTS_UNENFORCED})
+option(GSL_CONTRACT_UNENFORCED "GSL contract violations unenforced" ${CMAKE_CROSSCOMPILING})
 message(STATUS "Unenforced GSL contracts : ${GSL_CONTRACT_UNENFORCED}")
 
 
