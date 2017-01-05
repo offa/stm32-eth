@@ -18,6 +18,9 @@ message(STATUS "Enable Coverage : ${COVERAGE}")
 option(LTO "Enable Link Time Optimization (LTO)" OFF)
 message(STATUS "Enable LTO : ${LTO}")
 
+option(BUILD_SYSTEM_DRIVER "Build system files" ${CMAKE_CROSSCOMPILING})
+message(STATUS "Build system driver : ${BUILD_SYSTEM_DRIVER}")
+
 option(INTEGRATION_TEST "Build Integration Tests" OFF)
 message(STATUS "Build Integration Tests : ${INTEGRATION_TEST}")
 
@@ -64,7 +67,7 @@ include_directories(SYSTEM "system/include"
                             "system/include/cmsis"
                             )
 
-if( CMAKE_CROSSCOMPILING OR INTEGRATION_TEST )
+if( INTEGRATION_TEST OR BUILD_SYSTEM_DRIVER )
     add_subdirectory("system")
 endif()
 
