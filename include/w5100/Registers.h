@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016  offa
+ * Copyright (C) 2016 - 2017  offa
  *
  * This file is part of Stm32 Eth.
  *
