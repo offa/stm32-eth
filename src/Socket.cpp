@@ -63,7 +63,8 @@ namespace eth
     {
     }
 
-    Socket::~Socket() {
+    Socket::~Socket()
+    {
         closeImpl();
     }
 
