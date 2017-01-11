@@ -26,8 +26,6 @@
 
 namespace eth
 {
-    // TODO: Rename File
-
     enum class SpiAssign : uint8_t
     {
         spi1,

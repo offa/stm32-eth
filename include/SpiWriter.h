@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "Spi.h"
+#include "SpiConfig.h"
 
 namespace eth
 {
