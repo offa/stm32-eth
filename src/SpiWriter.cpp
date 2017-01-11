@@ -42,6 +42,9 @@ namespace eth
                     params... }};
         }
 
+
+        constexpr std::array<SPI_TypeDef*, 3> spiInstances{{ SPI1, SPI2, SPI3 }};
+
     }
 
 
@@ -62,7 +65,7 @@ namespace eth
         HAL_GPIO_Init(GPIOB, &gpio);
         HAL_GPIO_Init(GPIOB, &gpioSS);
 
-        m_handle.Instance = SPI2;
+        m_handle.Instance = spiInstances[static_cast<size_t>(spi)];
         m_handle.Init = settings;
 
         HAL_SPI_Init(&m_handle);
