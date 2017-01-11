@@ -27,17 +27,15 @@ function load() {
 pushd src/cmsis
 URL_CMSIS_STM_SRC="https://raw.githubusercontent.com/xpacks/stm32f4-cmsis/xpack/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates"
 load ${URL_CMSIS_STM_SRC} system_stm32f4xx.c
-#load ${URL_CMSIS_STM_SRC} vectors_stm32f407xx.c gcc    # XXX: Incompatible
+#load ${URL_CMSIS_STM_SRC} vectors_stm32f407xx.c gcc    # Incompatible
 popd
 
 
 pushd src/cortexm
 URL_CORTEXM_SRC="https://raw.githubusercontent.com/micro-os-plus/cortexm-startup/xpack/src/cortexm"
-#load ${URL_CORTEXM_SRC} exception-handlers.c           # XXX: Incompatible
+#load ${URL_CORTEXM_SRC} exception-handlers.c           # Incompatible
 load ${URL_CORTEXM_SRC} initialize-hardware.c
 load ${URL_CORTEXM_SRC} reset-hardware.c
-
-#mv -f exception-handlers.c exception_handlers.c        # XXX: Incompatible
 popd
 
 
@@ -152,7 +150,7 @@ popd
 #URL_CORTEXM_INC="https://raw.githubusercontent.com/micro-os-plus/micro-os-plus-iii/xpack/include/cmsis-plus/cortexm"
 #load ${URL_CORTEXM_INC} exception-handlers.h
 
-#mv -f exception-handlers.h ExceptionHandlers.h     # XXX: Incompatible
+#mv -f exception-handlers.h ExceptionHandlers.h     # Incompatible
 #popd
 
 
@@ -229,6 +227,4 @@ load ${URL_STM_HAL_INC} stm32f4xx_ll_fsmc.h
 load ${URL_STM_HAL_INC} stm32f4xx_ll_sdmmc.h
 load ${URL_STM_HAL_INC} stm32f4xx_ll_usb.h
 popd
-
-
 
