@@ -53,7 +53,7 @@ namespace eth
 
     void SpiWriter::init(const SpiConfig& config)
     {
-        SpiAssign spi;
+        Assign spi;
         GPIO_InitTypeDef gpio;
         GPIO_InitTypeDef gpioSS;
         SPI_InitTypeDef settings;
