@@ -37,24 +37,13 @@ namespace eth
     using SpiConfig = std::tuple<Assign, GPIO_InitTypeDef, GPIO_InitTypeDef, SPI_InitTypeDef>;
 
 
-    constexpr SpiConfig spi2 = std::make_tuple(Assign::spi2,
-        GPIO_InitTypeDef {(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
-                                GPIO_MODE_AF_PP, GPIO_NOPULL,
-                                GPIO_SPEED_HIGH, GPIO_AF5_SPI2},
-        GPIO_InitTypeDef {GPIO_PIN_12, GPIO_MODE_OUTPUT_PP,
-                                GPIO_PULLUP, GPIO_SPEED_LOW,
-                                GPIO_AF5_SPI2},
-        SPI_InitTypeDef {SPI_MODE_MASTER,
-                                SPI_DIRECTION_2LINES,
-                                SPI_DATASIZE_8BIT,
-                                SPI_POLARITY_LOW,
-                                SPI_PHASE_1EDGE,
-                                SPI_NSS_SOFT,
-                                SPI_BAUDRATEPRESCALER_4,
-                                SPI_FIRSTBIT_MSB,
-                                SPI_TIMODE_DISABLED,
-                                SPI_CRCCALCULATION_DISABLED,
-                                0}
-            );
+    constexpr SpiConfig spi2(Assign::spi2,
+            {(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
+                GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_HIGH, GPIO_AF5_SPI2},
+            {GPIO_PIN_12,
+                GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_LOW, GPIO_AF5_SPI2},
+            {SPI_MODE_MASTER,  SPI_DIRECTION_2LINES, SPI_DATASIZE_8BIT, SPI_POLARITY_LOW,
+                SPI_PHASE_1EDGE, SPI_NSS_SOFT, SPI_BAUDRATEPRESCALER_4, SPI_FIRSTBIT_MSB,
+                SPI_TIMODE_DISABLED, SPI_CRCCALCULATION_DISABLED, 0});
 
 }
