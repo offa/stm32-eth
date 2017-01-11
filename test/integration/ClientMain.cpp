@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     HAL_Init();
     spiClockEnable();
 
-    eth::SpiWriter writer;
+    eth::SpiWriter writer(eth::spi2);
 
     eth::w5100::Device device(writer);
     device.setGatewayAddress({192, 168, 1, 1});

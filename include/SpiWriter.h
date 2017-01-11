@@ -20,8 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
-#include "Platform.h"
+#include "Spi.h"
 
 namespace eth
 {
@@ -33,7 +32,7 @@ namespace eth
         using Handle = SPI_HandleTypeDef;
 
 
-        SpiWriter();
+        SpiWriter(const SpiConfig& config);
 
         void write(uint16_t address, uint8_t data);
         uint8_t read(uint16_t address);
@@ -43,7 +42,7 @@ namespace eth
 
    private:
 
-        void init();
+        void init(const SpiConfig& config);
         void setSlaveSelect();
         void resetSlaveSelect();
 

@@ -113,7 +113,7 @@ TEST_GROUP(SocketTest)
 
 
     std::unique_ptr<Socket> socket;
-    SpiWriter spi;
+    SpiWriter spi{eth::spi2};
     Device device{spi};
     MockSupport& deviceMock = mock("Device");
     MockSupport& platformMock = mock("platform");

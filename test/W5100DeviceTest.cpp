@@ -143,7 +143,7 @@ TEST_GROUP(W5100DeviceTest)
 
 
     std::unique_ptr<Device> device;
-    SpiWriter writer;
+    SpiWriter writer{eth::spi2};
     MockSupport& writerMock = mock("SpiWriter");
 };
 

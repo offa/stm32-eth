@@ -33,7 +33,7 @@ namespace eth
     }
 
 
-    SpiWriter::SpiWriter()
+    SpiWriter::SpiWriter(const SpiConfig&)
     {
     }
 

@@ -46,35 +46,22 @@ namespace eth
 
 
 
-    SpiWriter::SpiWriter()
+    SpiWriter::SpiWriter(const SpiConfig& config)
     {
-        init();
+        init(config);
     }
 
-    void SpiWriter::init()
+    void SpiWriter::init(const SpiConfig& config)
     {
-        GPIO_InitTypeDef gpioSpi{(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
-                                GPIO_MODE_AF_PP, GPIO_NOPULL,
-                                GPIO_SPEED_HIGH, GPIO_AF5_SPI2};
-        HAL_GPIO_Init(GPIOB, &gpioSpi);
+        SpiAssign spi;
+        GPIO_InitTypeDef gpio;
+        GPIO_InitTypeDef gpioSS;
+        SPI_InitTypeDef settings;
+        std::tie(spi, gpio, gpioSS, settings) = config;
 
-        GPIO_InitTypeDef gpioSS{GPIO_PIN_12, GPIO_MODE_OUTPUT_PP,
-                                GPIO_PULLUP, GPIO_SPEED_LOW,
-                                GPIO_AF5_SPI2};
+        HAL_GPIO_Init(GPIOB, &gpio);
         HAL_GPIO_Init(GPIOB, &gpioSS);
 
-
-        constexpr SPI_InitTypeDef settings{SPI_MODE_MASTER,
-                                            SPI_DIRECTION_2LINES,
-                                            SPI_DATASIZE_8BIT,
-                                            SPI_POLARITY_LOW,
-                                            SPI_PHASE_1EDGE,
-                                            SPI_NSS_SOFT,
-                                            SPI_BAUDRATEPRESCALER_4,
-                                            SPI_FIRSTBIT_MSB,
-                                            SPI_TIMODE_DISABLED,
-                                            SPI_CRCCALCULATION_DISABLED,
-                                            0};
         m_handle.Instance = SPI2;
         m_handle.Init = settings;
 

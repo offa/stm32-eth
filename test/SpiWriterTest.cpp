@@ -37,7 +37,7 @@ TEST_GROUP(SpiWriterTest)
         auto f = gsl::finally([] { mock().enable(); });
         mock().disable();
 
-        spi = std::make_unique<eth::SpiWriter>();
+        spi = std::make_unique<eth::SpiWriter>(eth::spi2);
     }
 
     void teardown() override
@@ -108,7 +108,7 @@ TEST(SpiWriterTest, initSetupsGpioPins)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &initSS);
     halSpiMock.expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
 
-    eth::SpiWriter writer;
+    eth::SpiWriter writer(eth::spi2);
 }
 
 TEST(SpiWriterTest, initSetupsSpi)
@@ -131,7 +131,7 @@ TEST(SpiWriterTest, initSetupsSpi)
         .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit)
         .ignoreOtherParameters();
 
-    eth::SpiWriter writer;
+    eth::SpiWriter writer(eth::spi2);
 }
 
 TEST(SpiWriterTest, writeTransmitsByte)
