@@ -42,7 +42,6 @@ namespace eth
 
    private:
 
-        void init(const SpiConfig& config);
         void setSlaveSelect();
         void resetSlaveSelect();
 
