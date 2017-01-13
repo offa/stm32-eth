@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](LICENSE)
 ![C++](https://img.shields.io/badge/c++-14-green.svg)
 
-Ethernet connectivity for *Stm32F4* Boards using W5100 ethernetcontroller..
+Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
 
 
 ## Requirements
