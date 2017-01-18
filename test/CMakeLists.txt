@@ -3,7 +3,6 @@ find_package(Threads REQUIRED)
 find_package(CppUTest REQUIRED)
 
 include_directories(SYSTEM ${CppUTest_INCLUDE_DIR})
-
 add_subdirectory("mock")
 
 add_library(testmain OBJECT TestMain.cpp)
@@ -17,7 +16,6 @@ macro(_add_test _NAME _SRC_LIST)
     target_link_libraries(${_NAME} ${CppUTest_LIBRARY}
                                     ${CppUTest_Ext_LIBRARY}
                                     )
-    target_include_directories(${_NAME} SYSTEM PUBLIC ${CppUTest_INCLUDE_DIR})
 endmacro()
 
 
