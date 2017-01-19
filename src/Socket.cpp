@@ -43,12 +43,12 @@ namespace eth
 
             do
             {
-                actual = getDataFn();
-
                 if( statusCheckFn() == false )
                 {
                     return 0;
                 }
+
+                actual = getDataFn();
             }
             while( actual < size );
 

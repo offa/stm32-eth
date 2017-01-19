@@ -377,10 +377,6 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagNotEnoughFreeMemory)
 
 TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
 {
-    constexpr uint16_t freeSize = defaultSize + 2;
-    deviceMock.expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.value())
-        .andReturnValue(freeSize);
     expectSocketStatusRead(socketHandle, SocketStatus::init);
 
     auto buffer = createBuffer(defaultSize);
@@ -524,7 +520,6 @@ TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
 TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
 {
     auto buffer = createBuffer(defaultSize);
-    deviceMock.expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
     expectSocketStatusRead(socketHandle, SocketStatus::init);
 
     std::array<uint8_t, defaultSize> data;
