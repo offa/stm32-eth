@@ -39,20 +39,17 @@ namespace eth
         template<class DataFn, class StatusFn>
         uint16_t waitFor(DataFn getDataFn, StatusFn statusCheckFn, uint16_t size)
         {
-            uint16_t actual = 0;
-
-            do
+            while( statusCheckFn() == true )
             {
-                if( statusCheckFn() == false )
+                const auto actual = getDataFn();
+
+                if( actual >= size )
                 {
-                    return 0;
+                    return actual;
                 }
-
-                actual = getDataFn();
             }
-            while( actual < size );
 
-            return actual;
+            return 0;
         }
 
     }
