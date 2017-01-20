@@ -35,139 +35,139 @@
 
 namespace eth
 {
-    namespace spi
+namespace spi
+{
+    class SpiWriter;
+}
+
+
+namespace w5100
+{
+
+    class Device
     {
-        class SpiWriter;
-    }
+    public:
+
+        explicit Device(spi::SpiWriter& writer);
+        Device(Device&&) = default;
 
 
-    namespace w5100
-    {
+        void executeSocketCommand(SocketHandle s, SocketCommand cmd);
 
-        class Device
+        void writeSocketModeRegister(SocketHandle s, uint8_t value);
+        void writeSocketSourcePort(SocketHandle s, uint16_t value);
+
+        void writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value);
+        SocketInterrupt readSocketInterruptRegister(SocketHandle s);
+
+        void writeSocketCommandRegister(SocketHandle s, SocketCommand value);
+        SocketCommand readSocketCommandRegister(SocketHandle s);
+
+        SocketStatus readSocketStatusRegister(SocketHandle s);
+
+        uint16_t getTransmitFreeSize(SocketHandle s);
+        uint16_t getReceiveFreeSize(SocketHandle s);
+
+        void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
+        uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
+
+        template<class T, size_t n = sizeof(T),
+                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
+                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+        void write(Register<T> reg, T data)
         {
-        public:
+            constexpr auto pos = n - 1;
+            write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
+            write<T, pos>(reg, data);
+        }
 
-            explicit Device(spi::SpiWriter& writer);
-            Device(Device&&) = default;
+        template<class T, size_t n = sizeof(T),
+                std::enable_if_t<(n <= 1), int> = 0,
+                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+        void write(Register<T> reg, T data)
+        {
+            write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
+        }
 
-
-            void executeSocketCommand(SocketHandle s, SocketCommand cmd);
-
-            void writeSocketModeRegister(SocketHandle s, uint8_t value);
-            void writeSocketSourcePort(SocketHandle s, uint16_t value);
-
-            void writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value);
-            SocketInterrupt readSocketInterruptRegister(SocketHandle s);
-
-            void writeSocketCommandRegister(SocketHandle s, SocketCommand value);
-            SocketCommand readSocketCommandRegister(SocketHandle s);
-
-            SocketStatus readSocketStatusRegister(SocketHandle s);
-
-            uint16_t getTransmitFreeSize(SocketHandle s);
-            uint16_t getReceiveFreeSize(SocketHandle s);
-
-            void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
-            uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
-
-            template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
-            void write(Register<T> reg, T data)
+        template<class T, class Iterator>
+        void write(Register<T> reg, Iterator begin, Iterator end)
+        {
+            uint16_t offset = 0;
+            std::for_each(begin, end, [&](uint8_t data)
             {
-                constexpr auto pos = n - 1;
-                write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
-                write<T, pos>(reg, data);
-            }
+                write(reg.address(), offset++, data);
+            });
+        }
 
-            template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n <= 1), int> = 0,
-                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
-            void write(Register<T> reg, T data)
+        template<class T, size_t n = sizeof(T),
+                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
+                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+        T read(Register<T> reg)
+        {
+            constexpr auto pos = sizeof(T) - n;
+            const auto byte0 = read(reg.address(), pos);
+            const auto byte1 = read<T, (pos + 1)>(reg);
+            return byte::to<T>(byte0, byte1);
+        }
+
+        template<class T, size_t n = sizeof(T),
+                std::enable_if_t<(n <= 1), int> = 0,
+                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+        T read(Register<T> reg)
+        {
+            return read(reg.address(), sizeof(T) - n);
+        }
+
+        template<class T, class Iterator>
+        auto read(Register<T> reg, Iterator begin, Iterator end)
+        {
+            size_t offset = 0;
+            std::generate(begin, end, [&]
             {
-                write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
-            }
+                return read(reg.address(), offset++);
+            });
 
-            template<class T, class Iterator>
-            void write(Register<T> reg, Iterator begin, Iterator end)
-            {
-                uint16_t offset = 0;
-                std::for_each(begin, end, [&](uint8_t data)
-                {
-                    write(reg.address(), offset++, data);
-                });
-            }
+            return offset;
+        }
 
-            template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
-            T read(Register<T> reg)
-            {
-                constexpr auto pos = sizeof(T) - n;
-                const auto byte0 = read(reg.address(), pos);
-                const auto byte1 = read<T, (pos + 1)>(reg);
-                return byte::to<T>(byte0, byte1);
-            }
+        void writeModeRegister(Mode value);
 
-            template<class T, size_t n = sizeof(T),
-                    std::enable_if_t<(n <= 1), int> = 0,
-                    std::enable_if_t<std::is_integral<T>::value, int> = 0>
-            T read(Register<T> reg)
-            {
-                return read(reg.address(), sizeof(T) - n);
-            }
+        void setGatewayAddress(std::array<uint8_t, 4> addr);
+        void setSubnetMask(std::array<uint8_t, 4> addr);
+        void setMacAddress(std::array<uint8_t, 6> addr);
+        void setIpAddress(std::array<uint8_t, 4> addr);
 
-            template<class T, class Iterator>
-            auto read(Register<T> reg, Iterator begin, Iterator end)
-            {
-                size_t offset = 0;
-                std::generate(begin, end, [&]
-                {
-                    return read(reg.address(), offset++);
-                });
-
-                return offset;
-            }
-
-            void writeModeRegister(Mode value);
-
-            void setGatewayAddress(std::array<uint8_t, 4> addr);
-            void setSubnetMask(std::array<uint8_t, 4> addr);
-            void setMacAddress(std::array<uint8_t, 6> addr);
-            void setIpAddress(std::array<uint8_t, 4> addr);
-
-            void setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr);
-            void setDestPort(SocketHandle s, uint16_t port);
+        void setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr);
+        void setDestPort(SocketHandle s, uint16_t port);
 
 
-            static constexpr uint16_t getTransmitBufferSize()
-            {
-                return transmitBufferSize;
-            }
+        static constexpr uint16_t getTransmitBufferSize()
+        {
+            return transmitBufferSize;
+        }
 
-            static constexpr uint16_t getReceiveBufferSize()
-            {
-                return receiveBufferSize;
-            }
-
-
-            Device& operator=(Device&&) = default;
+        static constexpr uint16_t getReceiveBufferSize()
+        {
+            return receiveBufferSize;
+        }
 
 
-        private:
-
-            void write(uint16_t addr, uint16_t offset, uint8_t data);
-            uint8_t read(uint16_t addr, uint16_t offset);
-
-            uint16_t readFreesize(Register<uint16_t> freesizeReg);
+        Device& operator=(Device&&) = default;
 
 
-            spi::SpiWriter& m_writer;
-            static constexpr uint16_t transmitBufferSize = 2048;
-            static constexpr uint16_t receiveBufferSize = transmitBufferSize;
-        };
+    private:
 
-    }
+        void write(uint16_t addr, uint16_t offset, uint8_t data);
+        uint8_t read(uint16_t addr, uint16_t offset);
+
+        uint16_t readFreesize(Register<uint16_t> freesizeReg);
+
+
+        spi::SpiWriter& m_writer;
+        static constexpr uint16_t transmitBufferSize = 2048;
+        static constexpr uint16_t receiveBufferSize = transmitBufferSize;
+    };
+
+}
 }
 

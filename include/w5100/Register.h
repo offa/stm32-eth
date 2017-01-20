@@ -25,48 +25,48 @@
 
 namespace eth
 {
-    namespace w5100
+namespace w5100
+{
+
+    template<class T>
+    class Register
     {
+    public:
 
-        template<class T>
-        class Register
+        using value_type = T;
+
+
+        constexpr Register(uint16_t address) : m_address(address)
         {
-        public:
-
-            using value_type = T;
-
-
-            constexpr Register(uint16_t address) : m_address(address)
-            {
-            }
-
-
-            constexpr uint16_t address() const
-            {
-                return m_address;
-            }
-
-
-
-        private:
-
-            const uint16_t m_address;
-        };
-
-
-        template<class T>
-        constexpr auto makeRegister(uint16_t address)
-        {
-            return Register<T>(address);
         }
 
-        template<class T>
-        constexpr auto makeRegister(SocketHandle s, uint16_t address)
+
+        constexpr uint16_t address() const
         {
-            constexpr uint16_t baseAddress = 0x0400;
-            constexpr uint16_t channelRegisterMapSize = 0x0100;
-            return makeRegister<T>(baseAddress + ( s.value() * channelRegisterMapSize ) + address);
+            return m_address;
         }
 
+
+
+    private:
+
+        const uint16_t m_address;
+    };
+
+
+    template<class T>
+    constexpr auto makeRegister(uint16_t address)
+    {
+        return Register<T>(address);
     }
+
+    template<class T>
+    constexpr auto makeRegister(SocketHandle s, uint16_t address)
+    {
+        constexpr uint16_t baseAddress = 0x0400;
+        constexpr uint16_t channelRegisterMapSize = 0x0100;
+        return makeRegister<T>(baseAddress + ( s.value() * channelRegisterMapSize ) + address);
+    }
+
+}
 }
