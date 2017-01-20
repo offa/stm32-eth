@@ -24,30 +24,33 @@
 
 namespace eth
 {
-
-    class SpiWriter
+    namespace spi
     {
-    public:
 
-        using Handle = SPI_HandleTypeDef;
+        class SpiWriter
+        {
+        public:
 
-
-        SpiWriter(const SpiConfig& config);
-
-        void write(uint16_t address, uint8_t data);
-        uint8_t read(uint16_t address);
-
-        Handle& nativeHandle();
+            using Handle = SPI_HandleTypeDef;
 
 
-   private:
+            SpiWriter(const SpiConfig& config);
 
-        void setSlaveSelect();
-        void resetSlaveSelect();
+            void write(uint16_t address, uint8_t data);
+            uint8_t read(uint16_t address);
 
-        Handle m_handle{};
-        static constexpr uint32_t timeout = ~0;
-    };
+            Handle& nativeHandle();
 
+
+        private:
+
+            void setSlaveSelect();
+            void resetSlaveSelect();
+
+            Handle m_handle{};
+            static constexpr uint32_t timeout = ~0;
+        };
+
+    }
 }
 

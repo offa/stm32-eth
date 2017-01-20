@@ -26,7 +26,7 @@ namespace eth
 namespace w5100
 {
 
-    Device::Device(SpiWriter& writer) : m_writer(writer)
+    Device::Device(spi::SpiWriter& writer) : m_writer(writer)
     {
     }
 

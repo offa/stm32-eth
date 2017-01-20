@@ -24,85 +24,89 @@
 
 namespace eth
 {
-    namespace
+    namespace spi
     {
-        enum class OpCode : uint8_t
+        namespace
         {
-            read = 0x0f,
-            write = 0xf0
-        };
+            enum class OpCode : uint8_t
+            {
+                read = 0x0f,
+                write = 0xf0
+            };
 
 
-        template<OpCode opcode, class... Ts>
-        constexpr std::array<uint8_t, 3 + sizeof...(Ts)> makePacket(uint16_t address, Ts&&... params)
-        {
-            return {{ static_cast<uint8_t>(opcode),
-                    byte::get<1>(address),
-                    byte::get<0>(address),
-                    params... }};
+            template<OpCode opcode, class... Ts>
+            constexpr std::array<uint8_t, 3 + sizeof...(Ts)>
+                makePacket(uint16_t address, Ts&&... params)
+            {
+                return {{ static_cast<uint8_t>(opcode),
+                        byte::get<1>(address),
+                        byte::get<0>(address),
+                        params... }};
+            }
+
+
+            const std::array<SPI_TypeDef*, 3> spiInstances{{SPI1, SPI2, SPI3}};
+
         }
 
 
-        const std::array<SPI_TypeDef*, 3> spiInstances{{SPI1, SPI2, SPI3}};
+
+        SpiWriter::SpiWriter(const SpiConfig& config)
+        {
+            Assign spi;
+            GPIO_InitTypeDef gpio;
+            GPIO_InitTypeDef gpioSS;
+            SPI_InitTypeDef settings;
+            std::tie(spi, gpio, gpioSS, settings) = config;
+
+            HAL_GPIO_Init(GPIOB, &gpio);
+            HAL_GPIO_Init(GPIOB, &gpioSS);
+
+            m_handle.Instance = spiInstances[static_cast<size_t>(spi)];
+            m_handle.Init = settings;
+
+            HAL_SPI_Init(&m_handle);
+        }
+
+        void SpiWriter::write(uint16_t address, uint8_t data)
+        {
+            auto packet = makePacket<OpCode::write>(address, data);
+
+            setSlaveSelect();
+            HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
+            resetSlaveSelect();
+        }
+
+        uint8_t SpiWriter::read(uint16_t address)
+        {
+            auto packet = makePacket<OpCode::read>(address);
+
+            setSlaveSelect();
+            HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
+
+            uint8_t buffer;
+            HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
+            resetSlaveSelect();
+
+            return buffer;
+        }
+
+        void SpiWriter::setSlaveSelect()
+        {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+        }
+
+        void SpiWriter::resetSlaveSelect()
+        {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+        }
+
+        SpiWriter::Handle& SpiWriter::nativeHandle()
+        {
+            return m_handle;
+        }
 
     }
-
-
-
-    SpiWriter::SpiWriter(const SpiConfig& config)
-    {
-        Assign spi;
-        GPIO_InitTypeDef gpio;
-        GPIO_InitTypeDef gpioSS;
-        SPI_InitTypeDef settings;
-        std::tie(spi, gpio, gpioSS, settings) = config;
-
-        HAL_GPIO_Init(GPIOB, &gpio);
-        HAL_GPIO_Init(GPIOB, &gpioSS);
-
-        m_handle.Instance = spiInstances[static_cast<size_t>(spi)];
-        m_handle.Init = settings;
-
-        HAL_SPI_Init(&m_handle);
-    }
-
-    void SpiWriter::write(uint16_t address, uint8_t data)
-    {
-        auto packet = makePacket<OpCode::write>(address, data);
-
-        setSlaveSelect();
-        HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
-        resetSlaveSelect();
-    }
-
-    uint8_t SpiWriter::read(uint16_t address)
-    {
-        auto packet = makePacket<OpCode::read>(address);
-
-        setSlaveSelect();
-        HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
-
-        uint8_t buffer;
-        HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
-        resetSlaveSelect();
-
-        return buffer;
-    }
-
-    void SpiWriter::setSlaveSelect()
-    {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-    }
-
-    void SpiWriter::resetSlaveSelect()
-    {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-    }
-
-    SpiWriter::Handle& SpiWriter::nativeHandle()
-    {
-        return m_handle;
-    }
-
 }
 

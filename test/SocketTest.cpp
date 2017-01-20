@@ -37,7 +37,7 @@ using eth::Socket;
 using eth::SocketHandle;
 using eth::Protocol;
 using eth::w5100::Device;
-using eth::SpiWriter;
+using eth::spi::SpiWriter;
 
 
 namespace
@@ -113,7 +113,7 @@ TEST_GROUP(SocketTest)
 
 
     std::unique_ptr<Socket> socket;
-    SpiWriter spi{eth::spi2};
+    SpiWriter spi{eth::spi::spi2};
     Device device{spi};
     MockSupport& deviceMock = mock("Device");
     MockSupport& platformMock = mock("platform");

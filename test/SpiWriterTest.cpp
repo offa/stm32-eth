@@ -37,7 +37,7 @@ TEST_GROUP(SpiWriterTest)
         auto f = gsl::finally([] { mock().enable(); });
         mock().disable();
 
-        spi = std::make_unique<eth::SpiWriter>(eth::spi2);
+        spiWriter = std::make_unique<eth::spi::SpiWriter>(eth::spi::spi2);
     }
 
     void teardown() override
@@ -50,7 +50,7 @@ TEST_GROUP(SpiWriterTest)
     void expectWrite(gsl::span<uint8_t> data) const
     {
         halSpiMock.expectOneCall("HAL_SPI_Transmit")
-            .withPointerParameter("hspi", &spi->nativeHandle())
+            .withPointerParameter("hspi", &spiWriter->nativeHandle())
             .withMemoryBufferParameter("pData", data.data(), data.size())
             .withParameter("Size", data.size())
             .withParameter("Timeout", timeout);
@@ -60,7 +60,7 @@ TEST_GROUP(SpiWriterTest)
     {
         constexpr auto size = sizeof(uint8_t);
         halSpiMock.expectOneCall("HAL_SPI_Receive")
-            .withPointerParameter("hspi", &spi->nativeHandle())
+            .withPointerParameter("hspi", &spiWriter->nativeHandle())
             .withOutputParameterReturning("pData", data, size)
             .withParameter("Size", size)
             .withParameter("Timeout", timeout);
@@ -82,7 +82,7 @@ TEST_GROUP(SpiWriterTest)
             .withParameter("PinState", GPIO_PIN_SET);
     }
 
-    std::unique_ptr<eth::SpiWriter> spi;
+    std::unique_ptr<eth::spi::SpiWriter> spiWriter;
     MockSupport& halSpiMock = mock("HAL_SPI");
     MockSupport& halGpioMock = mock("HAL_GPIO");
     SpiHandleComparator spiHandleCompare;
@@ -108,7 +108,7 @@ TEST(SpiWriterTest, initSetupsGpioPins)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &initSS);
     halSpiMock.expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
 
-    eth::SpiWriter writer(eth::spi2);
+    eth::spi::SpiWriter writer(eth::spi::spi2);
 }
 
 TEST(SpiWriterTest, initSetupsSpi)
@@ -131,7 +131,7 @@ TEST(SpiWriterTest, initSetupsSpi)
         .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit)
         .ignoreOtherParameters();
 
-    eth::SpiWriter writer(eth::spi2);
+    eth::spi::SpiWriter writer(eth::spi::spi2);
 }
 
 TEST(SpiWriterTest, writeTransmitsByte)
@@ -141,7 +141,7 @@ TEST(SpiWriterTest, writeTransmitsByte)
     expectWrite(data);
     expectSlaveSelectReset();
 
-    spi->write(0x2211, 0xab);
+    spiWriter->write(0x2211, 0xab);
 }
 
 TEST(SpiWriterTest, readReceivesByte)
@@ -153,6 +153,6 @@ TEST(SpiWriterTest, readReceivesByte)
     expectRead(&value);
     expectSlaveSelectReset();
 
-    const auto result = spi->read(0x3355);
+    const auto result = spiWriter->read(0x3355);
     CHECK_EQUAL(value, result);
 }

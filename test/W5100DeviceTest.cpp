@@ -28,7 +28,7 @@
 #include <CppUTestExt/MockSupport.h>
 
 using eth::w5100::Device;
-using eth::SpiWriter;
+using eth::spi::SpiWriter;
 using eth::SocketHandle;
 using eth::SocketCommand;
 using eth::SocketStatus;
@@ -143,7 +143,7 @@ TEST_GROUP(W5100DeviceTest)
 
 
     std::unique_ptr<Device> device;
-    SpiWriter writer{eth::spi2};
+    SpiWriter writer{eth::spi::spi2};
     MockSupport& writerMock = mock("SpiWriter");
 };
 

@@ -35,7 +35,10 @@
 
 namespace eth
 {
-    class SpiWriter;
+    namespace spi
+    {
+        class SpiWriter;
+    }
 
 
     namespace w5100
@@ -45,7 +48,7 @@ namespace eth
         {
         public:
 
-            explicit Device(SpiWriter& writer);
+            explicit Device(spi::SpiWriter& writer);
             Device(Device&&) = default;
 
 
@@ -160,7 +163,7 @@ namespace eth
             uint16_t readFreesize(Register<uint16_t> freesizeReg);
 
 
-            SpiWriter& m_writer;
+            spi::SpiWriter& m_writer;
             static constexpr uint16_t transmitBufferSize = 2048;
             static constexpr uint16_t receiveBufferSize = transmitBufferSize;
         };

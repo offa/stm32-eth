@@ -44,7 +44,7 @@ namespace eth
 
 
 
-        Device::Device(SpiWriter& writer) : m_writer(writer)
+        Device::Device(spi::SpiWriter& writer) : m_writer(writer)
         {
             writeModeRegister(Mode::reset);
 

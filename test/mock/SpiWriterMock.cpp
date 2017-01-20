@@ -23,36 +23,40 @@
 
 namespace eth
 {
-    namespace mockutil
+    namespace spi
     {
-        static inline void incrementCalls(const ::SimpleString& name)
+
+        namespace mockutil
         {
-            int count = mock("SpiWriter").getData(name).getUnsignedIntValue();
-            mock("SpiWriter").setData(name, ++count);
+            static inline void incrementCalls(const ::SimpleString& name)
+            {
+                int count = mock("SpiWriter").getData(name).getUnsignedIntValue();
+                mock("SpiWriter").setData(name, ++count);
+            }
         }
+
+
+        SpiWriter::SpiWriter(const SpiConfig&)
+        {
+        }
+
+        void SpiWriter::write(uint16_t address, uint8_t data)
+        {
+            mockutil::incrementCalls("write::count");
+
+            mock("SpiWriter").actualCall("write")
+                    .withParameter("address", address)
+                    .withParameter("data", data);
+        }
+
+        uint8_t SpiWriter::read(uint16_t address)
+        {
+            mockutil::incrementCalls("read::count");
+
+            return mock("SpiWriter").actualCall("read")
+                    .withParameter("address", address)
+                    .returnUnsignedIntValue();
+        }
+
     }
-
-
-    SpiWriter::SpiWriter(const SpiConfig&)
-    {
-    }
-
-    void SpiWriter::write(uint16_t address, uint8_t data)
-    {
-        mockutil::incrementCalls("write::count");
-
-        mock("SpiWriter").actualCall("write")
-                .withParameter("address", address)
-                .withParameter("data", data);
-    }
-
-    uint8_t SpiWriter::read(uint16_t address)
-    {
-        mockutil::incrementCalls("read::count");
-
-        return mock("SpiWriter").actualCall("read")
-                .withParameter("address", address)
-                .returnUnsignedIntValue();
-    }
-
 }
