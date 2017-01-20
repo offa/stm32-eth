@@ -22,7 +22,7 @@
 #include <diag/Trace.h>
 #include "Socket.h"
 #include "w5100/Device.h"
-#include "SpiWriter.h"
+#include "spi/SpiWriter.h"
 
 void spiClockEnable()
 {

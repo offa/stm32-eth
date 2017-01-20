@@ -18,7 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SpiWriter.h"
+#include "spi/SpiWriter.h"
 #include "Byte.h"
 #include <array>
 

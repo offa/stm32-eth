@@ -23,7 +23,7 @@
 #include "SocketCommand.h"
 #include "SocketInterrupt.h"
 #include "w5100/Device.h"
-#include "SpiWriter.h"
+#include "spi/SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>
 #include <numeric>

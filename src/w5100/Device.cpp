@@ -20,7 +20,7 @@
 
 #include "w5100/Device.h"
 #include "w5100/Registers.h"
-#include "SpiWriter.h"
+#include "spi/SpiWriter.h"
 
 namespace eth
 {

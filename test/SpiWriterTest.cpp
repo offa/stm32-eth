@@ -18,7 +18,7 @@
  * along with Stm32 Eth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SpiWriter.h"
+#include "spi/SpiWriter.h"
 #include "mock/Stm32HalComparator.h"
 #include <gsl/span>
 #include <gsl/gsl_util>
