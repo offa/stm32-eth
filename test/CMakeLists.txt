@@ -1,5 +1,4 @@
 
-find_package(Threads REQUIRED)
 find_package(CppUTest REQUIRED)
 
 include_directories(SYSTEM ${CppUTest_INCLUDE_DIR})

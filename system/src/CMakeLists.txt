@@ -28,13 +28,13 @@ add_library(hal OBJECT stm32f4-hal/stm32f4xx_hal.c
                     stm32f4-hal/stm32f4xx_hal_msp_template.c
                     )
 
-add_library(misc OBJECT _initialize_hardware.c
+
+add_library(misc OBJECT _initialize_hardware.c)
+add_library(trace OBJECT diag/Trace.c diag/trace_impl.c)
+
+
+set_target_properties(cmsis cortexm newlib hal misc trace
+                        PROPERTIES COMPILE_FLAGS
+                            "-Wno-error -Wno-pedantic -Wno-extra"
                         )
-
-add_library(trace OBJECT diag/Trace.c
-                        diag/trace_impl.c
-                        )
-
-
-set_target_properties(cmsis cortexm newlib hal misc trace PROPERTIES COMPILE_FLAGS "-Wno-error -Wno-pedantic -Wno-extra")
 
