@@ -7,12 +7,12 @@ add_subdirectory("mock")
 add_library(testmain OBJECT TestMain.cpp)
 
 
-macro(_add_test _NAME _SRC_LIST)
-    add_executable(${_NAME} ${${_SRC_LIST}}
+macro(_add_test _name _src_list)
+    add_executable(${_name} ${${_src_list}}
                                 $<TARGET_OBJECTS:testmain>
                                 )
-    add_test(NAME ${_NAME} COMMAND ${_NAME})
-    target_link_libraries(${_NAME} ${CppUTest_LIBRARY}
+    add_test(NAME ${_name} COMMAND ${_name})
+    target_link_libraries(${_name} ${CppUTest_LIBRARY}
                                     ${CppUTest_Ext_LIBRARY}
                                     )
 endmacro()
