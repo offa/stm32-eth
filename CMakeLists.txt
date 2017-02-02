@@ -31,7 +31,7 @@ message(STATUS "Unenforced GSL contracts : ${GSL_CONTRACT_UNENFORCED}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(BuildType)
 include(Compiler)
-include(Cpp14)
+include(CppStd)
 
 
 if( ${BUILD_TYPE_DEBUG} )
