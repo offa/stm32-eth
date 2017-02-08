@@ -7,7 +7,7 @@ BUILD_TYPE=${BUILD_TYPE:=Release}
 
 if [ ! -v GSL_INCLUDE_DIR ]; then
     if [ -d "dependencies/gsl" ]; then
-        export GSL_INCLUDE_DIR=dependencies/gsl
+        export GSL_INCLUDE_DIR=dependencies/gsl/include
     fi
 fi
 
