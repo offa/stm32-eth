@@ -5,6 +5,7 @@ set(GSL_DEFINITIONS ${PKG_GSL_CFLAGS_OTHER})
 find_path(GSL_INCLUDE_DIR "gsl/gsl"
                             HINTS ${PKG_GSL_INCLUDE_DIRS}
                                     ${GSL_DIR}
+                                    ${GSL_DIR}/include
                             ENV GSL_INCLUDE_DIR
                             )
 
