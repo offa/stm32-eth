@@ -21,9 +21,7 @@
 #include "w5100/Device.h"
 #include <CppUTestExt/MockSupport.h>
 
-namespace eth
-{
-namespace w5100
+namespace eth::w5100
 {
 
     Device::Device(spi::SpiWriter& writer) : m_writer(writer)
@@ -118,5 +116,4 @@ namespace w5100
                 .withParameter("port", port);
     }
 
-}
 }

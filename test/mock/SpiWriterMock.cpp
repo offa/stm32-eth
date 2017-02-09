@@ -21,9 +21,7 @@
 #include "spi/SpiWriter.h"
 #include <CppUTestExt/MockSupport.h>
 
-namespace eth
-{
-namespace spi
+namespace eth::spi
 {
 
     namespace mockutil
@@ -58,5 +56,4 @@ namespace spi
                 .returnUnsignedIntValue();
     }
 
-}
 }
