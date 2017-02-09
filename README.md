@@ -3,9 +3,13 @@
 [![Build Status](https://travis-ci.org/offa/stm32-eth.svg?branch=master)](https://travis-ci.org/offa/stm32-eth)
 [![GitHub release](https://img.shields.io/github/release/offa/stm32-eth.svg)](https://github.com/offa/stm32-eth/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](LICENSE)
-![C++](https://img.shields.io/badge/c++-14-green.svg)
+![C++](https://img.shields.io/badge/c++-17-green.svg)
 
 Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
+
+### Note
+
+> This is the ***experimental* C++17** branch, which requires a capable compiler.
 
 
 ## Requirements
