@@ -24,31 +24,27 @@
 #include <stdint.h>
 #include "Platform.h"
 
-namespace eth
+namespace eth::spi
 {
-    namespace spi
+
+    enum class Assign : uint8_t
     {
-
-        enum class Assign : uint8_t
-        {
-            spi1,
-            spi2,
-            spi3
-        };
+        spi1,
+        spi2,
+        spi3
+    };
 
 
-        using SpiConfig = std::tuple<Assign, GPIO_InitTypeDef, GPIO_InitTypeDef, SPI_InitTypeDef>;
+    using SpiConfig = std::tuple<Assign, GPIO_InitTypeDef, GPIO_InitTypeDef, SPI_InitTypeDef>;
 
 
-        constexpr SpiConfig spi2(Assign::spi2,
-                {(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
-                    GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_HIGH, GPIO_AF5_SPI2},
-                {GPIO_PIN_12,
-                    GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_LOW, GPIO_AF5_SPI2},
-                {SPI_MODE_MASTER,  SPI_DIRECTION_2LINES, SPI_DATASIZE_8BIT, SPI_POLARITY_LOW,
-                    SPI_PHASE_1EDGE, SPI_NSS_SOFT, SPI_BAUDRATEPRESCALER_4, SPI_FIRSTBIT_MSB,
-                    SPI_TIMODE_DISABLED, SPI_CRCCALCULATION_DISABLED, 0});
+    constexpr SpiConfig spi2(Assign::spi2,
+            {(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
+                GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_HIGH, GPIO_AF5_SPI2},
+            {GPIO_PIN_12,
+                GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_LOW, GPIO_AF5_SPI2},
+            {SPI_MODE_MASTER,  SPI_DIRECTION_2LINES, SPI_DATASIZE_8BIT, SPI_POLARITY_LOW,
+                SPI_PHASE_1EDGE, SPI_NSS_SOFT, SPI_BAUDRATEPRESCALER_4, SPI_FIRSTBIT_MSB,
+                SPI_TIMODE_DISABLED, SPI_CRCCALCULATION_DISABLED, 0});
 
-
-    }
 }

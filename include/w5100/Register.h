@@ -23,9 +23,7 @@
 #include "SocketHandle.h"
 #include <stdint.h>
 
-namespace eth
-{
-namespace w5100
+namespace eth::w5100
 {
 
     template<class T>
@@ -68,5 +66,4 @@ namespace w5100
         return makeRegister<T>(baseAddress + ( s.value() * channelRegisterMapSize ) + address);
     }
 
-}
 }

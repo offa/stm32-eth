@@ -24,55 +24,52 @@
 #include <stdint.h>
 #include <type_traits>
 
-namespace eth
+namespace eth::byte
 {
-    namespace byte
+
+    template<class T>
+    constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, uint8_t>::value
+                                        && std::is_integral<T>::value;
+
+
+    template<size_t pos, class T,
+        std::enable_if_t<std::is_integral<T>::value
+                            && ( pos < sizeof(T) ), int> = 0>
+    constexpr uint8_t get(T value)
     {
-
-        template<class T>
-        constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, uint8_t>::value
-                                            && std::is_integral<T>::value;
-
-
-        template<size_t pos, class T,
-            std::enable_if_t<std::is_integral<T>::value
-                                && ( pos < sizeof(T) ), int> = 0>
-        constexpr uint8_t get(T value)
-        {
-            constexpr auto shift = pos * 8;
-            constexpr auto mask = ( 0xff << shift );
-            return ( value & mask ) >> shift;
-        }
-
-
-        template<class T, class U,
-            std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
-        constexpr void to(U)
-        {
-            static_assert(is_byte_compatible_v<U>, "Invalid type for 'U'");
-        }
-
-        template<class T, class U,
-            std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
-            std::enable_if_t<std::is_integral<T>::value
-                                && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
-        constexpr T to(U value)
-        {
-            return value;
-        }
-
-
-        template<class T, class U, class... Us,
-            std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
-            std::enable_if_t<std::is_integral<T>::value
-                                && ( sizeof(T) >= (sizeof...(Us) + sizeof(uint8_t)) ), int> = 0>
-        constexpr T to(U valueN, Us... values)
-        {
-            constexpr auto shift = sizeof...(values) * 8;
-            const auto lower = to<T>(values...);
-            return ( valueN << shift ) | lower ;
-        }
-
+        constexpr auto shift = pos * 8;
+        constexpr auto mask = ( 0xff << shift );
+        return ( value & mask ) >> shift;
     }
+
+
+    template<class T, class U,
+        std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
+    constexpr void to(U)
+    {
+        static_assert(is_byte_compatible_v<U>, "Invalid type for 'U'");
+    }
+
+    template<class T, class U,
+        std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
+        std::enable_if_t<std::is_integral<T>::value
+                            && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
+    constexpr T to(U value)
+    {
+        return value;
+    }
+
+
+    template<class T, class U, class... Us,
+        std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
+        std::enable_if_t<std::is_integral<T>::value
+                            && ( sizeof(T) >= (sizeof...(Us) + sizeof(uint8_t)) ), int> = 0>
+    constexpr T to(U valueN, Us... values)
+    {
+        constexpr auto shift = sizeof...(values) * 8;
+        const auto lower = to<T>(values...);
+        return ( valueN << shift ) | lower ;
+    }
+
 }
 

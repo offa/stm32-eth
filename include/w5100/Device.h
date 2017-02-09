@@ -33,15 +33,12 @@
 #include <stdint.h>
 #include <gsl/span>
 
-namespace eth
-{
-namespace spi
+namespace eth::spi
 {
     class SpiWriter;
 }
 
-
-namespace w5100
+namespace eth::w5100
 {
 
     class Device
@@ -168,6 +165,5 @@ namespace w5100
         static constexpr uint16_t receiveBufferSize = transmitBufferSize;
     };
 
-}
 }
 
