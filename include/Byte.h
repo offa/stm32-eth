@@ -69,8 +69,7 @@ namespace eth
         constexpr T to(U valueN, Us... values)
         {
             constexpr auto shift = sizeof...(values) * 8;
-            const auto lower = to<T>(values...);
-            return ( valueN << shift ) | lower ;
+            return ( valueN << shift ) | to<T>(values...);
         }
 
     }
