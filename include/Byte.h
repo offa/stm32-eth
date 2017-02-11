@@ -59,7 +59,6 @@ namespace eth::byte
         return value;
     }
 
-
     template<class T, class U, class... Us,
         std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
         std::enable_if_t<std::is_integral<T>::value
@@ -67,8 +66,7 @@ namespace eth::byte
     constexpr T to(U valueN, Us... values)
     {
         constexpr auto shift = sizeof...(values) * 8;
-        const auto lower = to<T>(values...);
-        return ( valueN << shift ) | lower ;
+        return ( valueN << shift ) | to<T>(values...);
     }
 
 }
