@@ -1,5 +1,5 @@
-set(CPP_STD         17)
-set(CPP_STD_PRE     1z)
+set(CPP_STD 17)
+set(CPP_STD_PRE 1z)
 
 if( NOT CMAKE_CROSSCOMPILING )
     include(CheckCXXCompilerFlag)
