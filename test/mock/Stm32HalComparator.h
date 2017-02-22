@@ -31,11 +31,8 @@ struct GpioInitComparator : public MockNamedValueComparator
         const auto* value1 = static_cast<const GPIO_InitTypeDef*>(object1);
         const auto* value2 = static_cast<const GPIO_InitTypeDef*>(object2);
 
-        return ( value1->Pin == value2->Pin )
-            && ( value1->Mode == value2->Mode )
-            && ( value1->Pull == value2->Pull )
-            && ( value1->Speed == value2->Speed )
-            && ( value1->Alternate == value2->Alternate );
+        return ( std::tie(value1->Pin, value1->Mode, value1->Pull, value1->Speed, value1->Alternate)
+                == std::tie(value2->Pin, value2->Mode, value2->Pull, value2->Speed, value2->Alternate) );
     }
 
     SimpleString valueToString(const void* object) override
