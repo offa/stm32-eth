@@ -60,17 +60,14 @@ struct SpiHandleComparator : public MockNamedValueComparator
         const auto* value1 = static_cast<const SPI_InitTypeDef*>(object1);
         const auto* value2 = static_cast<const SPI_InitTypeDef*>(object2);
 
-        return ( value1->Mode == value2->Mode )
-            && ( value1->Direction == value2->Direction )
-            && ( value1->DataSize == value2->DataSize )
-            && ( value1->CLKPolarity == value2->CLKPolarity )
-            && ( value1->CLKPhase == value2->CLKPhase )
-            && ( value1->NSS == value2->NSS )
-            && ( value1->BaudRatePrescaler == value2->BaudRatePrescaler )
-            && ( value1->FirstBit == value2->FirstBit )
-            && ( value1->TIMode == value2->TIMode )
-            && ( value1->CRCCalculation == value2->CRCCalculation )
-            && ( value1->CRCPolynomial == value2->CRCPolynomial );
+        return ( std::tie(value1->Mode, value1->Direction, value1->DataSize, value1->CLKPolarity,
+                    value1->CLKPhase, value1->NSS, value1->BaudRatePrescaler, value1->FirstBit,
+                    value1->TIMode, value1->CRCCalculation, value1->CRCPolynomial)
+                == std::tie(value2->Mode, value2->Direction, value2->DataSize, value2->CLKPolarity,
+                    value2->CLKPhase, value2->NSS, value2->BaudRatePrescaler, value2->FirstBit,
+                    value2->TIMode, value2->CRCCalculation, value2->CRCPolynomial) );
+
+
     }
 
     SimpleString valueToString(const void* object) override
