@@ -22,9 +22,7 @@
 
 #include "spi/SpiConfig.h"
 
-namespace eth
-{
-namespace spi
+namespace eth::spi
 {
 
     class SpiWriter
@@ -51,6 +49,5 @@ namespace spi
         static constexpr uint32_t timeout = ~0;
     };
 
-}
 }
 
