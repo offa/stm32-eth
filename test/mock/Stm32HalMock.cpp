@@ -58,7 +58,6 @@ void HAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init)
     mock("HAL_GPIO").actualCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOx)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", GPIO_Init);
-
 }
 
 void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState)
