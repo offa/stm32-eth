@@ -23,35 +23,34 @@
 
 HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
 {
-    auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Init")
-        .withPointerParameter("hspi", hspi)
-        .withPointerParameter("hspi.instance", hspi->Instance)
-        .withParameterOfType("SPI_InitTypeDef", "hspi.init", &hspi->Init)
-        .returnUnsignedIntValueOrDefault(HAL_OK);
+    const auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Init")
+                        .withPointerParameter("hspi", hspi)
+                        .withPointerParameter("hspi.instance", hspi->Instance)
+                        .withParameterOfType("SPI_InitTypeDef", "hspi.init", &hspi->Init)
+                        .returnUnsignedIntValueOrDefault(HAL_OK);
     return static_cast<HAL_StatusTypeDef>(rtn);
 }
 
 HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 {
-    auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Transmit")
-                .withPointerParameter("hspi", hspi)
-                .withMemoryBufferParameter("pData", pData, Size)
-                .withParameter("Size", Size)
-                .withParameter("Timeout", Timeout)
-                .returnUnsignedIntValueOrDefault(HAL_OK);
+    const auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Transmit")
+                        .withPointerParameter("hspi", hspi)
+                        .withMemoryBufferParameter("pData", pData, Size)
+                        .withParameter("Size", Size)
+                        .withParameter("Timeout", Timeout)
+                        .returnUnsignedIntValueOrDefault(HAL_OK);
     return static_cast<HAL_StatusTypeDef>(rtn);
 }
 
 HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 {
-    auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Receive")
-                .withPointerParameter("hspi", hspi)
-                .withOutputParameter("pData", pData)
-                .withParameter("Size", Size)
-                .withParameter("Timeout", Timeout)
-                .returnUnsignedIntValueOrDefault(HAL_OK);
+    const auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Receive")
+                        .withPointerParameter("hspi", hspi)
+                        .withOutputParameter("pData", pData)
+                        .withParameter("Size", Size)
+                        .withParameter("Timeout", Timeout)
+                        .returnUnsignedIntValueOrDefault(HAL_OK);
     return static_cast<HAL_StatusTypeDef>(rtn);
-
 }
 
 void HAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init)
@@ -59,7 +58,6 @@ void HAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init)
     mock("HAL_GPIO").actualCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOx)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", GPIO_Init);
-
 }
 
 void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState)
