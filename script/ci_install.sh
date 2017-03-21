@@ -22,7 +22,7 @@ if [ "$CXX" != "arm-none-eabi-g++" ]; then
 
 
     wget https://github.com/offa/cpputest/archive/${CPPUTEST_VERSION}.tar.gz
-    tar -xzf ${CPPUTEST}.tar.gz
+    tar -xzf ${CPPUTEST_VERSION}.tar.gz
     pushd ${CPPUTEST}
     mkdir _build && cd _build
     cmake $BUILD_FLAGS ..
