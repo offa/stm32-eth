@@ -38,7 +38,7 @@ namespace eth::spi
     {
     }
 
-    void SpiWriter::write(uint16_t address, uint8_t data)
+    void SpiWriter::write(std::uint16_t address, std::uint8_t data)
     {
         mockutil::incrementCalls("write::count");
 
@@ -47,7 +47,7 @@ namespace eth::spi
                 .withParameter("data", data);
     }
 
-    uint8_t SpiWriter::read(uint16_t address)
+    std::uint8_t SpiWriter::read(std::uint16_t address)
     {
         mockutil::incrementCalls("read::count");
 

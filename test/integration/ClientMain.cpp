@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
         {
             if( socket.getStatus() == eth::SocketStatus::established )
             {
-                const std::array<uint8_t, 6> msg{'a', 'b', 'c', 'd', '\n', '\r'};
+                const std::array<std::uint8_t, 6> msg{'a', 'b', 'c', 'd', '\n', '\r'};
                 const auto n = socket.send(msg);
 
                 if( n != msg.size() )

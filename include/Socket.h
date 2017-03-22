@@ -25,7 +25,7 @@
 #include "SocketInterrupt.h"
 #include "Protocol.h"
 #include <array>
-#include <stdint.h>
+#include <cstdint>
 #include <gsl/span>
 
 namespace eth
@@ -40,7 +40,7 @@ namespace eth
     {
     public:
 
-        enum class Status : uint8_t
+        enum class Status : std::uint8_t
         {
             ok,
             failed,
@@ -54,16 +54,16 @@ namespace eth
         ~Socket();
 
 
-        Status open(Protocol protocol, uint16_t port, uint8_t flag);
+        Status open(Protocol protocol, std::uint16_t port, std::uint8_t flag);
         void close();
         Status listen();
         void accept();
-        uint16_t send(const gsl::span<const uint8_t> buffer);
-        uint16_t receive(gsl::span<uint8_t> buffer);
+        std::uint16_t send(const gsl::span<const std::uint8_t> buffer);
+        std::uint16_t receive(gsl::span<std::uint8_t> buffer);
 
 
 
-        Status connect(std::array<uint8_t, 4> address, uint16_t port);
+        Status connect(std::array<std::uint8_t, 4> address, std::uint16_t port);
         Status disconnect();
 
         SocketStatus getStatus() const;

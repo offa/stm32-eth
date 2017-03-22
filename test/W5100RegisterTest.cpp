@@ -40,33 +40,33 @@ TEST_GROUP(W5100RegisterTest)
 
 TEST(W5100RegisterTest, address)
 {
-    constexpr Register<uint16_t> reg(0xabcd);
+    constexpr Register<std::uint16_t> reg(0xabcd);
     CHECK_EQUAL(0xabcd, reg.address());
 }
 
 TEST(W5100RegisterTest, makeRegister)
 {
-    constexpr auto reg = makeRegister<uint32_t>(0xaabb);
+    constexpr auto reg = makeRegister<std::uint32_t>(0xaabb);
     CHECK_EQUAL(0xaabb, reg.address());
 }
 
 TEST(W5100RegisterTest, makeSocketRegister)
 {
-    constexpr uint16_t address = 0xaabb;
-    constexpr uint16_t expected = 0x0400 + ( 1 * 0x0100 ) + address;
-    constexpr auto reg = makeRegister<uint32_t>(eth::makeHandle<1>(), address);
+    constexpr std::uint16_t address = 0xaabb;
+    constexpr std::uint16_t expected = 0x0400 + ( 1 * 0x0100 ) + address;
+    constexpr auto reg = makeRegister<std::uint32_t>(eth::makeHandle<1>(), address);
     CHECK_EQUAL(expected, reg.address());
 }
 
 TEST(W5100RegisterTest, registerOfArray)
 {
-    const auto reg = makeRegister<std::array<uint8_t, 4>>(0x0011);
+    const auto reg = makeRegister<std::array<std::uint8_t, 4>>(0x0011);
     CHECK_EQUAL(0x0011, reg.address());
 }
 
 TEST(W5100RegisterTest, registerOfSpan)
 {
-    const auto reg = makeRegister<gsl::span<uint8_t>>(0x1122);
+    const auto reg = makeRegister<gsl::span<std::uint8_t>>(0x1122);
     CHECK_EQUAL(0x1122, reg.address());
 }
 

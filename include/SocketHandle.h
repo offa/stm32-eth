@@ -20,12 +20,12 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace eth
 {
 
-    static constexpr uint8_t supportedSockets = 4;
+    static constexpr std::uint8_t supportedSockets = 4;
 
 
 
@@ -33,7 +33,7 @@ namespace eth
     {
     public:
 
-        using value_type = uint8_t;
+        using value_type = std::uint8_t;
 
 
         constexpr explicit SocketHandle(value_type id) : m_id(id)

@@ -50,7 +50,7 @@ TEST(SocketInterruptTest, initWithMask)
 {
     constexpr auto mask = SocketInterrupt::Mask::send;
     SocketInterrupt si(mask);
-    CHECK_EQUAL(static_cast<uint8_t>(mask), si.value());
+    CHECK_EQUAL(static_cast<std::uint8_t>(mask), si.value());
 }
 
 TEST(SocketInterruptTest, testValue)

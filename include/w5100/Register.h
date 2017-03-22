@@ -21,7 +21,7 @@
 #pragma once
 
 #include "SocketHandle.h"
-#include <stdint.h>
+#include <cstdint>
 
 namespace eth::w5100
 {
@@ -34,12 +34,12 @@ namespace eth::w5100
         using value_type = T;
 
 
-        constexpr Register(uint16_t address) : m_address(address)
+        constexpr Register(std::uint16_t address) : m_address(address)
         {
         }
 
 
-        constexpr uint16_t address() const
+        constexpr std::uint16_t address() const
         {
             return m_address;
         }
@@ -48,21 +48,21 @@ namespace eth::w5100
 
     private:
 
-        const uint16_t m_address;
+        const std::uint16_t m_address;
     };
 
 
     template<class T>
-    constexpr auto makeRegister(uint16_t address)
+    constexpr auto makeRegister(std::uint16_t address)
     {
         return Register<T>(address);
     }
 
     template<class T>
-    constexpr auto makeRegister(SocketHandle s, uint16_t address)
+    constexpr auto makeRegister(SocketHandle s, std::uint16_t address)
     {
-        constexpr uint16_t baseAddress = 0x0400;
-        constexpr uint16_t channelRegisterMapSize = 0x0100;
+        constexpr std::uint16_t baseAddress = 0x0400;
+        constexpr std::uint16_t channelRegisterMapSize = 0x0100;
         return makeRegister<T>(baseAddress + ( s.value() * channelRegisterMapSize ) + address);
     }
 

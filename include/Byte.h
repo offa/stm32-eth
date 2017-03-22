@@ -20,22 +20,21 @@
 
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
+#include <cstdint>
 #include <type_traits>
 
 namespace eth::byte
 {
 
     template<class T>
-    constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, uint8_t>::value
+    constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, std::uint8_t>::value
                                         && std::is_integral<T>::value;
 
 
-    template<size_t pos, class T,
+    template<std::size_t pos, class T,
         std::enable_if_t<std::is_integral<T>::value
                             && ( pos < sizeof(T) ), int> = 0>
-    constexpr uint8_t get(T value)
+    constexpr std::uint8_t get(T value)
     {
         constexpr auto shift = pos * 8;
         constexpr auto mask = ( 0xff << shift );
@@ -53,7 +52,7 @@ namespace eth::byte
     template<class T, class U,
         std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
         std::enable_if_t<std::is_integral<T>::value
-                            && ( sizeof(T) >= sizeof(uint8_t) ), int> = 0>
+                            && ( sizeof(T) >= sizeof(std::uint8_t) ), int> = 0>
     constexpr T to(U value)
     {
         return value;
@@ -62,7 +61,7 @@ namespace eth::byte
     template<class T, class U, class... Us,
         std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
         std::enable_if_t<std::is_integral<T>::value
-                            && ( sizeof(T) >= (sizeof...(Us) + sizeof(uint8_t)) ), int> = 0>
+                            && ( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
     constexpr T to(U valueN, Us... values)
     {
         constexpr auto shift = sizeof...(values) * 8;

@@ -28,14 +28,14 @@ namespace eth::w5100
     {
     }
 
-    void Device::writeSocketModeRegister(SocketHandle s, uint8_t value)
+    void Device::writeSocketModeRegister(SocketHandle s, std::uint8_t value)
     {
         mock("Device").actualCall("writeSocketModeRegister")
                 .withParameter("socket", s.value())
                 .withParameter("value", value);
     }
 
-    void Device::writeSocketSourcePort(SocketHandle s, uint16_t value)
+    void Device::writeSocketSourcePort(SocketHandle s, std::uint16_t value)
     {
         mock("Device").actualCall("writeSocketSourcePort")
                 .withParameter("socket", s.value())
@@ -61,7 +61,7 @@ namespace eth::w5100
     {
         mock("Device").actualCall("executeSocketCommand")
                 .withParameter("socket", s.value())
-                .withParameter("value", static_cast<uint8_t>(cmd));
+                .withParameter("value", static_cast<std::uint8_t>(cmd));
     }
 
     SocketStatus Device::readSocketStatusRegister(SocketHandle s)
@@ -71,21 +71,21 @@ namespace eth::w5100
                 .returnUnsignedIntValue());
     }
 
-    uint16_t Device::getTransmitFreeSize(SocketHandle s)
+    std::uint16_t Device::getTransmitFreeSize(SocketHandle s)
     {
         return mock("Device").actualCall("getTransmitFreeSize")
                 .withParameter("socket", s.value())
                 .returnUnsignedIntValue();
     }
 
-    uint16_t Device::getReceiveFreeSize(SocketHandle s)
+    std::uint16_t Device::getReceiveFreeSize(SocketHandle s)
     {
         return mock("Device").actualCall("getReceiveFreeSize")
                 .withParameter("socket", s.value())
                 .returnUnsignedIntValue();
     }
 
-    void Device::sendData(SocketHandle s, const gsl::span<const uint8_t> buffer)
+    void Device::sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer)
     {
         mock("Device").actualCall("sendData")
                 .withParameter("socket", s.value())
@@ -93,7 +93,7 @@ namespace eth::w5100
                 .withParameter("size", buffer.length());
     }
 
-    uint16_t Device::receiveData(SocketHandle s, gsl::span<uint8_t> buffer)
+    std::uint16_t Device::receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer)
     {
         return mock("Device").actualCall("receiveData")
                     .withParameter("socket", s.value())
@@ -102,14 +102,14 @@ namespace eth::w5100
                     .returnUnsignedIntValue();
     }
 
-    void Device::setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr)
+    void Device::setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr)
     {
         mock("Device").actualCall("setDestIpAddress")
                 .withParameter("socket", s.value())
                 .withMemoryBufferParameter("buffer", addr.data(), addr.size());
     }
 
-    void Device::setDestPort(SocketHandle s, uint16_t port)
+    void Device::setDestPort(SocketHandle s, std::uint16_t port)
     {
         mock("Device").actualCall("setDestPort")
                 .withParameter("socket", s.value())

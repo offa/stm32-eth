@@ -20,12 +20,12 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace eth
 {
 
-    enum class SocketStatus : uint8_t
+    enum class SocketStatus : std::uint8_t
     {
         closed = 0x00,
         init = 0x13,

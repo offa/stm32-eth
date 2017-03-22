@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
     device.setMacAddress({0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef});
 
     eth::Socket socket(eth::makeHandle<0>(), device);
-    constexpr uint16_t port = 5000;
+    constexpr std::uint16_t port = 5000;
 
     trace_puts("Server: 192.168.1.8:5000");
 
@@ -82,14 +82,14 @@ int main(int argc, char* argv[])
         {
             if( socket.getStatus() == eth::SocketStatus::established )
             {
-                std::array<uint8_t, 20> buffer;
+                std::array<std::uint8_t, 20> buffer;
 
                 const auto received = socket.receive(buffer);
                 trace_printf("receive(): %d\n", received);
 
                 if( received > 0 )
                 {
-                    std::array<uint8_t, 9> resp{{ 'r', 'e', 'c', 'e', 'i', 'v', 'e', 'd', '\n' }};
+                    std::array<std::uint8_t, 9> resp{{ 'r', 'e', 'c', 'e', 'i', 'v', 'e', 'd', '\n' }};
                     const auto n = socket.send(resp);
 
                     if( n != resp.size() )

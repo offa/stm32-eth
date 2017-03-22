@@ -36,20 +36,20 @@ TEST_GROUP(ByteTest)
 
 TEST(ByteTest, getByteUint8)
 {
-    constexpr uint8_t value = 0xab;
+    constexpr std::uint8_t value = 0xab;
     CHECK_EQUAL(0xab, byte::get<0>(value));
 }
 
 TEST(ByteTest, getByteUint16)
 {
-    constexpr uint16_t value = 0xabcd;
+    constexpr std::uint16_t value = 0xabcd;
     CHECK_EQUAL(0xcd, byte::get<0>(value));
     CHECK_EQUAL(0xab, byte::get<1>(value));
 }
 
 TEST(ByteTest, getByteUint32)
 {
-    constexpr uint32_t value = 0xabcdef01;
+    constexpr std::uint32_t value = 0xabcdef01;
     CHECK_EQUAL(0x01, byte::get<0>(value));
     CHECK_EQUAL(0xef, byte::get<1>(value));
     CHECK_EQUAL(0xcd, byte::get<2>(value));
@@ -58,34 +58,34 @@ TEST(ByteTest, getByteUint32)
 
 TEST(ByteTest, getByteWithLessValue)
 {
-    constexpr uint16_t value = 0xab;
+    constexpr std::uint16_t value = 0xab;
     CHECK_EQUAL(0xab, byte::get<0>(value));
     CHECK_EQUAL(0x00, byte::get<1>(value));
 }
 
 TEST(ByteTest, toByteUint8)
 {
-    constexpr uint8_t b0 = 0xab;
-    CHECK_EQUAL(0xab, byte::to<uint8_t>(b0));
+    constexpr std::uint8_t b0 = 0xab;
+    CHECK_EQUAL(0xab, byte::to<std::uint8_t>(b0));
 }
 
 TEST(ByteTest, toByteUint16)
 {
-    constexpr uint8_t b0 = 0xcd;
-    CHECK_EQUAL(0xabcd, byte::to<uint16_t>(0xab, b0));
+    constexpr std::uint8_t b0 = 0xcd;
+    CHECK_EQUAL(0xabcd, byte::to<std::uint16_t>(0xab, b0));
 }
 
 TEST(ByteTest, toByteUint32)
 {
-    constexpr uint8_t b0 = 0x01;
-    constexpr uint8_t b3 = 0xab;
-    CHECK_EQUAL(0xabcdef01, byte::to<uint32_t>(b3, 0xcd, 0xef, b0));
+    constexpr std::uint8_t b0 = 0x01;
+    constexpr std::uint8_t b3 = 0xab;
+    CHECK_EQUAL(0xabcdef01, byte::to<std::uint32_t>(b3, 0xcd, 0xef, b0));
 }
 
 TEST(ByteTest, toByteWithLessThanSize)
 {
-    constexpr uint8_t b0 = 0x01;
-    constexpr uint8_t b1 = 0x02;
-    CHECK_EQUAL(0x0201, byte::to<uint32_t>(b1, b0));
+    constexpr std::uint8_t b0 = 0x01;
+    constexpr std::uint8_t b1 = 0x02;
+    CHECK_EQUAL(0x0201, byte::to<std::uint32_t>(b1, b0));
 }
 
