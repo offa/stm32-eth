@@ -47,7 +47,7 @@ TEST_GROUP(SpiWriterTest)
         mock().removeAllComparatorsAndCopiers();
     }
 
-    void expectWrite(gsl::span<uint8_t> data) const
+    void expectWrite(gsl::span<std::uint8_t> data) const
     {
         halSpiMock.expectOneCall("HAL_SPI_Transmit")
             .withPointerParameter("hspi", &spiWriter->nativeHandle())
@@ -56,9 +56,9 @@ TEST_GROUP(SpiWriterTest)
             .withParameter("Timeout", timeout);
     }
 
-    void expectRead(const uint8_t* data) const
+    void expectRead(const std::uint8_t* data) const
     {
-        constexpr auto size = sizeof(uint8_t);
+        constexpr auto size = sizeof(std::uint8_t);
         halSpiMock.expectOneCall("HAL_SPI_Receive")
             .withPointerParameter("hspi", &spiWriter->nativeHandle())
             .withOutputParameterReturning("pData", data, size)
@@ -87,7 +87,7 @@ TEST_GROUP(SpiWriterTest)
     MockSupport& halGpioMock = mock("HAL_GPIO");
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
-    static constexpr uint32_t timeout = 0xffffffff;
+    static constexpr std::uint32_t timeout = 0xffffffff;
 };
 
 TEST(SpiWriterTest, initSetupsGpioPins)
@@ -136,7 +136,7 @@ TEST(SpiWriterTest, initSetupsSpi)
 
 TEST(SpiWriterTest, writeTransmitsByte)
 {
-    std::array<uint8_t, 4> data = {{ 0xf0, 0x22, 0x11, 0xab }};
+    std::array<std::uint8_t, 4> data = {{ 0xf0, 0x22, 0x11, 0xab }};
     expectSlaveSelectSet();
     expectWrite(data);
     expectSlaveSelectReset();
@@ -146,8 +146,8 @@ TEST(SpiWriterTest, writeTransmitsByte)
 
 TEST(SpiWriterTest, readReceivesByte)
 {
-    const uint8_t value = 0xcd;
-    std::array<uint8_t, 3> data = {{ 0x0f, 0x33, 0x55 }};
+    const std::uint8_t value = 0xcd;
+    std::array<std::uint8_t, 3> data = {{ 0x0f, 0x33, 0x55 }};
     expectSlaveSelectSet();
     expectWrite(data);
     expectRead(&value);

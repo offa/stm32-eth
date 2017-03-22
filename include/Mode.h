@@ -20,12 +20,12 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace eth
 {
 
-    enum class Mode : uint8_t
+    enum class Mode : std::uint8_t
     {
         indirect = 0x01,
         autoIncrement = 0x02,

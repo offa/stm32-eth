@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace eth
 {
@@ -29,7 +29,7 @@ namespace eth
     {
     public:
 
-        enum class Mask : uint8_t
+        enum class Mask : std::uint8_t
         {
             connect = 0x01,
             disconnect = 0x02,
@@ -39,11 +39,11 @@ namespace eth
         };
 
 
-        constexpr explicit SocketInterrupt(uint8_t value) : m_value(value)
+        constexpr explicit SocketInterrupt(std::uint8_t value) : m_value(value)
         {
         }
 
-        constexpr SocketInterrupt(SocketInterrupt::Mask mask) : SocketInterrupt(static_cast<uint8_t>(mask))
+        constexpr SocketInterrupt(SocketInterrupt::Mask mask) : SocketInterrupt(static_cast<std::uint8_t>(mask))
         {
         }
 
@@ -52,25 +52,25 @@ namespace eth
         }
 
 
-        constexpr uint8_t value() const
+        constexpr std::uint8_t value() const
         {
             return m_value;
         }
 
         constexpr bool test(Mask mask) const
         {
-            return m_value & static_cast<uint8_t>(mask);
+            return m_value & static_cast<std::uint8_t>(mask);
         }
 
         constexpr void set(Mask mask)
         {
-            m_value |= static_cast<uint8_t>(mask);
+            m_value |= static_cast<std::uint8_t>(mask);
         }
 
 
     private:
 
-        uint8_t m_value;
+        std::uint8_t m_value;
     };
 
 }

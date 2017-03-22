@@ -30,7 +30,7 @@
 #include <array>
 #include <algorithm>
 #include <iterator>
-#include <stdint.h>
+#include <cstdint>
 #include <gsl/span>
 
 namespace eth
@@ -54,8 +54,8 @@ namespace w5100
 
         void executeSocketCommand(SocketHandle s, SocketCommand cmd);
 
-        void writeSocketModeRegister(SocketHandle s, uint8_t value);
-        void writeSocketSourcePort(SocketHandle s, uint16_t value);
+        void writeSocketModeRegister(SocketHandle s, std::uint8_t value);
+        void writeSocketSourcePort(SocketHandle s, std::uint16_t value);
 
         void writeSocketInterruptRegister(SocketHandle s, SocketInterrupt value);
         SocketInterrupt readSocketInterruptRegister(SocketHandle s);
@@ -65,13 +65,13 @@ namespace w5100
 
         SocketStatus readSocketStatusRegister(SocketHandle s);
 
-        uint16_t getTransmitFreeSize(SocketHandle s);
-        uint16_t getReceiveFreeSize(SocketHandle s);
+        std::uint16_t getTransmitFreeSize(SocketHandle s);
+        std::uint16_t getReceiveFreeSize(SocketHandle s);
 
-        void sendData(SocketHandle s, const gsl::span<const uint8_t> buffer);
-        uint16_t receiveData(SocketHandle s, gsl::span<uint8_t> buffer);
+        void sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer);
+        std::uint16_t receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer);
 
-        template<class T, size_t n = sizeof(T),
+        template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
                 std::enable_if_t<std::is_integral<T>::value, int> = 0>
         void write(Register<T> reg, T data)
@@ -81,7 +81,7 @@ namespace w5100
             write<T, pos>(reg, data);
         }
 
-        template<class T, size_t n = sizeof(T),
+        template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n <= 1), int> = 0,
                 std::enable_if_t<std::is_integral<T>::value, int> = 0>
         void write(Register<T> reg, T data)
@@ -92,14 +92,14 @@ namespace w5100
         template<class T, class Iterator>
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
-            uint16_t offset = 0;
-            std::for_each(begin, end, [&](uint8_t data)
+            std::uint16_t offset = 0;
+            std::for_each(begin, end, [&](std::uint8_t data)
             {
                 write(reg.address(), offset++, data);
             });
         }
 
-        template<class T, size_t n = sizeof(T),
+        template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
                 std::enable_if_t<std::is_integral<T>::value, int> = 0>
         T read(Register<T> reg)
@@ -110,7 +110,7 @@ namespace w5100
             return byte::to<T>(byte0, byte1);
         }
 
-        template<class T, size_t n = sizeof(T),
+        template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n <= 1), int> = 0,
                 std::enable_if_t<std::is_integral<T>::value, int> = 0>
         T read(Register<T> reg)
@@ -121,7 +121,7 @@ namespace w5100
         template<class T, class Iterator>
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
-            size_t offset = 0;
+            std::size_t offset = 0;
             std::generate(begin, end, [&]
             {
                 return read(reg.address(), offset++);
@@ -132,21 +132,21 @@ namespace w5100
 
         void writeModeRegister(Mode value);
 
-        void setGatewayAddress(std::array<uint8_t, 4> addr);
-        void setSubnetMask(std::array<uint8_t, 4> addr);
-        void setMacAddress(std::array<uint8_t, 6> addr);
-        void setIpAddress(std::array<uint8_t, 4> addr);
+        void setGatewayAddress(std::array<std::uint8_t, 4> addr);
+        void setSubnetMask(std::array<std::uint8_t, 4> addr);
+        void setMacAddress(std::array<std::uint8_t, 6> addr);
+        void setIpAddress(std::array<std::uint8_t, 4> addr);
 
-        void setDestIpAddress(SocketHandle s, std::array<uint8_t, 4> addr);
-        void setDestPort(SocketHandle s, uint16_t port);
+        void setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr);
+        void setDestPort(SocketHandle s, std::uint16_t port);
 
 
-        static constexpr uint16_t getTransmitBufferSize()
+        static constexpr std::uint16_t getTransmitBufferSize()
         {
             return transmitBufferSize;
         }
 
-        static constexpr uint16_t getReceiveBufferSize()
+        static constexpr std::uint16_t getReceiveBufferSize()
         {
             return receiveBufferSize;
         }
@@ -157,15 +157,15 @@ namespace w5100
 
     private:
 
-        void write(uint16_t addr, uint16_t offset, uint8_t data);
-        uint8_t read(uint16_t addr, uint16_t offset);
+        void write(std::uint16_t addr, std::uint16_t offset, std::uint8_t data);
+        std::uint8_t read(std::uint16_t addr, std::uint16_t offset);
 
-        uint16_t readFreesize(Register<uint16_t> freesizeReg);
+        std::uint16_t readFreesize(Register<std::uint16_t> freesizeReg);
 
 
         spi::SpiWriter& m_writer;
-        static constexpr uint16_t transmitBufferSize = 2048;
-        static constexpr uint16_t receiveBufferSize = transmitBufferSize;
+        static constexpr std::uint16_t transmitBufferSize = 2048;
+        static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
 
 }

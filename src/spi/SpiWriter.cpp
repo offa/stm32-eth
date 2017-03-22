@@ -28,7 +28,7 @@ namespace spi
 {
     namespace
     {
-        enum class OpCode : uint8_t
+        enum class OpCode : std::uint8_t
         {
             read = 0x0f,
             write = 0xf0
@@ -36,10 +36,10 @@ namespace spi
 
 
         template<OpCode opcode, class... Ts>
-        constexpr std::array<uint8_t, 3 + sizeof...(Ts)>
-            makePacket(uint16_t address, Ts&&... params)
+        constexpr std::array<std::uint8_t, 3 + sizeof...(Ts)>
+            makePacket(std::uint16_t address, Ts&&... params)
         {
-            return {{ static_cast<uint8_t>(opcode),
+            return {{ static_cast<std::uint8_t>(opcode),
                     byte::get<1>(address),
                     byte::get<0>(address),
                     params... }};
@@ -63,13 +63,13 @@ namespace spi
         HAL_GPIO_Init(GPIOB, &gpio);
         HAL_GPIO_Init(GPIOB, &gpioSS);
 
-        m_handle.Instance = spiInstances[static_cast<size_t>(spi)];
+        m_handle.Instance = spiInstances[static_cast<std::size_t>(spi)];
         m_handle.Init = settings;
 
         HAL_SPI_Init(&m_handle);
     }
 
-    void SpiWriter::write(uint16_t address, uint8_t data)
+    void SpiWriter::write(std::uint16_t address, std::uint8_t data)
     {
         auto packet = makePacket<OpCode::write>(address, data);
 
@@ -78,14 +78,14 @@ namespace spi
         resetSlaveSelect();
     }
 
-    uint8_t SpiWriter::read(uint16_t address)
+    std::uint8_t SpiWriter::read(std::uint16_t address)
     {
         auto packet = makePacket<OpCode::read>(address);
 
         setSlaveSelect();
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
-        uint8_t buffer;
+        std::uint8_t buffer;
         HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
         resetSlaveSelect();
 

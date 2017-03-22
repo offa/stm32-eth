@@ -36,8 +36,8 @@ namespace spi
 
         SpiWriter(const SpiConfig& config);
 
-        void write(uint16_t address, uint8_t data);
-        uint8_t read(uint16_t address);
+        void write(std::uint16_t address, std::uint8_t data);
+        std::uint8_t read(std::uint16_t address);
 
         Handle& nativeHandle();
 
@@ -48,7 +48,7 @@ namespace spi
         void resetSlaveSelect();
 
         Handle m_handle{};
-        static constexpr uint32_t timeout = ~0;
+        static constexpr std::uint32_t timeout = ~0;
     };
 
 }

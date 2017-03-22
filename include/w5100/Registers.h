@@ -30,70 +30,70 @@ namespace w5100
     namespace registers
     {
 
-        constexpr auto mode = makeRegister<uint8_t>(0x0000);
-        constexpr auto transmitMemorySize = makeRegister<uint8_t>(0x001b);
-        constexpr auto receiveMemorySize = makeRegister<uint8_t>(0x001a);
+        constexpr auto mode = makeRegister<std::uint8_t>(0x0000);
+        constexpr auto transmitMemorySize = makeRegister<std::uint8_t>(0x001b);
+        constexpr auto receiveMemorySize = makeRegister<std::uint8_t>(0x001a);
 
-        constexpr auto gatewayAddress = makeRegister<std::array<uint8_t, 4>>(0x0001);
-        constexpr auto subnetMask = makeRegister<std::array<uint8_t, 4>>(0x0005);
-        constexpr auto sourceMacAddress = makeRegister<std::array<uint8_t, 6>>(0x0009);
-        constexpr auto sourceIpAddress = makeRegister<std::array<uint8_t, 4>>(0x000f);
+        constexpr auto gatewayAddress = makeRegister<std::array<std::uint8_t, 4>>(0x0001);
+        constexpr auto subnetMask = makeRegister<std::array<std::uint8_t, 4>>(0x0005);
+        constexpr auto sourceMacAddress = makeRegister<std::array<std::uint8_t, 6>>(0x0009);
+        constexpr auto sourceIpAddress = makeRegister<std::array<std::uint8_t, 4>>(0x000f);
 
 
 
         constexpr auto socketMode(SocketHandle s)
         {
-            return makeRegister<uint8_t>(s, 0x0000);
+            return makeRegister<std::uint8_t>(s, 0x0000);
         }
 
         constexpr auto socketSourcePort(SocketHandle s)
         {
-            return makeRegister<uint16_t>(s, 0x0004);
+            return makeRegister<std::uint16_t>(s, 0x0004);
         }
 
         constexpr auto socketInterrupt(SocketHandle s)
         {
-            return makeRegister<uint8_t>(s, 0x0002);
+            return makeRegister<std::uint8_t>(s, 0x0002);
         }
 
         constexpr auto socketCommand(SocketHandle s)
         {
-            return makeRegister<uint8_t>(s, 0x0001);
+            return makeRegister<std::uint8_t>(s, 0x0001);
         }
 
         constexpr auto socketStatus(SocketHandle s)
         {
-            return makeRegister<uint8_t>(s, 0x0003);
+            return makeRegister<std::uint8_t>(s, 0x0003);
         }
 
         constexpr auto socketTransmitFreeSize(SocketHandle s)
         {
-            return makeRegister<uint16_t>(s, 0x0020);
+            return makeRegister<std::uint16_t>(s, 0x0020);
         }
 
         constexpr auto socketReceiveFreeSize(SocketHandle s)
         {
-            return makeRegister<uint16_t>(s, 0x0026);
+            return makeRegister<std::uint16_t>(s, 0x0026);
         }
 
         constexpr auto socketTransmitWritePointer(SocketHandle s)
         {
-            return makeRegister<uint16_t>(s, 0x0024);
+            return makeRegister<std::uint16_t>(s, 0x0024);
         }
 
         constexpr auto socketReceiveReadPointer(SocketHandle s)
         {
-            return makeRegister<uint16_t>(s, 0x0028);
+            return makeRegister<std::uint16_t>(s, 0x0028);
         }
 
         constexpr auto socketDestIpAddress(SocketHandle s)
         {
-            return makeRegister<std::array<uint8_t, 4>>(s, 0x000c);
+            return makeRegister<std::array<std::uint8_t, 4>>(s, 0x000c);
         }
 
         constexpr auto socketDestPort(SocketHandle s)
         {
-            return makeRegister<uint16_t>(s, 0x0010);
+            return makeRegister<std::uint16_t>(s, 0x0010);
         }
 
     }

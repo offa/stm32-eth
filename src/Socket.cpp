@@ -37,7 +37,7 @@ namespace eth
         }
 
         template<class DataFn, class StatusFn>
-        uint16_t waitFor(DataFn getDataFn, StatusFn statusCheckFn, uint16_t size)
+        std::uint16_t waitFor(DataFn getDataFn, StatusFn statusCheckFn, std::uint16_t size)
         {
             while( statusCheckFn() == true )
             {
@@ -65,12 +65,12 @@ namespace eth
         closeImpl();
     }
 
-    Socket::Status Socket::open(Protocol protocol, uint16_t port, uint8_t flag)
+    Socket::Status Socket::open(Protocol protocol, std::uint16_t port, std::uint8_t flag)
     {
         if( protocol == Protocol::tcp )
         {
             close();
-            m_device.writeSocketModeRegister(m_handle, static_cast<uint8_t>(protocol) | flag);
+            m_device.writeSocketModeRegister(m_handle, static_cast<std::uint8_t>(protocol) | flag);
 
             m_device.writeSocketSourcePort(m_handle, port);
             m_device.executeSocketCommand(m_handle, SocketCommand::open);
@@ -117,14 +117,14 @@ namespace eth
         }
     }
 
-    uint16_t Socket::send(const gsl::span<const uint8_t> buffer)
+    std::uint16_t Socket::send(const gsl::span<const std::uint8_t> buffer)
     {
         if( buffer.empty() == true )
         {
             return 0;
         }
 
-        const uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), uint16_t(buffer.length()));
+        const std::uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), std::uint16_t(buffer.length()));
         const auto freeSize = waitFor([this] { return m_device.getTransmitFreeSize(m_handle); },
                                         [this] { return connectionReady(getStatus()); },
                                         sendSize);
@@ -140,14 +140,14 @@ namespace eth
         return sendSize;
     }
 
-    uint16_t Socket::receive(gsl::span<uint8_t> buffer)
+    std::uint16_t Socket::receive(gsl::span<std::uint8_t> buffer)
     {
         if( buffer.empty() == true )
         {
             return 0;
         }
 
-        const uint16_t available = waitFor([this] { return m_device.getReceiveFreeSize(m_handle); },
+        const std::uint16_t available = waitFor([this] { return m_device.getReceiveFreeSize(m_handle); },
                                             [this] { return connectionReady(getStatus()); },
                                             1);
 
@@ -157,8 +157,8 @@ namespace eth
             return 0;
         }
 
-        const uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), uint16_t(buffer.length()));
-        const uint16_t receiveSize = std::min(available, sizeLimited);
+        const std::uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), std::uint16_t(buffer.length()));
+        const std::uint16_t receiveSize = std::min(available, sizeLimited);
         auto shrinkedBuffer = buffer.first(receiveSize);
         m_device.receiveData(m_handle, shrinkedBuffer);
         m_device.executeSocketCommand(m_handle, SocketCommand::receive);
@@ -166,7 +166,7 @@ namespace eth
         return receiveSize;
     }
 
-    Socket::Status Socket::connect(std::array<uint8_t, 4> address, uint16_t port)
+    Socket::Status Socket::connect(std::array<std::uint8_t, 4> address, std::uint16_t port)
     {
         m_device.setDestIpAddress(m_handle, address);
         m_device.setDestPort(m_handle, port);

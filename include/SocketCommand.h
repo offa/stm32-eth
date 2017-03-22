@@ -20,12 +20,12 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace eth
 {
 
-    enum class SocketCommand : uint8_t
+    enum class SocketCommand : std::uint8_t
     {
         executed = 0x00,
         open = 0x01,

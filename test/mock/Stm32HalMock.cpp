@@ -31,7 +31,7 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
     return static_cast<HAL_StatusTypeDef>(rtn);
 }
 
-HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, std::uint8_t *pData, std::uint16_t Size, std::uint32_t Timeout)
 {
     const auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Transmit")
                         .withPointerParameter("hspi", hspi)
@@ -42,7 +42,7 @@ HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint
     return static_cast<HAL_StatusTypeDef>(rtn);
 }
 
-HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, std::uint8_t *pData, std::uint16_t Size, std::uint32_t Timeout)
 {
     const auto rtn = mock("HAL_SPI").actualCall("HAL_SPI_Receive")
                         .withPointerParameter("hspi", hspi)
@@ -60,7 +60,7 @@ void HAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", GPIO_Init);
 }
 
-void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState)
+void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, std::uint16_t GPIO_Pin, GPIO_PinState PinState)
 {
     mock("HAL_GPIO").actualCall("HAL_GPIO_WritePin")
         .withPointerParameter("GPIOx", GPIOx)

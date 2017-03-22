@@ -21,7 +21,7 @@
 #pragma once
 
 #include <tuple>
-#include <stdint.h>
+#include <cstdint>
 #include "Platform.h"
 
 namespace eth
@@ -29,7 +29,7 @@ namespace eth
     namespace spi
     {
 
-        enum class Assign : uint8_t
+        enum class Assign : std::uint8_t
         {
             spi1,
             spi2,
