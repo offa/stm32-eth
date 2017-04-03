@@ -23,6 +23,7 @@ list(APPEND COMMONTEST_SRC RegisterValueTest.cpp
                                     SocketInterruptTest.cpp
                                     ByteTest.cpp
                                     SocketHandleTest.cpp
+                                    NetConfigTest.cpp
                                     )
 _add_test(CommonTest COMMONTEST_SRC)
 
