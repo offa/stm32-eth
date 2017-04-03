@@ -133,15 +133,6 @@ namespace w5100
 
         void writeModeRegister(Mode value);
 
-        [[deprecated("Use setupDevice() instead")]]
-        void setGatewayAddress(std::array<std::uint8_t, 4> addr);
-        [[deprecated("Use setupDevice() instead")]]
-        void setSubnetMask(std::array<std::uint8_t, 4> addr);
-        [[deprecated("Use setupDevice() instead")]]
-        void setMacAddress(std::array<std::uint8_t, 6> addr);
-        [[deprecated("Use setupDevice() instead")]]
-        void setIpAddress(std::array<std::uint8_t, 4> addr);
-
         void setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr);
         void setDestPort(SocketHandle s, std::uint16_t port);
 

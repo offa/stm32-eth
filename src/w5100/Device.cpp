@@ -192,26 +192,6 @@ namespace w5100
         write(registers::mode, static_cast<std::uint8_t>(value));
     }
 
-    void Device::setGatewayAddress(std::array<std::uint8_t, 4> addr)
-    {
-        write(registers::gatewayAddress, addr.cbegin(), addr.cend());
-    }
-
-    void Device::setSubnetMask(std::array<std::uint8_t, 4> addr)
-    {
-        write(registers::subnetMask, addr.cbegin(), addr.cend());
-    }
-
-    void Device::setMacAddress(std::array<std::uint8_t, 6> addr)
-    {
-        write(registers::sourceMacAddress, addr.cbegin(), addr.cend());
-    }
-
-    void Device::setIpAddress(std::array<std::uint8_t, 4> addr)
-    {
-        write(registers::sourceIpAddress, addr.cbegin(), addr.cend());
-    }
-
     void Device::setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr)
     {
         write(registers::socketDestIpAddress(s), addr.cbegin(), addr.cend());
