@@ -42,9 +42,9 @@ TEST_GROUP(NetConfigTest)
 
 TEST(NetConfigTest, getValues)
 {
-    constexpr eth::NetConfig cfg{{0, 0, 0, 0}, {1, 1, 1, 1}, {2, 2, 2, 2}, {9, 9, 9, 9, 9, 9}};
-    CHECK_TRUE(checkValue({0, 0, 0, 0}, std::get<0>(cfg)));
-    CHECK_TRUE(checkValue({1, 1, 1, 1}, std::get<1>(cfg)));
-    CHECK_TRUE(checkValue({2, 2, 2, 2}, std::get<2>(cfg)));
-    CHECK_TRUE(checkValue({9, 9, 9, 9, 9, 9}, std::get<3>(cfg)));
+    constexpr eth::NetConfig cfg{{{0, 0, 0, 0}}, {{1, 1, 1, 1}}, {{2, 2, 2, 2}}, {{9, 9, 9, 9, 9, 9}}};
+    CHECK_TRUE(checkValue({{0, 0, 0, 0}}, std::get<0>(cfg)));
+    CHECK_TRUE(checkValue({{1, 1, 1, 1}}, std::get<1>(cfg)));
+    CHECK_TRUE(checkValue({{2, 2, 2, 2}}, std::get<2>(cfg)));
+    CHECK_TRUE(checkValue({{9, 9, 9, 9, 9, 9}}, std::get<3>(cfg)));
 }
