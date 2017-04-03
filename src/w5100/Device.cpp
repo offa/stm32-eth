@@ -222,5 +222,14 @@ namespace w5100
         write(registers::socketDestPort(s), port);
     }
 
+
+    void setupDevice(Device& dev, eth::NetConfig config)
+    {
+        dev.write(registers::sourceIpAddress, std::get<0>(config).cbegin(), std::get<0>(config).cend());
+        dev.write(registers::subnetMask, std::get<1>(config).cbegin(), std::get<1>(config).cend());
+        dev.write(registers::gatewayAddress, std::get<2>(config).cbegin(), std::get<2>(config).cend());
+        dev.write(registers::sourceMacAddress, std::get<3>(config).cbegin(), std::get<3>(config).cend());
+    }
+
 }
 }

@@ -25,6 +25,7 @@
 #include "SocketStatus.h"
 #include "SocketInterrupt.h"
 #include "Mode.h"
+#include "NetConfig.h"
 #include "w5100/Register.h"
 #include "Byte.h"
 #include <array>
@@ -167,6 +168,9 @@ namespace w5100
         static constexpr std::uint16_t transmitBufferSize = 2048;
         static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
+
+
+    void setupDevice(Device& dev, eth::NetConfig config);
 
 }
 }
