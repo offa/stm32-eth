@@ -443,10 +443,10 @@ TEST(W5100DeviceTest, setDestPort)
 TEST(W5100DeviceTest, configureNetConfiguration)
 {
     constexpr eth::NetConfig config{
-        {192, 168, 0, 3},
-        {255, 255, 255, 0},
-        {192, 168, 0, 1},
-        {0x00, 0x08, 0xdc, 0x01, 0x02, 0x03}
+        {{192, 168, 0, 3}},
+        {{255, 255, 255, 0}},
+        {{192, 168, 0, 1}},
+        {{0x00, 0x08, 0xdc, 0x01, 0x02, 0x03}}
     };
 
     constexpr std::uint16_t addrIp = 0x000f;
