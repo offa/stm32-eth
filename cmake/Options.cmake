@@ -2,12 +2,19 @@ macro(print_option _option _text)
     message(STATUS "${_text} : ${${_option}}")
 endmacro()
 
+macro(print_option_if_enabled _option _text)
+    if( ${_option} )
+        print_option(${_option} ${_text})
+    endif()
+endmacro()
+
 
 option(UNITTEST "Build Unit Tests" ON)
-print_option(UNITTEST "Build Unit Tests")
-
 option(UNITTEST_VERBOSE "Verbose Unit Tests" OFF)
+option(UNITTEST_JUNIT "Create JUnit XML Files of Unit Tests" OFF)
+print_option(UNITTEST "Build Unit Tests")
 print_option(UNITTEST_VERBOSE "Verbose Unit Tests")
+print_option_if_enabled(UNITTEST_JUNIT "JUnit XML output enabled")
 
 option(COVERAGE "Enable Coverage" OFF)
 print_option(COVERAGE "Enable Coverage")

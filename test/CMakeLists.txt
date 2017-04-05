@@ -61,7 +61,6 @@ if( UNITTEST_VERBOSE )
 endif()
 
 if( UNITTEST_JUNIT )
-    message(STATUS "JUnit XML output enabled")
     set(TEST_FLAGS ${TEST_FLAGS} -ojunit -k ${PROJECT_NAME})
 endif()
 

@@ -1,6 +1,4 @@
 
-message(STATUS "Code coverage ${COVERAGE}")
-
 if( ${COVERAGE} )
 
     # Find Lcov tools
