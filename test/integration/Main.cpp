@@ -40,11 +40,11 @@ int main(int argc, char* argv[])
     spiClockEnable();
 
     constexpr auto config = eth::NetConfig{
-        {192, 168, 1, 1},
-        {192, 168, 1, 8},
-        {255, 255, 255, 0},
-        {0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef}
-        };
+        {{192, 168, 1, 1}},
+        {{192, 168, 1, 8}},
+        {{255, 255, 255, 0}},
+        {{0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef}}
+    };
 
     eth::spi::SpiWriter writer(eth::spi::spi2);
     eth::w5100::Device device(writer);

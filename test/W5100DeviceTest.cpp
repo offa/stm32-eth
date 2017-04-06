@@ -426,7 +426,7 @@ TEST(W5100DeviceTest, setDestAddress)
 {
     constexpr std::uint16_t addressIp = toAddress(socketHandle, 0x000c);
     constexpr std::uint16_t addressPort = toAddress(socketHandle, 0x0010);
-    std::array<std::uint8_t, 4> ip = {{ 192, 168, 1, 4 }};
+    eth::NetAddress<4> ip = {{ 192, 168, 1, 4 }};
     constexpr std::uint16_t port = 1234;
     expectWrite(addressIp, ip);
     expectWrite(addressPort, port);
