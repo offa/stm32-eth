@@ -25,9 +25,9 @@
 #include "SocketStatus.h"
 #include "SocketInterrupt.h"
 #include "Mode.h"
+#include "NetConfig.h"
 #include "w5100/Register.h"
 #include "Byte.h"
-#include <array>
 #include <algorithm>
 #include <iterator>
 #include <cstdint>
@@ -129,13 +129,7 @@ namespace eth::w5100
 
         void writeModeRegister(Mode value);
 
-        void setGatewayAddress(std::array<std::uint8_t, 4> addr);
-        void setSubnetMask(std::array<std::uint8_t, 4> addr);
-        void setMacAddress(std::array<std::uint8_t, 6> addr);
-        void setIpAddress(std::array<std::uint8_t, 4> addr);
-
-        void setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr);
-        void setDestPort(SocketHandle s, std::uint16_t port);
+        void setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port);
 
 
         static constexpr std::uint16_t getTransmitBufferSize()
@@ -164,6 +158,9 @@ namespace eth::w5100
         static constexpr std::uint16_t transmitBufferSize = 2048;
         static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
+
+
+    void setupDevice(Device& dev, eth::NetConfig config);
 
 }
 

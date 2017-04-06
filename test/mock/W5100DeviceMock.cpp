@@ -102,17 +102,11 @@ namespace eth::w5100
                     .returnUnsignedIntValue();
     }
 
-    void Device::setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr)
+    void Device::setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port)
     {
-        mock("Device").actualCall("setDestIpAddress")
+        mock("Device").actualCall("setDestAddress")
                 .withParameter("socket", s.value())
-                .withMemoryBufferParameter("buffer", addr.data(), addr.size());
-    }
-
-    void Device::setDestPort(SocketHandle s, std::uint16_t port)
-    {
-        mock("Device").actualCall("setDestPort")
-                .withParameter("socket", s.value())
+                .withMemoryBufferParameter("buffer", addr.data(), addr.size())
                 .withParameter("port", port);
     }
 

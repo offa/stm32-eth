@@ -39,19 +39,22 @@ int main(int argc, char* argv[])
     HAL_Init();
     spiClockEnable();
 
-    eth::spi::SpiWriter writer(eth::spi::spi2);
+    constexpr auto config = eth::NetConfig{
+        {{192, 168, 1, 1}},
+        {{192, 168, 1, 8}},
+        {{255, 255, 255, 0}},
+        {{0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef}}
+    };
 
+    eth::spi::SpiWriter writer(eth::spi::spi2);
     eth::w5100::Device device(writer);
-    device.setGatewayAddress({192, 168, 1, 1});
-    device.setIpAddress({192, 168, 1, 8});
-    device.setSubnetMask({255, 255, 255, 0});
-    device.setMacAddress({0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef});
+    eth::w5100::setupDevice(device, config);
 
     eth::Socket socket(eth::makeHandle<0>(), device);
 
     while(true)
     {
-        if( socket.connect({192, 168, 1, 6}, 5000) != eth::Socket::Status::ok )
+        if( socket.connect({{192, 168, 1, 6}}, 5000) != eth::Socket::Status::ok )
         {
             trace_puts("connect() failed");
         }

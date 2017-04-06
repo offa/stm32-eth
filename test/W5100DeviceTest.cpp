@@ -413,42 +413,6 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
     checkReadCalls(size + ptrReads);
 }
 
-TEST(W5100DeviceTest, setGatewayAddress)
-{
-    constexpr std::uint16_t address = 0x0001;
-    std::array<std::uint8_t, 4> value = {{ 192, 168, 0, 1 }};
-    expectWrite(address, value);
-
-    device->setGatewayAddress(value);
-}
-
-TEST(W5100DeviceTest, setSubnetMask)
-{
-    constexpr std::uint16_t address = 0x0005;
-    std::array<std::uint8_t, 4> value = {{ 255, 255, 255, 0 }};
-    expectWrite(address, value);
-
-    device->setSubnetMask(value);
-}
-
-TEST(W5100DeviceTest, setMacAddress)
-{
-    constexpr std::uint16_t address = 0x0009;
-    std::array<std::uint8_t, 6> value = {{ 0x00, 0x08, 0xdc, 0x01, 0x02, 0x03 }};
-    expectWrite(address, value);
-
-    device->setMacAddress(value);
-}
-
-TEST(W5100DeviceTest, setIpAddress)
-{
-    constexpr std::uint16_t address = 0x000f;
-    std::array<std::uint8_t, 4> value = {{ 192, 168, 0, 3 }};
-    expectWrite(address, value);
-
-    device->setIpAddress(value);
-}
-
 TEST(W5100DeviceTest, writeModeRegister)
 {
     constexpr std::uint16_t address = 0x0000;
@@ -458,21 +422,37 @@ TEST(W5100DeviceTest, writeModeRegister)
     device->writeModeRegister(mode);
 }
 
-TEST(W5100DeviceTest, setDestIpAddress)
+TEST(W5100DeviceTest, setDestAddress)
 {
-    constexpr std::uint16_t address = toAddress(socketHandle, 0x000c);
-    std::array<std::uint8_t, 4> value = {{ 192, 168, 1, 4 }};
-    expectWrite(address, value);
+    constexpr std::uint16_t addressIp = toAddress(socketHandle, 0x000c);
+    constexpr std::uint16_t addressPort = toAddress(socketHandle, 0x0010);
+    eth::NetAddress<4> ip = {{ 192, 168, 1, 4 }};
+    constexpr std::uint16_t port = 1234;
+    expectWrite(addressIp, ip);
+    expectWrite(addressPort, port);
 
-    device->setDestIpAddress(socketHandle, value);
+    device->setDestAddress(socketHandle, ip, port);
 }
 
-TEST(W5100DeviceTest, setDestPort)
+TEST(W5100DeviceTest, configureNetConfiguration)
 {
-    constexpr std::uint16_t address = toAddress(socketHandle, 0x0010);
-    constexpr std::uint16_t value = 1234;
-    expectWrite(address, value);
+    constexpr eth::NetConfig config{
+        {{192, 168, 0, 3}},
+        {{255, 255, 255, 0}},
+        {{192, 168, 0, 1}},
+        {{0x00, 0x08, 0xdc, 0x01, 0x02, 0x03}}
+    };
 
-    device->setDestPort(socketHandle, value);
+    constexpr std::uint16_t addrIp = 0x000f;
+    constexpr std::uint16_t addrNetmask = 0x0005;
+    constexpr std::uint16_t addrGateway = 0x0001;
+    constexpr std::uint16_t addrMac = 0x0009;
+
+    expectWrite(addrIp, std::get<0>(config));
+    expectWrite(addrNetmask, std::get<1>(config));
+    expectWrite(addrGateway, std::get<2>(config));
+    expectWrite(addrMac, std::get<3>(config));
+
+    setupDevice(*device, config);
 }
 

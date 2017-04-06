@@ -23,6 +23,7 @@ list(APPEND COMMONTEST_SRC RegisterValueTest.cpp
                                     SocketInterruptTest.cpp
                                     ByteTest.cpp
                                     SocketHandleTest.cpp
+                                    NetConfigTest.cpp
                                     )
 _add_test(CommonTest COMMONTEST_SRC)
 
@@ -60,7 +61,6 @@ if( UNITTEST_VERBOSE )
 endif()
 
 if( UNITTEST_JUNIT )
-    message(STATUS "JUnit XML output enabled")
     set(TEST_FLAGS ${TEST_FLAGS} -ojunit -k ${PROJECT_NAME})
 endif()
 

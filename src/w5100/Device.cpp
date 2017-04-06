@@ -192,34 +192,19 @@ namespace w5100
         write(registers::mode, static_cast<std::uint8_t>(value));
     }
 
-    void Device::setGatewayAddress(std::array<std::uint8_t, 4> addr)
-    {
-        write(registers::gatewayAddress, addr.cbegin(), addr.cend());
-    }
-
-    void Device::setSubnetMask(std::array<std::uint8_t, 4> addr)
-    {
-        write(registers::subnetMask, addr.cbegin(), addr.cend());
-    }
-
-    void Device::setMacAddress(std::array<std::uint8_t, 6> addr)
-    {
-        write(registers::sourceMacAddress, addr.cbegin(), addr.cend());
-    }
-
-    void Device::setIpAddress(std::array<std::uint8_t, 4> addr)
-    {
-        write(registers::sourceIpAddress, addr.cbegin(), addr.cend());
-    }
-
-    void Device::setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr)
+    void Device::setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port)
     {
         write(registers::socketDestIpAddress(s), addr.cbegin(), addr.cend());
+        write(registers::socketDestPort(s), port);
     }
 
-    void Device::setDestPort(SocketHandle s, std::uint16_t port)
+
+    void setupDevice(Device& dev, eth::NetConfig config)
     {
-        write(registers::socketDestPort(s), port);
+        dev.write(registers::sourceIpAddress, std::get<0>(config).cbegin(), std::get<0>(config).cend());
+        dev.write(registers::subnetMask, std::get<1>(config).cbegin(), std::get<1>(config).cend());
+        dev.write(registers::gatewayAddress, std::get<2>(config).cbegin(), std::get<2>(config).cend());
+        dev.write(registers::sourceMacAddress, std::get<3>(config).cbegin(), std::get<3>(config).cend());
     }
 
 }

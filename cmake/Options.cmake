@@ -1,22 +1,33 @@
+macro(print_option _option _text)
+    message(STATUS "${_text} : ${${_option}}")
+endmacro()
+
+macro(print_option_if_enabled _option _text)
+    if( ${_option} )
+        print_option(${_option} ${_text})
+    endif()
+endmacro()
+
 
 option(UNITTEST "Build Unit Tests" ON)
-message(STATUS "Build Unit Tests : ${UNITTEST}")
-
 option(UNITTEST_VERBOSE "Verbose Unit Tests" OFF)
-message(STATUS "Verbose Unit Tests : ${UNITTEST_VERBOSE}")
+option(UNITTEST_JUNIT "Create JUnit XML Files of Unit Tests" OFF)
+print_option(UNITTEST "Build Unit Tests")
+print_option(UNITTEST_VERBOSE "Verbose Unit Tests")
+print_option_if_enabled(UNITTEST_JUNIT "JUnit XML output enabled")
 
 option(COVERAGE "Enable Coverage" OFF)
-message(STATUS "Enable Coverage : ${COVERAGE}")
+print_option(COVERAGE "Enable Coverage")
 
 option(LTO "Enable Link Time Optimization (LTO)" OFF)
-message(STATUS "Enable LTO : ${LTO}")
+print_option(LTO "Enable LTO")
 
 option(BUILD_SYSTEM_DRIVER "Build system files" ${CMAKE_CROSSCOMPILING})
-message(STATUS "Build system driver : ${BUILD_SYSTEM_DRIVER}")
+print_option(BUILD_SYSTEM_DRIVER "Build system driver")
 
 option(INTEGRATION_TEST "Build Integration Tests" OFF)
-message(STATUS "Build Integration Tests : ${INTEGRATION_TEST}")
+print_option(INTEGRATION_TEST "Build Integration Tests")
 
 option(GSL_CONTRACT_UNENFORCED "GSL contract violations unenforced" ${CMAKE_CROSSCOMPILING})
-message(STATUS "Unenforced GSL contracts : ${GSL_CONTRACT_UNENFORCED}")
+print_option(GSL_CONTRACT_UNENFORCED "Unenforced GSL contracts")
 
