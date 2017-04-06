@@ -104,7 +104,7 @@ namespace w5100
                     .returnUnsignedIntValue();
     }
 
-    void Device::setDestAddress(SocketHandle s, std::array<std::uint8_t, 4> addr, std::uint16_t port)
+    void Device::setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port)
     {
         mock("Device").actualCall("setDestAddress")
                 .withParameter("socket", s.value())

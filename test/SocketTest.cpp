@@ -35,6 +35,7 @@ using eth::SocketCommand;
 using eth::SocketInterrupt;
 using eth::Socket;
 using eth::SocketHandle;
+using eth::NetAddress;
 using eth::Protocol;
 using eth::w5100::Device;
 using eth::spi::SpiWriter;
@@ -613,7 +614,7 @@ TEST(SocketTest, getStatus)
 
 TEST(SocketTest, connect)
 {
-    std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr = {{127, 0, 0, 1}};
     constexpr std::uint16_t port = 4567;
 
     deviceMock.expectOneCall("setDestAddress")
@@ -629,7 +630,7 @@ TEST(SocketTest, connect)
 
 TEST(SocketTest, connectWaitsForEstablishedStatus)
 {
-    std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr = {{127, 0, 0, 1}};
 
     deviceMock.expectOneCall("setDestAddress").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -647,7 +648,7 @@ TEST(SocketTest, connectWaitsForEstablishedStatus)
 
 TEST(SocketTest, connectErrorOnClosedConnection)
 {
-    std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr = {{127, 0, 0, 1}};
 
     deviceMock.expectOneCall("setDestAddress").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -660,7 +661,7 @@ TEST(SocketTest, connectErrorOnClosedConnection)
 
 TEST(SocketTest, connectErrorOnTimeout)
 {
-    std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr = {{127, 0, 0, 1}};
 
     deviceMock.expectOneCall("setDestAddress").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();

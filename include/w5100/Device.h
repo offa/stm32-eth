@@ -28,7 +28,6 @@
 #include "NetConfig.h"
 #include "w5100/Register.h"
 #include "Byte.h"
-#include <array>
 #include <algorithm>
 #include <iterator>
 #include <cstdint>
@@ -133,7 +132,7 @@ namespace w5100
 
         void writeModeRegister(Mode value);
 
-        void setDestAddress(SocketHandle s, std::array<std::uint8_t, 4> addr, std::uint16_t port);
+        void setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port);
 
 
         static constexpr std::uint16_t getTransmitBufferSize()

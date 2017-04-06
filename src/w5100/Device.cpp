@@ -192,7 +192,7 @@ namespace w5100
         write(registers::mode, static_cast<std::uint8_t>(value));
     }
 
-    void Device::setDestAddress(SocketHandle s, std::array<std::uint8_t, 4> addr, std::uint16_t port)
+    void Device::setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port)
     {
         write(registers::socketDestIpAddress(s), addr.cbegin(), addr.cend());
         write(registers::socketDestPort(s), port);

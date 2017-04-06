@@ -24,7 +24,7 @@
 #include "SocketStatus.h"
 #include "SocketInterrupt.h"
 #include "Protocol.h"
-#include <array>
+#include "NetConfig.h"
 #include <cstdint>
 #include <gsl/span>
 
@@ -63,7 +63,7 @@ namespace eth
 
 
 
-        Status connect(std::array<std::uint8_t, 4> address, std::uint16_t port);
+        Status connect(NetAddress<4> address, std::uint16_t port);
         Status disconnect();
 
         SocketStatus getStatus() const;
