@@ -616,11 +616,9 @@ TEST(SocketTest, connect)
     std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
     constexpr std::uint16_t port = 4567;
 
-    deviceMock.expectOneCall("setDestIpAddress")
+    deviceMock.expectOneCall("setDestAddress")
                 .withParameter("socket", socketHandle.value())
-                .withMemoryBufferParameter("buffer", addr.data(), addr.size());
-    deviceMock.expectOneCall("setDestPort")
-                .withParameter("socket", socketHandle.value())
+                .withMemoryBufferParameter("buffer", addr.data(), addr.size())
                 .withParameter("port", port);
     expectSocketCommand(socketHandle, SocketCommand::connect);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
@@ -633,8 +631,7 @@ TEST(SocketTest, connectWaitsForEstablishedStatus)
 {
     std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
 
-    deviceMock.expectOneCall("setDestIpAddress").ignoreOtherParameters();
-    deviceMock.expectOneCall("setDestPort").ignoreOtherParameters();
+    deviceMock.expectOneCall("setDestAddress").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::init);
     expectSocketStatusRead(socketHandle, SocketStatus::init);
@@ -652,8 +649,7 @@ TEST(SocketTest, connectErrorOnClosedConnection)
 {
     std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
 
-    deviceMock.expectOneCall("setDestIpAddress").ignoreOtherParameters();
-    deviceMock.expectOneCall("setDestPort").ignoreOtherParameters();
+    deviceMock.expectOneCall("setDestAddress").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::init);
     expectSocketStatusRead(socketHandle, SocketStatus::closed);
@@ -666,8 +662,7 @@ TEST(SocketTest, connectErrorOnTimeout)
 {
     std::array<std::uint8_t, 4> addr = {{127, 0, 0, 1}};
 
-    deviceMock.expectOneCall("setDestIpAddress").ignoreOtherParameters();
-    deviceMock.expectOneCall("setDestPort").ignoreOtherParameters();
+    deviceMock.expectOneCall("setDestAddress").ignoreOtherParameters();
     deviceMock.expectOneCall("executeSocketCommand").ignoreOtherParameters();
     expectSocketStatusRead(socketHandle, SocketStatus::init);
     expectSocketStatusRead(socketHandle, SocketStatus::init);

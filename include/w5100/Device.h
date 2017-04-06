@@ -133,8 +133,7 @@ namespace w5100
 
         void writeModeRegister(Mode value);
 
-        void setDestIpAddress(SocketHandle s, std::array<std::uint8_t, 4> addr);
-        void setDestPort(SocketHandle s, std::uint16_t port);
+        void setDestAddress(SocketHandle s, std::array<std::uint8_t, 4> addr, std::uint16_t port);
 
 
         static constexpr std::uint16_t getTransmitBufferSize()

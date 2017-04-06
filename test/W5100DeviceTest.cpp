@@ -422,22 +422,16 @@ TEST(W5100DeviceTest, writeModeRegister)
     device->writeModeRegister(mode);
 }
 
-TEST(W5100DeviceTest, setDestIpAddress)
+TEST(W5100DeviceTest, setDestAddress)
 {
-    constexpr std::uint16_t address = toAddress(socketHandle, 0x000c);
-    std::array<std::uint8_t, 4> value = {{ 192, 168, 1, 4 }};
-    expectWrite(address, value);
+    constexpr std::uint16_t addressIp = toAddress(socketHandle, 0x000c);
+    constexpr std::uint16_t addressPort = toAddress(socketHandle, 0x0010);
+    std::array<std::uint8_t, 4> ip = {{ 192, 168, 1, 4 }};
+    constexpr std::uint16_t port = 1234;
+    expectWrite(addressIp, ip);
+    expectWrite(addressPort, port);
 
-    device->setDestIpAddress(socketHandle, value);
-}
-
-TEST(W5100DeviceTest, setDestPort)
-{
-    constexpr std::uint16_t address = toAddress(socketHandle, 0x0010);
-    constexpr std::uint16_t value = 1234;
-    expectWrite(address, value);
-
-    device->setDestPort(socketHandle, value);
+    device->setDestAddress(socketHandle, ip, port);
 }
 
 TEST(W5100DeviceTest, configureNetConfiguration)

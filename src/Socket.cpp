@@ -168,8 +168,7 @@ namespace eth
 
     Socket::Status Socket::connect(std::array<std::uint8_t, 4> address, std::uint16_t port)
     {
-        m_device.setDestIpAddress(m_handle, address);
-        m_device.setDestPort(m_handle, port);
+        m_device.setDestAddress(m_handle, address, port);
         m_device.executeSocketCommand(m_handle, SocketCommand::connect);
 
         while( getStatus() != SocketStatus::established )
