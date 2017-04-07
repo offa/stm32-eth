@@ -135,7 +135,7 @@ namespace w5100
         const std::uint16_t offset = writePointer & transmitBufferMask;
         const std::uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
-        if( offset + size > transmitBufferSize )
+        if( (offset + size) > transmitBufferSize )
         {
             const std::uint16_t first = transmitBufferSize - offset;
             const auto border = std::next(buffer.cbegin(), first);
@@ -159,7 +159,7 @@ namespace w5100
         const std::uint16_t destAddress = offset + toReceiveBufferAddress(s);
         const auto reg = makeRegister<gsl::span<std::uint8_t>>(destAddress);
 
-        if( offset + size > receiveBufferSize )
+        if( (offset + size) > receiveBufferSize )
         {
             const auto first = receiveBufferSize - offset;
             auto border = std::next(buffer.begin(), first);
