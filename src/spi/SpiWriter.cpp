@@ -36,13 +36,13 @@ namespace spi
 
 
         template<OpCode opcode, class... Ts>
-        constexpr std::array<std::uint8_t, 3 + sizeof...(Ts)>
-            makePacket(std::uint16_t address, Ts&&... params)
+        constexpr auto makePacket(std::uint16_t address, Ts&&... params)
         {
-            return {{ static_cast<std::uint8_t>(opcode),
-                    byte::get<1>(address),
-                    byte::get<0>(address),
-                    params... }};
+            using Type = std::array<std::uint8_t, 3 + sizeof...(Ts)>;
+            return Type{{ static_cast<std::uint8_t>(opcode),
+                            byte::get<1>(address),
+                            byte::get<0>(address),
+                            params... }};
         }
 
 
