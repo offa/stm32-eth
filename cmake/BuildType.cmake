@@ -1,27 +1,29 @@
 
-if( CMAKE_BUILD_TYPE )
-    if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
-        set(BUILD_TYPE_DEBUG TRUE)
-        set(BUILD_TYPE_VALID TRUE)
-    elseif( "${CMAKE_BUILD_TYPE}" STREQUAL "Release" )
-        set(BUILD_TYPE_RELEASE TRUE)
-        set(BUILD_TYPE_VALID TRUE)
-    elseif( "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo" )
-        set(BUILD_TYPE_RELWITHDEBINFO TRUE)
-        set(BUILD_TYPE_VALID TRUE)
-    elseif( "${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel" )
-        set(BUILD_TYPE_MINSIZEREL TRUE)
-        set(BUILD_TYPE_VALID TRUE)
+macro(enable_build_type _type)
+    list(APPEND VALID_BUILD_TYPES ${_type})
+endmacro()
+
+macro(set_build_type _type)
+    list(FIND VALID_BUILD_TYPES ${_type} _type_found)
+
+    if( ${_type_found} GREATER_EQUAL 0 )
+        string(TOUPPER ${_type} _type_name)
+        set(BUILD_TYPE_${_type_name} TRUE)
     else()
-        set(BUILD_TYPE_VALID FALSE)
+        message(SEND_ERROR "Warning:\tInvalid / unsupported build type: '${CMAKE_BUILD_TYPE}'")
     endif()
+endmacro()
+
+
+enable_build_type("Debug")
+enable_build_type("Release")
+enable_build_type("RelWithDebInfo")
+enable_build_type("MinSizeRel")
+
+
+if( CMAKE_BUILD_TYPE )
+    set_build_type(${CMAKE_BUILD_TYPE})
 else()
     set(BUILD_TYPE_NONE TRUE)
-    set(BUILD_TYPE_VALID TRUE)
-endif()
-
-
-if( NOT ${BUILD_TYPE_VALID} )
-    message(STATUS "Warning:\tUnknown build type: '${CMAKE_BUILD_TYPE}'")
 endif()
 
