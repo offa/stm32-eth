@@ -6,7 +6,7 @@ endmacro()
 macro(set_build_type _type)
     list(FIND VALID_BUILD_TYPES ${_type} _type_found)
 
-    if( ${_type_found} GREATER_EQUAL 0 )
+    if( NOT ( ${_type_found} LESS 0 ) )
         string(TOUPPER ${_type} _type_name)
         set(BUILD_TYPE_${_type_name} TRUE)
     else()
