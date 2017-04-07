@@ -52,13 +52,13 @@ namespace spi
 
 
 
-    SpiWriter::SpiWriter(const SpiConfig& config)
+    SpiWriter::SpiWriter(const SpiConfig& config) : m_config(config)
     {
         Assign spi;
         GPIO_InitTypeDef gpio;
         GPIO_InitTypeDef gpioSS;
         SPI_InitTypeDef settings;
-        std::tie(spi, gpio, gpioSS, settings) = config;
+        std::tie(spi, gpio, gpioSS, settings) = m_config;
 
         HAL_GPIO_Init(GPIOB, &gpio);
         HAL_GPIO_Init(GPIOB, &gpioSS);
@@ -95,7 +95,7 @@ namespace spi
     void SpiWriter::setSlaveSelect(PinState state)
     {
         const auto value = ( state == PinState::set ? GPIO_PIN_SET : GPIO_PIN_RESET );
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, value);
+        HAL_GPIO_WritePin(GPIOB, std::get<2>(m_config).Pin, value);
     }
 
     SpiWriter::Handle& SpiWriter::nativeHandle()
