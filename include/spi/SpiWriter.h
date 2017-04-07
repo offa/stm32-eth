@@ -35,11 +35,16 @@ namespace spi
 
 
         SpiWriter(const SpiConfig& config);
+        SpiWriter(SpiWriter&&) = default;
+
 
         void write(std::uint16_t address, std::uint8_t data);
         std::uint8_t read(std::uint16_t address);
 
         Handle& nativeHandle();
+
+
+        SpiWriter& operator=(SpiWriter&&) = default;
 
 
     private:
