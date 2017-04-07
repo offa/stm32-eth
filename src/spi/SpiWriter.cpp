@@ -85,11 +85,11 @@ namespace spi
         setSlaveSelect(PinState::set);
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
-        std::uint8_t buffer;
-        HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
+        std::array<std::uint8_t, 1> buffer;
+        HAL_SPI_Receive(&m_handle, buffer.data(), buffer.size(), timeout);
         setSlaveSelect(PinState::reset);
 
-        return buffer;
+        return buffer[0];
     }
 
     void SpiWriter::setSlaveSelect(PinState state)
