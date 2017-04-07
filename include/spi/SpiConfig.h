@@ -36,11 +36,17 @@ namespace eth
             spi3
         };
 
+        enum class PinBlock : std::uint8_t
+        {
+            A,
+            B,
+            C
+        };
 
-        using SpiConfig = std::tuple<Assign, GPIO_InitTypeDef, GPIO_InitTypeDef, SPI_InitTypeDef>;
+        using SpiConfig = std::tuple<Assign, PinBlock, GPIO_InitTypeDef, GPIO_InitTypeDef, SPI_InitTypeDef>;
 
 
-        constexpr SpiConfig spi2(Assign::spi2,
+        constexpr SpiConfig spi2(Assign::spi2, PinBlock::B,
                 {(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
                     GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_HIGH, GPIO_AF5_SPI2},
                 {GPIO_PIN_12,

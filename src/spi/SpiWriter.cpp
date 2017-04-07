@@ -47,7 +47,7 @@ namespace spi
 
 
         const std::array<SPI_TypeDef*, 3> spiInstances{{SPI1, SPI2, SPI3}};
-
+        const std::array<GPIO_TypeDef*, 3> pinBlocks{{GPIOA, GPIOB, GPIOC}};
     }
 
 
@@ -55,13 +55,16 @@ namespace spi
     SpiWriter::SpiWriter(const SpiConfig& config) : m_config(config)
     {
         Assign spi;
+        PinBlock block;
         GPIO_InitTypeDef gpio;
         GPIO_InitTypeDef gpioSS;
         SPI_InitTypeDef settings;
-        std::tie(spi, gpio, gpioSS, settings) = m_config;
+        std::tie(spi, block, gpio, gpioSS, settings) = m_config;
 
-        HAL_GPIO_Init(GPIOB, &gpio);
-        HAL_GPIO_Init(GPIOB, &gpioSS);
+        const auto blockRef = pinBlocks[static_cast<std::size_t>(block)];
+
+        HAL_GPIO_Init(blockRef, &gpio);
+        HAL_GPIO_Init(blockRef, &gpioSS);
 
         m_handle.Instance = spiInstances[static_cast<std::size_t>(spi)];
         m_handle.Init = settings;
@@ -95,7 +98,8 @@ namespace spi
     void SpiWriter::setSlaveSelect(PinState state)
     {
         const auto value = ( state == PinState::set ? GPIO_PIN_SET : GPIO_PIN_RESET );
-        HAL_GPIO_WritePin(GPIOB, std::get<2>(m_config).Pin, value);
+        const auto blockRef = pinBlocks[static_cast<std::size_t>(std::get<1>(m_config))];
+        HAL_GPIO_WritePin(blockRef, std::get<3>(m_config).Pin, value);
     }
 
     SpiWriter::Handle& SpiWriter::nativeHandle()
