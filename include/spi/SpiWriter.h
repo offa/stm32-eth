@@ -44,8 +44,13 @@ namespace spi
 
     private:
 
-        void setSlaveSelect();
-        void resetSlaveSelect();
+        enum class PinState : std::uint8_t
+        {
+            set,
+            reset
+        };
+
+        void setSlaveSelect(PinState state);
 
         Handle m_handle{};
         static constexpr std::uint32_t timeout = ~0;

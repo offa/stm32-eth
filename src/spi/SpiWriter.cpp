@@ -73,33 +73,29 @@ namespace spi
     {
         auto packet = makePacket<OpCode::write>(address, data);
 
-        setSlaveSelect();
+        setSlaveSelect(PinState::set);
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
-        resetSlaveSelect();
+        setSlaveSelect(PinState::reset);
     }
 
     std::uint8_t SpiWriter::read(std::uint16_t address)
     {
         auto packet = makePacket<OpCode::read>(address);
 
-        setSlaveSelect();
+        setSlaveSelect(PinState::set);
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
         std::uint8_t buffer;
         HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
-        resetSlaveSelect();
+        setSlaveSelect(PinState::reset);
 
         return buffer;
     }
 
-    void SpiWriter::setSlaveSelect()
+    void SpiWriter::setSlaveSelect(PinState state)
     {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-    }
-
-    void SpiWriter::resetSlaveSelect()
-    {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+        const auto value = ( state == PinState::set ? GPIO_PIN_SET : GPIO_PIN_RESET );
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, value);
     }
 
     SpiWriter::Handle& SpiWriter::nativeHandle()
