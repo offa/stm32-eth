@@ -51,6 +51,26 @@ namespace spi
     }
 
 
+    class SpiWriter::SlaveSelect
+    {
+    public:
+
+        explicit SlaveSelect(SpiWriter& writer) : m_writer(writer)
+        {
+            m_writer.setSlaveSelect(PinState::set);
+        }
+
+        ~SlaveSelect()
+        {
+            m_writer.setSlaveSelect(PinState::reset);
+        }
+
+
+    private:
+
+        SpiWriter& m_writer;
+    };
+
 
     SpiWriter::SpiWriter(const SpiConfig& config) : m_config(config)
     {
@@ -76,21 +96,19 @@ namespace spi
     {
         auto packet = makePacket<OpCode::write>(address, data);
 
-        setSlaveSelect(PinState::set);
+        SlaveSelect(*this);
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
-        setSlaveSelect(PinState::reset);
     }
 
     std::uint8_t SpiWriter::read(std::uint16_t address)
     {
         auto packet = makePacket<OpCode::read>(address);
 
-        setSlaveSelect(PinState::set);
+        SlaveSelect(*this);
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
         std::array<std::uint8_t, 1> buffer;
         HAL_SPI_Receive(&m_handle, buffer.data(), buffer.size(), timeout);
-        setSlaveSelect(PinState::reset);
 
         return buffer[0];
     }

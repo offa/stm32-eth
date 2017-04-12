@@ -57,6 +57,8 @@ namespace spi
 
         void setSlaveSelect(PinState state);
 
+        class SlaveSelect;
+
         Handle m_handle{};
         const SpiConfig& m_config;
         static constexpr std::uint32_t timeout = ~0;
