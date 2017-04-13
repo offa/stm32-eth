@@ -29,6 +29,10 @@ if( COVERAGE )
     include(Coverage)
 endif()
 
+if( LTO )
+    include(LTO)
+endif()
+
 
 add_definitions(-DSTM32F407xx
                 -DUSE_HAL_DRIVER
