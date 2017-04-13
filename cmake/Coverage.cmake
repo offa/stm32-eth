@@ -20,7 +20,7 @@ if( ${COVERAGE} )
 
 
     # Compiler flags
-    add_common_flag(-ftest-coverage -fprofile-arcs)
+    add_compiler_flag(-ftest-coverage -fprofile-arcs)
 
 
     set(INPUT_DIR "${CMAKE_SOURCE_DIR}")
