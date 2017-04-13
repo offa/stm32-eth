@@ -1,6 +1,6 @@
 
 if( LTO )
-    add_common_flag(-flto)
+    add_compiler_flag(-flto)
     add_linker_flag(-flto)
 
 

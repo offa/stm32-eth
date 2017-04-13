@@ -18,7 +18,7 @@ if( ${BUILD_TYPE_DEBUG} )
 endif()
 
 
-add_common_flag(-Wall
+add_compiler_flag(-Wall
                 -Wextra
                 -pedantic
                 -Werror
