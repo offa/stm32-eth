@@ -40,6 +40,13 @@ namespace w5100
             constexpr std::uint16_t baseAddress = 0x6000;
             return baseAddress + ( Device::getReceiveBufferSize() * s.value() );
         }
+
+        template<std::size_t limit>
+        constexpr bool isWrapAround(std::size_t offset, std::size_t size)
+        {
+            return ( offset + size ) > limit;
+        }
+
     }
 
 
@@ -135,9 +142,9 @@ namespace w5100
         const std::uint16_t offset = writePointer & transmitBufferMask;
         const std::uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
-        if( offset + size > transmitBufferSize )
+        if( isWrapAround<transmitBufferSize>(offset, size) == true )
         {
-            const std::uint16_t first = transmitBufferSize - offset;
+            const auto first = transmitBufferSize - offset;
             const auto border = std::next(buffer.cbegin(), first);
             write(makeRegister<gsl::span<const std::uint8_t>>(destAddress), buffer.cbegin(), border);
             write(makeRegister<gsl::span<const std::uint8_t>>(toTransmitBufferAddress(s)), border, buffer.cend());
@@ -159,7 +166,7 @@ namespace w5100
         const std::uint16_t destAddress = offset + toReceiveBufferAddress(s);
         const auto reg = makeRegister<gsl::span<std::uint8_t>>(destAddress);
 
-        if( offset + size > receiveBufferSize )
+        if( isWrapAround<receiveBufferSize>(offset, size) == true )
         {
             const auto first = receiveBufferSize - offset;
             auto border = std::next(buffer.begin(), first);

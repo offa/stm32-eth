@@ -36,32 +36,55 @@ namespace spi
 
 
         template<OpCode opcode, class... Ts>
-        constexpr std::array<std::uint8_t, 3 + sizeof...(Ts)>
-            makePacket(std::uint16_t address, Ts&&... params)
+        constexpr auto makePacket(std::uint16_t address, Ts&&... params)
         {
-            return {{ static_cast<std::uint8_t>(opcode),
-                    byte::get<1>(address),
-                    byte::get<0>(address),
-                    params... }};
+            using Type = std::array<std::uint8_t, 3 + sizeof...(Ts)>;
+            return Type{{ static_cast<std::uint8_t>(opcode),
+                            byte::get<1>(address),
+                            byte::get<0>(address),
+                            params... }};
         }
 
 
         const std::array<SPI_TypeDef*, 3> spiInstances{{SPI1, SPI2, SPI3}};
-
+        const std::array<GPIO_TypeDef*, 3> pinBlocks{{GPIOA, GPIOB, GPIOC}};
     }
 
 
+    class SpiWriter::SlaveSelect
+    {
+    public:
 
-    SpiWriter::SpiWriter(const SpiConfig& config)
+        explicit SlaveSelect(SpiWriter& writer) : m_writer(writer)
+        {
+            m_writer.setSlaveSelect(PinState::set);
+        }
+
+        ~SlaveSelect()
+        {
+            m_writer.setSlaveSelect(PinState::reset);
+        }
+
+
+    private:
+
+        SpiWriter& m_writer;
+    };
+
+
+    SpiWriter::SpiWriter(const SpiConfig& config) : m_config(config)
     {
         Assign spi;
+        PinBlock block;
         GPIO_InitTypeDef gpio;
         GPIO_InitTypeDef gpioSS;
         SPI_InitTypeDef settings;
-        std::tie(spi, gpio, gpioSS, settings) = config;
+        std::tie(spi, block, gpio, gpioSS, settings) = m_config;
 
-        HAL_GPIO_Init(GPIOB, &gpio);
-        HAL_GPIO_Init(GPIOB, &gpioSS);
+        const auto blockRef = pinBlocks[static_cast<std::size_t>(block)];
+
+        HAL_GPIO_Init(blockRef, &gpio);
+        HAL_GPIO_Init(blockRef, &gpioSS);
 
         m_handle.Instance = spiInstances[static_cast<std::size_t>(spi)];
         m_handle.Init = settings;
@@ -73,33 +96,28 @@ namespace spi
     {
         auto packet = makePacket<OpCode::write>(address, data);
 
-        setSlaveSelect();
+        SlaveSelect(*this);
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
-        resetSlaveSelect();
     }
 
     std::uint8_t SpiWriter::read(std::uint16_t address)
     {
         auto packet = makePacket<OpCode::read>(address);
 
-        setSlaveSelect();
+        SlaveSelect(*this);
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
-        std::uint8_t buffer;
-        HAL_SPI_Receive(&m_handle, &buffer, sizeof(buffer), timeout);
-        resetSlaveSelect();
+        std::array<std::uint8_t, 1> buffer;
+        HAL_SPI_Receive(&m_handle, buffer.data(), buffer.size(), timeout);
 
-        return buffer;
+        return buffer[0];
     }
 
-    void SpiWriter::setSlaveSelect()
+    void SpiWriter::setSlaveSelect(PinState state)
     {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-    }
-
-    void SpiWriter::resetSlaveSelect()
-    {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+        const auto value = ( state == PinState::set ? GPIO_PIN_SET : GPIO_PIN_RESET );
+        const auto blockRef = pinBlocks[static_cast<std::size_t>(std::get<1>(m_config))];
+        HAL_GPIO_WritePin(blockRef, std::get<3>(m_config).Pin, value);
     }
 
     SpiWriter::Handle& SpiWriter::nativeHandle()

@@ -33,6 +33,8 @@ namespace eth::spi
 
 
         SpiWriter(const SpiConfig& config);
+        SpiWriter(SpiWriter&&) = default;
+
 
         void write(std::uint16_t address, std::uint8_t data);
         std::uint8_t read(std::uint16_t address);
@@ -40,12 +42,23 @@ namespace eth::spi
         Handle& nativeHandle();
 
 
+        SpiWriter& operator=(SpiWriter&&) = default;
+
+
     private:
 
-        void setSlaveSelect();
-        void resetSlaveSelect();
+        enum class PinState : std::uint8_t
+        {
+            set,
+            reset
+        };
+
+        void setSlaveSelect(PinState state);
+
+        class SlaveSelect;
 
         Handle m_handle{};
+        const SpiConfig& m_config;
         static constexpr std::uint32_t timeout = ~0;
     };
 
