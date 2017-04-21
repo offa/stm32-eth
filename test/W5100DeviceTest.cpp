@@ -83,7 +83,7 @@ TEST_GROUP(W5100DeviceTest)
     template<class Container>
     void expectWrite(std::uint16_t addr, const Container& data) const
     {
-        std::for_each(data.begin(), data.end(), [&](std::uint8_t value)
+        std::for_each(data.begin(), data.end(), [this, &addr](std::uint8_t value)
         {
             expectWrite(addr++, value);
         });
@@ -117,7 +117,7 @@ TEST_GROUP(W5100DeviceTest)
     template<class Container>
     void expectRead(std::uint16_t addr, const Container& data) const
     {
-        std::for_each(data.begin(), data.end(), [&](std::uint8_t value)
+        std::for_each(data.begin(), data.end(), [this, &addr](std::uint8_t value)
         {
             expectRead(addr++, value);
         });
