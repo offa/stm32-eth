@@ -6,20 +6,24 @@ sudo: required
 
 matrix:
     include:
-    - env: CXX=g++-6 CC=gcc-6
+    - env: CXX=g++-7 CC=gcc-7
       addons:
         apt:
           packages:
-            - g++-6
+            - g++-7
           sources: &sources
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
             - llvm-toolchain-precise-3.9
             - llvm-toolchain-precise-3.8
-            - llvm-toolchain-precise-3.7
-            - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
             - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main'
               key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
+    - env: CXX=g++-6 CC=gcc-6
+      addons:
+        apt:
+          packages:
+            - g++-6
+          sources: *sources
     - env: CXX=g++-5 CC=gcc-5
       addons:
         apt:
@@ -45,13 +49,6 @@ matrix:
         apt:
           packages:
             - clang-3.8
-            - libc++-dev
-          sources: *sources
-    - env: CXX=clang++-3.7 CC=clang-3.7
-      addons:
-        apt:
-          packages:
-            - clang-3.7
             - libc++-dev
           sources: *sources
     - env: CXX=arm-none-eabi-g++ CC=arm-none-eabi-gcc BUILD_TYPE=Debug
