@@ -90,7 +90,7 @@ namespace eth::w5100
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
             std::uint16_t offset = 0;
-            std::for_each(begin, end, [&](std::uint8_t data)
+            std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
             {
                 write(reg.address(), offset++, data);
             });
@@ -119,7 +119,7 @@ namespace eth::w5100
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
             std::size_t offset = 0;
-            std::generate(begin, end, [&]
+            std::generate(begin, end, [this, &reg, &offset]
             {
                 return read(reg.address(), offset++);
             });
