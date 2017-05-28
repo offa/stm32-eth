@@ -3,10 +3,11 @@
 set -ex
 
 ## Install GSL
-wget https://github.com/Microsoft/GSL/archive/master.tar.gz -O gsl.tar.gz
+GSL_VERSION=1f82596
+wget https://github.com/Microsoft/GSL/archive/${GSL_VERSION}.tar.gz -O gsl.tar.gz
 tar -xzf gsl.tar.gz
 mkdir dependencies
-mv GSL-master dependencies/gsl
+mv GSL-* dependencies/gsl
 
 
 if [ "$CXX" != "arm-none-eabi-g++" ]; then
