@@ -96,7 +96,7 @@ namespace spi
     {
         auto packet = makePacket<OpCode::write>(address, data);
 
-        SlaveSelect(*this);
+        SlaveSelect ss{*this};
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
     }
 
@@ -104,7 +104,7 @@ namespace spi
     {
         auto packet = makePacket<OpCode::read>(address);
 
-        SlaveSelect(*this);
+        SlaveSelect ss{*this};
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
         std::array<std::uint8_t, 1> buffer;
