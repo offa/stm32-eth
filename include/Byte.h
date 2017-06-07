@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <type_traits>
+#include <iterator>
 
 namespace eth
 {
@@ -31,6 +32,9 @@ namespace eth
         template<class T>
         constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, std::uint8_t>::value
                                             && std::is_integral<T>::value;
+
+        template<class Itr>
+        constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
 
 
         template<std::size_t pos, class T,
