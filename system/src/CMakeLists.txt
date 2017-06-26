@@ -33,8 +33,13 @@ add_library(misc OBJECT _initialize_hardware.c)
 add_library(trace OBJECT diag/Trace.c diag/trace_impl.c)
 
 
-set_target_properties(cmsis cortexm newlib hal misc trace
-                        PROPERTIES COMPILE_FLAGS
-                            "-Wno-error -Wno-pedantic -Wno-extra"
-                        )
+macro(disable_compiler_warnings _target)
+    target_compile_options(${_target} PUBLIC -Wno-error -Wno-pedantic -Wno-extra)
+endmacro()
 
+disable_compiler_warnings(cmsis)
+disable_compiler_warnings(cortexm)
+disable_compiler_warnings(newlib)
+disable_compiler_warnings(hal)
+disable_compiler_warnings(misc)
+disable_compiler_warnings(trace)
