@@ -23,8 +23,8 @@ add_compiler_flag(-Wall
                 -pedantic
                 -Werror
                 -Wshadow
-                -Wold-style-cast 
                 )
+add_cxx_flag(-Wold-style-cast)
 
 if( COVERAGE )
     include(Coverage)
