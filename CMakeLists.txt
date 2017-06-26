@@ -23,6 +23,7 @@ add_compiler_flag(-Wall
                 -pedantic
                 -Werror
                 -Wshadow
+                -Wold-style-cast 
                 )
 
 if( COVERAGE )
