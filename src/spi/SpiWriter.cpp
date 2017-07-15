@@ -120,7 +120,7 @@ namespace spi
         HAL_GPIO_WritePin(blockRef, std::get<3>(m_config).Pin, value);
     }
 
-    SpiWriter::Handle& SpiWriter::nativeHandle()
+    SpiWriter::Handle& SpiWriter::nativeHandle() noexcept
     {
         return m_handle;
     }

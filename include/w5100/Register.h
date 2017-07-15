@@ -41,7 +41,7 @@ namespace w5100
         }
 
 
-        constexpr std::uint16_t address() const
+        constexpr std::uint16_t address() const noexcept
         {
             return m_address;
         }
@@ -55,13 +55,13 @@ namespace w5100
 
 
     template<class T>
-    constexpr auto makeRegister(std::uint16_t address)
+    constexpr auto makeRegister(std::uint16_t address) noexcept
     {
         return Register<T>(address);
     }
 
     template<class T>
-    constexpr auto makeRegister(SocketHandle s, std::uint16_t address)
+    constexpr auto makeRegister(SocketHandle s, std::uint16_t address) noexcept
     {
         constexpr std::uint16_t baseAddress = 0x0400;
         constexpr std::uint16_t channelRegisterMapSize = 0x0100;
