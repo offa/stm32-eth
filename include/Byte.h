@@ -40,7 +40,7 @@ namespace eth
         template<std::size_t pos, class T,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( pos < sizeof(T) ), int> = 0>
-        constexpr std::uint8_t get(T value)
+        constexpr std::uint8_t get(T value) noexcept
         {
             constexpr auto shift = pos * 8;
             constexpr auto mask = ( 0xff << shift );
@@ -50,7 +50,7 @@ namespace eth
 
         template<class T, class U,
             std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
-        constexpr void to(U)
+        constexpr void to(U) noexcept
         {
             static_assert(is_byte_compatible_v<U>, "Invalid type for 'U'");
         }
@@ -59,7 +59,7 @@ namespace eth
             std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= sizeof(std::uint8_t) ), int> = 0>
-        constexpr T to(U value)
+        constexpr T to(U value) noexcept
         {
             return value;
         }
@@ -69,7 +69,7 @@ namespace eth
             std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
             std::enable_if_t<std::is_integral<T>::value
                                 && ( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
-        constexpr T to(U valueN, Us... values)
+        constexpr T to(U valueN, Us... values) noexcept
         {
             constexpr auto shift = sizeof...(values) * 8;
             return ( valueN << shift ) | to<T>(values...);
