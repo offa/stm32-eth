@@ -52,17 +52,17 @@ namespace eth
         }
 
 
-        constexpr std::uint8_t value() const
+        constexpr std::uint8_t value() const noexcept
         {
             return m_value;
         }
 
-        constexpr bool test(Mask mask) const
+        constexpr bool test(Mask mask) const noexcept
         {
             return m_value & static_cast<std::uint8_t>(mask);
         }
 
-        constexpr void set(Mask mask)
+        constexpr void set(Mask mask) noexcept
         {
             m_value |= static_cast<std::uint8_t>(mask);
         }

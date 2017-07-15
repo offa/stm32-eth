@@ -41,7 +41,7 @@ namespace eth
         }
 
 
-        constexpr value_type value() const
+        constexpr value_type value() const noexcept
         {
             return m_id;
         }
@@ -56,7 +56,7 @@ namespace eth
 
 
     template<SocketHandle::value_type id>
-    constexpr auto makeHandle()
+    constexpr auto makeHandle() noexcept
     {
         static_assert(id < supportedSockets, "Socket-Id out of range");
         return SocketHandle(id);
