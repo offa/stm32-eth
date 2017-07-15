@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_hal_qspi.c
   * @author  MCD Application Team
-  * @version V1.5.0
-  * @date    06-May-2016
+  * @version V1.6.0
+  * @date    04-November-2016
   * @brief   QSPI HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the QuadSPI interface (QSPI).
@@ -179,7 +179,7 @@
 #ifdef HAL_QSPI_MODULE_ENABLED
 
 #if defined(STM32F446xx) || defined(STM32F469xx) || defined(STM32F479xx) || defined(STM32F412Zx) || defined(STM32F412Vx) || \
-    defined(STM32F412Rx)
+    defined(STM32F412Rx) || defined(STM32F413xx) || defined(STM32F423xx)
     
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -495,7 +495,7 @@ void HAL_QSPI_IRQHandler(QSPI_HandleTypeDef *hqspi)
         __HAL_DMA_DISABLE(hqspi->hdma);
       }
 
-/* Clear Busy bit */
+      /* Clear Busy bit */
       HAL_QSPI_Abort_IT(hqspi);
       
       /* Change state of QSPI */
@@ -1143,15 +1143,15 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
   HAL_StatusTypeDef status = HAL_OK;
   uint32_t *tmp;
   uint32_t data_size = (READ_REG(hqspi->Instance->DLR) + 1);
-  
+
   /* Process locked */
   __HAL_LOCK(hqspi);
-  
+
   if(hqspi->State == HAL_QSPI_STATE_READY)
   {
     /* Clear the error code */                
     hqspi->ErrorCode = HAL_QSPI_ERROR_NONE;
-    
+
     if(pData != NULL ) 
     {
       /* Configure counters of the handle */
@@ -1167,7 +1167,7 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
           => no transfer possible with DMA peripheral access configured as halfword */
           hqspi->ErrorCode |= HAL_QSPI_ERROR_INVALID_PARAM;
           status = HAL_ERROR;
-          
+
           /* Process unlocked */
           __HAL_UNLOCK(hqspi);
         }
@@ -1184,7 +1184,7 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
           => no transfer possible with DMA peripheral access configured as word */
           hqspi->ErrorCode |= HAL_QSPI_ERROR_INVALID_PARAM;
           status = HAL_ERROR;
-          
+
           /* Process unlocked */
           __HAL_UNLOCK(hqspi);
         }
@@ -1193,10 +1193,9 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
           hqspi->TxXferCount = (data_size >> 2);
         }
       }
-      
+
       if (status == HAL_OK)
       {
-
       /* Update state */
       hqspi->State = HAL_QSPI_STATE_BUSY_INDIRECT_TX;
 
@@ -1206,24 +1205,47 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
       /* Configure size and pointer of the handle */
       hqspi->TxXferSize = hqspi->TxXferCount;
       hqspi->pTxBuffPtr = pData;
-    
+
       /* Configure QSPI: CCR register with functional mode as indirect write */
       MODIFY_REG(hqspi->Instance->CCR, QUADSPI_CCR_FMODE, QSPI_FUNCTIONAL_MODE_INDIRECT_WRITE);
-    
+
       /* Set the QSPI DMA transfer complete callback */
       hqspi->hdma->XferCpltCallback = QSPI_DMATxCplt;
-    
+
       /* Set the QSPI DMA Half transfer complete callback */
       hqspi->hdma->XferHalfCpltCallback = QSPI_DMATxHalfCplt;
-    
+
       /* Set the DMA error callback */
       hqspi->hdma->XferErrorCallback = QSPI_DMAError;
-      
-      /* Clear the DMA abort callback */      
+
+      /* Clear the DMA abort callback */
       hqspi->hdma->XferAbortCallback = NULL;
 
+#if defined (QSPI1_V2_1L)
+      /* Bug "ES0305 section 2.1.8 In some specific cases, DMA2 data corruption occurs when managing
+         AHB and APB2 peripherals in a concurrent way" Workaround Implementation:
+         Change the following configuration of DMA peripheral
+           - Enable peripheral increment
+           - Disable memory increment
+           - Set DMA direction as peripheral to memory mode */
+
+        /* Enable peripheral increment mode of the DMA */
+        hqspi->hdma->Init.PeriphInc = DMA_PINC_ENABLE;
+
+        /* Disable memory increment mode of the DMA */
+        hqspi->hdma->Init.MemInc = DMA_MINC_DISABLE;
+        
+        /* Update peripheral/memory increment mode bits */
+        MODIFY_REG(hqspi->hdma->Instance->CR, (DMA_SxCR_MINC | DMA_SxCR_PINC), (hqspi->hdma->Init.MemInc | hqspi->hdma->Init.PeriphInc));
+
+        /* Configure the direction of the DMA */
+        hqspi->hdma->Init.Direction = DMA_PERIPH_TO_MEMORY;
+#else        
       /* Configure the direction of the DMA */
       hqspi->hdma->Init.Direction = DMA_MEMORY_TO_PERIPH;
+#endif /* QSPI1_V2_1L */
+
+      /* Update direction mode bit */
       MODIFY_REG(hqspi->hdma->Instance->CR, DMA_SxCR_DIR, hqspi->hdma->Init.Direction);
 
       /* Enable the QSPI transmit DMA Channel */
@@ -1238,12 +1260,12 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
 
       /* Enable the DMA transfer by setting the DMAEN bit in the QSPI CR register */
       SET_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
-    }
+      }
     }
     else
     {
       hqspi->ErrorCode |= HAL_QSPI_ERROR_INVALID_PARAM;
-      
+
       status = HAL_ERROR;
 
       /* Process unlocked */
@@ -1260,7 +1282,7 @@ HAL_StatusTypeDef HAL_QSPI_Transmit_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pDat
 
   return status;
 }
-                          
+
 /**
   * @brief  Receives an amount of data in non blocking mode with DMA. 
   * @param  hqspi: QSPI handle
@@ -1278,14 +1300,14 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
   uint32_t *tmp;
   uint32_t addr_reg = READ_REG(hqspi->Instance->AR);
   uint32_t data_size = (READ_REG(hqspi->Instance->DLR) + 1);
-  
+
   /* Process locked */
   __HAL_LOCK(hqspi);
-  
+
   if(hqspi->State == HAL_QSPI_STATE_READY)
   {
     hqspi->ErrorCode = HAL_QSPI_ERROR_NONE;
-    
+
     if(pData != NULL ) 
     {
       /* Configure counters of the handle */
@@ -1301,7 +1323,7 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
           => no transfer possible with DMA peripheral access configured as halfword */
           hqspi->ErrorCode |= HAL_QSPI_ERROR_INVALID_PARAM;
           status = HAL_ERROR;
-          
+
           /* Process unlocked */
           __HAL_UNLOCK(hqspi);
         }
@@ -1318,7 +1340,7 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
           => no transfer possible with DMA peripheral access configured as word */
           hqspi->ErrorCode |= HAL_QSPI_ERROR_INVALID_PARAM;
           status = HAL_ERROR;
-          
+
           /* Process unlocked */
           __HAL_UNLOCK(hqspi);
         }
@@ -1327,61 +1349,110 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
           hqspi->RxXferCount = (data_size >> 2);
         }
       }
-      
+
       if (status == HAL_OK)
       {
-        
         /* Update state */
         hqspi->State = HAL_QSPI_STATE_BUSY_INDIRECT_RX;
-        
+
         /* Clear interrupt */
         __HAL_QSPI_CLEAR_FLAG(hqspi, (QSPI_FLAG_TE | QSPI_FLAG_TC));
-        
+
         /* Configure size and pointer of the handle */
         hqspi->RxXferSize = hqspi->RxXferCount;
         hqspi->pRxBuffPtr = pData;
-        
+
         /* Set the QSPI DMA transfer complete callback */
         hqspi->hdma->XferCpltCallback = QSPI_DMARxCplt;
-        
+
         /* Set the QSPI DMA Half transfer complete callback */
         hqspi->hdma->XferHalfCpltCallback = QSPI_DMARxHalfCplt;
-        
+
         /* Set the DMA error callback */
         hqspi->hdma->XferErrorCallback = QSPI_DMAError;
-        
-        /* Clear the DMA abort callback */      
+
+        /* Clear the DMA abort callback */
         hqspi->hdma->XferAbortCallback = NULL;
-        
+
+#if defined (QSPI1_V2_1L)
+      /* Bug "ES0305 section 2.1.8 In some specific cases, DMA2 data corruption occurs when managing
+         AHB and APB2 peripherals in a concurrent way" Workaround Implementation:
+         Change the following configuration of DMA peripheral
+           - Enable peripheral increment
+           - Disable memory increment
+           - Set DMA direction as memory to peripheral mode
+           - 4 Extra words (32-bits) are added for read operation to guarantee
+              the last data is transferred from DMA FIFO to RAM memory */
+
+        /* Enable peripheral increment of the DMA */
+        hqspi->hdma->Init.PeriphInc = DMA_PINC_ENABLE;
+
+        /* Disable memory increment of the DMA */
+        hqspi->hdma->Init.MemInc = DMA_MINC_DISABLE;
+
+        /* Update peripheral/memory increment mode bits */
+        MODIFY_REG(hqspi->hdma->Instance->CR, (DMA_SxCR_MINC | DMA_SxCR_PINC), (hqspi->hdma->Init.MemInc | hqspi->hdma->Init.PeriphInc));
+
         /* Configure the direction of the DMA */
-        hqspi->hdma->Init.Direction = DMA_PERIPH_TO_MEMORY;
+        hqspi->hdma->Init.Direction = DMA_MEMORY_TO_PERIPH;
+
+        /* 4 Extra words (32-bits) are needed for read operation to guarantee 
+        the last data is transferred from DMA FIFO to RAM memory */
+        WRITE_REG(hqspi->Instance->DLR, (data_size - 1 + 16));
+
+		/* Update direction mode bit */
         MODIFY_REG(hqspi->hdma->Instance->CR, DMA_SxCR_DIR, hqspi->hdma->Init.Direction);
-        
+
+        /* Configure QSPI: CCR register with functional as indirect read */
+        MODIFY_REG(hqspi->Instance->CCR, QUADSPI_CCR_FMODE, QSPI_FUNCTIONAL_MODE_INDIRECT_READ);
+
+        /* Start the transfer by re-writing the address in AR register */
+        WRITE_REG(hqspi->Instance->AR, addr_reg);
+
         /* Enable the DMA Channel */
         tmp = (uint32_t*)&pData;
         HAL_DMA_Start_IT(hqspi->hdma, (uint32_t)&hqspi->Instance->DR, *(uint32_t*)tmp, hqspi->RxXferSize);
-        
-        /* Configure QSPI: CCR register with functional as indirect read */
-        MODIFY_REG(hqspi->Instance->CCR, QUADSPI_CCR_FMODE, QSPI_FUNCTIONAL_MODE_INDIRECT_READ);
-        
-        /* Start the transfer by re-writing the address in AR register */
-        WRITE_REG(hqspi->Instance->AR, addr_reg);
-        
-        /* Process unlocked */
-        __HAL_UNLOCK(hqspi);
-        
-        /* Enable the QSPI transfer error Interrupt */
-        __HAL_QSPI_ENABLE_IT(hqspi, QSPI_IT_TE);
-        
+
         /* Enable the DMA transfer by setting the DMAEN bit in the QSPI CR register */
         SET_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
+
+        /* Process unlocked */
+        __HAL_UNLOCK(hqspi);
+
+        /* Enable the QSPI transfer error Interrupt */
+        __HAL_QSPI_ENABLE_IT(hqspi, QSPI_IT_TE);
+#else
+        /* Configure the direction of the DMA */
+        hqspi->hdma->Init.Direction = DMA_PERIPH_TO_MEMORY;
+
+		MODIFY_REG(hqspi->hdma->Instance->CR, DMA_SxCR_DIR, hqspi->hdma->Init.Direction);
+
+        /* Enable the DMA Channel */
+        tmp = (uint32_t*)&pData;
+        HAL_DMA_Start_IT(hqspi->hdma, (uint32_t)&hqspi->Instance->DR, *(uint32_t*)tmp, hqspi->RxXferSize);
+
+        /* Configure QSPI: CCR register with functional as indirect read */
+        MODIFY_REG(hqspi->Instance->CCR, QUADSPI_CCR_FMODE, QSPI_FUNCTIONAL_MODE_INDIRECT_READ);
+
+        /* Start the transfer by re-writing the address in AR register */
+        WRITE_REG(hqspi->Instance->AR, addr_reg);
+
+        /* Process unlocked */
+        __HAL_UNLOCK(hqspi);
+
+        /* Enable the QSPI transfer error Interrupt */
+        __HAL_QSPI_ENABLE_IT(hqspi, QSPI_IT_TE);
+
+        /* Enable the DMA transfer by setting the DMAEN bit in the QSPI CR register */
+        SET_BIT(hqspi->Instance->CR, QUADSPI_CR_DMAEN);
+#endif /* QSPI1_V2_1L */
       }
     }
     else
     {
       hqspi->ErrorCode |= HAL_QSPI_ERROR_INVALID_PARAM;
       status = HAL_ERROR;
-      
+
       /* Process unlocked */
       __HAL_UNLOCK(hqspi);
     }
@@ -1389,11 +1460,11 @@ HAL_StatusTypeDef HAL_QSPI_Receive_DMA(QSPI_HandleTypeDef *hqspi, uint8_t *pData
   else
   {
     status = HAL_BUSY; 
-    
+
     /* Process unlocked */
     __HAL_UNLOCK(hqspi);
   }
-  
+
   return status;
 }
 
@@ -2338,7 +2409,8 @@ static void QSPI_Config(QSPI_HandleTypeDef *hqspi, QSPI_CommandTypeDef *cmd, uin
 /**
   * @}
   */
-#endif /* STM32F446xx || STM32F469xx || STM32F479xx || STM32F412Zx || STM32F412Vx || STM32F412Rx */
+#endif /* STM32F446xx || STM32F469xx || STM32F479xx || STM32F412Zx || STM32F412Vx || STM32F412Rx 
+          STM32F413xx || STM32F423xx */
 
 #endif /* HAL_QSPI_MODULE_ENABLED */
 /**

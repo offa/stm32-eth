@@ -39,7 +39,7 @@ namespace eth::spi
         void write(std::uint16_t address, std::uint8_t data);
         std::uint8_t read(std::uint16_t address);
 
-        Handle& nativeHandle();
+        Handle& nativeHandle() noexcept;
 
 
         SpiWriter& operator=(SpiWriter&&) = default;

@@ -89,6 +89,8 @@ namespace eth::w5100
         template<class T, class Iterator>
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
+            static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
+
             std::uint16_t offset = 0;
             std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
             {
@@ -118,6 +120,8 @@ namespace eth::w5100
         template<class T, class Iterator>
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
+            static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
+
             std::size_t offset = 0;
             std::generate(begin, end, [this, &reg, &offset]
             {
@@ -132,12 +136,12 @@ namespace eth::w5100
         void setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port);
 
 
-        static constexpr std::uint16_t getTransmitBufferSize()
+        static constexpr std::uint16_t getTransmitBufferSize() noexcept
         {
             return transmitBufferSize;
         }
 
-        static constexpr std::uint16_t getReceiveBufferSize()
+        static constexpr std::uint16_t getReceiveBufferSize() noexcept
         {
             return receiveBufferSize;
         }

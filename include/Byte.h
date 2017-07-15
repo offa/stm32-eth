@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <type_traits>
+#include <iterator>
 
 namespace eth::byte
 {
@@ -30,11 +31,14 @@ namespace eth::byte
     constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, std::uint8_t>::value
                                         && std::is_integral<T>::value;
 
+    template<class Itr>
+    constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
+
 
     template<std::size_t pos, class T,
         std::enable_if_t<std::is_integral<T>::value
                             && ( pos < sizeof(T) ), int> = 0>
-    constexpr std::uint8_t get(T value)
+    constexpr std::uint8_t get(T value) noexcept
     {
         constexpr auto shift = pos * 8;
         constexpr auto mask = ( 0xff << shift );
@@ -44,7 +48,7 @@ namespace eth::byte
 
     template<class T, class U,
         std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
-    constexpr void to(U)
+    constexpr void to(U) noexcept
     {
         static_assert(is_byte_compatible_v<U>, "Invalid type for 'U'");
     }
@@ -53,7 +57,7 @@ namespace eth::byte
         std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
         std::enable_if_t<std::is_integral<T>::value
                             && ( sizeof(T) >= sizeof(std::uint8_t) ), int> = 0>
-    constexpr T to(U value)
+    constexpr T to(U value) noexcept
     {
         return value;
     }
@@ -62,7 +66,7 @@ namespace eth::byte
         std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
         std::enable_if_t<std::is_integral<T>::value
                             && ( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
-    constexpr T to(U valueN, Us... values)
+    constexpr T to(U valueN, Us... values) noexcept
     {
         constexpr auto shift = sizeof...(values) * 8;
         return ( valueN << shift ) | to<T>(values...);

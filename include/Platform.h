@@ -25,6 +25,6 @@
 
 namespace platform
 {
-    void wait(std::chrono::milliseconds t);
+    void wait(std::chrono::milliseconds t) noexcept;
 }
 

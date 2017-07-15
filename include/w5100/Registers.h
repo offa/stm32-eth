@@ -37,57 +37,57 @@ namespace eth::w5100::registers
 
 
 
-    constexpr auto socketMode(SocketHandle s)
+    constexpr auto socketMode(SocketHandle s) noexcept
     {
         return makeRegister<std::uint8_t>(s, 0x0000);
     }
 
-    constexpr auto socketSourcePort(SocketHandle s)
+    constexpr auto socketSourcePort(SocketHandle s) noexcept
     {
         return makeRegister<std::uint16_t>(s, 0x0004);
     }
 
-    constexpr auto socketInterrupt(SocketHandle s)
+    constexpr auto socketInterrupt(SocketHandle s) noexcept
     {
         return makeRegister<std::uint8_t>(s, 0x0002);
     }
 
-    constexpr auto socketCommand(SocketHandle s)
+    constexpr auto socketCommand(SocketHandle s) noexcept
     {
         return makeRegister<std::uint8_t>(s, 0x0001);
     }
 
-    constexpr auto socketStatus(SocketHandle s)
+    constexpr auto socketStatus(SocketHandle s) noexcept
     {
         return makeRegister<std::uint8_t>(s, 0x0003);
     }
 
-    constexpr auto socketTransmitFreeSize(SocketHandle s)
+    constexpr auto socketTransmitFreeSize(SocketHandle s) noexcept
     {
         return makeRegister<std::uint16_t>(s, 0x0020);
     }
 
-    constexpr auto socketReceiveFreeSize(SocketHandle s)
+    constexpr auto socketReceiveFreeSize(SocketHandle s) noexcept
     {
         return makeRegister<std::uint16_t>(s, 0x0026);
     }
 
-    constexpr auto socketTransmitWritePointer(SocketHandle s)
+    constexpr auto socketTransmitWritePointer(SocketHandle s) noexcept
     {
         return makeRegister<std::uint16_t>(s, 0x0024);
     }
 
-    constexpr auto socketReceiveReadPointer(SocketHandle s)
+    constexpr auto socketReceiveReadPointer(SocketHandle s) noexcept
     {
         return makeRegister<std::uint16_t>(s, 0x0028);
     }
 
-    constexpr auto socketDestIpAddress(SocketHandle s)
+    constexpr auto socketDestIpAddress(SocketHandle s) noexcept
     {
         return makeRegister<std::array<std::uint8_t, 4>>(s, 0x000c);
     }
 
-    constexpr auto socketDestPort(SocketHandle s)
+    constexpr auto socketDestPort(SocketHandle s) noexcept
     {
         return makeRegister<std::uint16_t>(s, 0x0010);
     }

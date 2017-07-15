@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f4xx_hal_spi.c
   * @author  MCD Application Team
-  * @version V1.5.0
-  * @date    06-May-2016
+  * @version V1.6.0
+  * @date    04-November-2016
   * @brief   SPI HAL module driver.
   *          This file provides firmware functions to manage the following
   *          functionalities of the Serial Peripheral Interface (SPI) peripheral:
@@ -1593,6 +1593,46 @@ error :
   /* Process Unlocked */
   __HAL_UNLOCK(hspi);
   return errorcode;
+}
+
+/**
+  * @brief  Pause the DMA Transfer.
+  * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for the specified SPI module.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_SPI_DMAPause(SPI_HandleTypeDef *hspi)
+{
+  /* Process Locked */
+  __HAL_LOCK(hspi);
+
+  /* Disable the SPI DMA Tx & Rx requests */
+  CLEAR_BIT(hspi->Instance->CR2, SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
+
+  /* Process Unlocked */
+  __HAL_UNLOCK(hspi);
+
+  return HAL_OK;
+}
+
+/**
+  * @brief  Resume the DMA Transfer.
+  * @param  hspi: pointer to a SPI_HandleTypeDef structure that contains
+  *               the configuration information for the specified SPI module.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_SPI_DMAResume(SPI_HandleTypeDef *hspi)
+{
+  /* Process Locked */
+  __HAL_LOCK(hspi);
+
+  /* Enable the SPI DMA Tx & Rx requests */
+  SET_BIT(hspi->Instance->CR2, SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
+
+  /* Process Unlocked */
+  __HAL_UNLOCK(hspi);
+
+  return HAL_OK;
 }
 
 /**
