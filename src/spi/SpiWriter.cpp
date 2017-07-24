@@ -22,9 +22,7 @@
 #include "Byte.h"
 #include <array>
 
-namespace eth
-{
-namespace spi
+namespace eth::spi
 {
     namespace
     {
@@ -120,5 +118,3 @@ namespace spi
     }
 
 }
-}
-
