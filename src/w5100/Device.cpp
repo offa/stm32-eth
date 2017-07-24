@@ -208,10 +208,11 @@ namespace w5100
 
     void setupDevice(Device& dev, eth::NetConfig config)
     {
-        dev.write(registers::sourceIpAddress, std::get<0>(config).cbegin(), std::get<0>(config).cend());
-        dev.write(registers::subnetMask, std::get<1>(config).cbegin(), std::get<1>(config).cend());
-        dev.write(registers::gatewayAddress, std::get<2>(config).cbegin(), std::get<2>(config).cend());
-        dev.write(registers::sourceMacAddress, std::get<3>(config).cbegin(), std::get<3>(config).cend());
+        const auto[ip, subnet, gateway, mac] = config;
+        dev.write(registers::sourceIpAddress, ip.cbegin(), ip.cend());
+        dev.write(registers::subnetMask, subnet.cbegin(), subnet.cend());
+        dev.write(registers::gatewayAddress, gateway.cbegin(), gateway.cend());
+        dev.write(registers::sourceMacAddress, mac.cbegin(), mac.cend());
     }
 
 }
