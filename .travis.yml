@@ -13,15 +13,6 @@ matrix:
             - g++-7
           sources: &sources
             - ubuntu-toolchain-r-test
-            - sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main'
-              key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
-    - env: CXX=clang++-4.0 CC=clang-4.0
-      addons:
-        apt:
-          packages:
-            - clang-4.0
-            - libc++-dev
-          sources: *sources
 
 
 script:
