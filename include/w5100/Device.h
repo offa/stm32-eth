@@ -70,7 +70,7 @@ namespace eth::w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         void write(Register<T> reg, T data)
         {
             constexpr auto pos = n - 1;
@@ -80,7 +80,7 @@ namespace eth::w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         void write(Register<T> reg, T data)
         {
             write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
@@ -100,7 +100,7 @@ namespace eth::w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
             constexpr auto pos = sizeof(T) - n;
@@ -111,7 +111,7 @@ namespace eth::w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
             return read(reg.address(), sizeof(T) - n);
