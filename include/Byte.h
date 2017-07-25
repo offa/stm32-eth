@@ -28,15 +28,15 @@ namespace eth::byte
 {
 
     template<class T>
-    constexpr bool is_byte_compatible_v = std::is_convertible<std::remove_cv_t<T>, std::uint8_t>::value
-                                        && std::is_integral<T>::value;
+    constexpr bool is_byte_compatible_v = std::is_convertible_v<std::remove_cv_t<T>, std::uint8_t>
+                                        && std::is_integral_v<T>;
 
     template<class Itr>
     constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
 
 
     template<std::size_t pos, class T,
-        std::enable_if_t<std::is_integral<T>::value
+        std::enable_if_t<std::is_integral_v<T>
                             && ( pos < sizeof(T) ), int> = 0>
     constexpr std::uint8_t get(T value) noexcept
     {
@@ -55,7 +55,7 @@ namespace eth::byte
 
     template<class T, class U,
         std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
-        std::enable_if_t<std::is_integral<T>::value
+        std::enable_if_t<std::is_integral_v<T>
                             && ( sizeof(T) >= sizeof(std::uint8_t) ), int> = 0>
     constexpr T to(U value) noexcept
     {
@@ -64,7 +64,7 @@ namespace eth::byte
 
     template<class T, class U, class... Us,
         std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
-        std::enable_if_t<std::is_integral<T>::value
+        std::enable_if_t<std::is_integral_v<T>
                             && ( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
     constexpr T to(U valueN, Us... values) noexcept
     {
