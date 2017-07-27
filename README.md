@@ -46,7 +46,7 @@ Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.
  1. `reset run`
 
 
-## Pin assignment
+## Wiring
 
 #### W5100
 
