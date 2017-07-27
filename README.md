@@ -10,7 +10,7 @@ Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
 ---------------------------
 > ### Note
 >
-> This is the ***experimental* C++17** branch, which requires a capable compiler.
+> This is the ***experimental* C++17 Concepts** branch, which requires a capable compiler.
 
 ---------------------------
 
