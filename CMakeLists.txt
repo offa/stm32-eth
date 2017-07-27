@@ -24,7 +24,7 @@ add_compiler_flag(-Wall
                 -Werror
                 -Wshadow
                 )
-add_cxx_flag(-Wold-style-cast)
+add_cxx_flag(-Wold-style-cast -fconcepts)
 
 if( COVERAGE )
     include(Coverage)
