@@ -14,7 +14,7 @@ Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
  - [**GSL**](https://github.com/microsoft/gsl)
  - [**CppUTest**](https://github.com/cpputest/cpputest) – *(Optional)*
  - [**GNU ARM Embedded Toolchain**](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm) (*arm-none-eabi-gcc*)
-
+ 
 
 ## Testing
 
@@ -33,6 +33,19 @@ Executing tests using CTest: `make test` or `ctest`. For `unittest` it's possibl
 ## Integration Test
 
 Integration Test for *Stm32F4* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
+
+
+
+## Experimental Branches
+
+There are following *experimental* branches: 
+
+| Branch | Description |
+|-------:|-------------|
+| ***cpp17*** | C++17 |
+| ***cpp17-concepts*** | C++17 with *Concepts* |
+
+***Note:*** These require appropriate compiler support.
 
 
 ## Flashing (OpenOCD)
@@ -54,7 +67,7 @@ Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 
 [![W5100 Pin Assignment](doc/W5100-Pin-Assignment-Scaled.png?raw=true)](doc/W5100-Pin-Assignment.png?raw=true)
 
-#### Stm32
+#### Stm32 Pin Assignment
 
 | Pin  | Stm32 |
 |:----:|:-----:|
