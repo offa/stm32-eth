@@ -87,10 +87,9 @@ namespace eth::w5100
         }
 
         template<class T, class Iterator>
+            requires byte::ByteCompatibleIterator<Iterator>
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
-            static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
-
             std::uint16_t offset = 0;
             std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
             {
@@ -118,10 +117,9 @@ namespace eth::w5100
         }
 
         template<class T, class Iterator>
+            requires byte::ByteCompatibleIterator<Iterator>
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
-            static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
-
             std::size_t offset = 0;
             std::generate(begin, end, [this, &reg, &offset]
             {

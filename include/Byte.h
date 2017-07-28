@@ -38,6 +38,10 @@ namespace eth::byte
     template<class T>
     concept bool ByteCompatible = is_byte_compatible_v<T>;
 
+    template<class Itr>
+    concept bool ByteCompatibleIterator = is_byte_compatible_itr_v<Itr>;
+
+
 
     template<std::size_t pos, class T,
         std::enable_if_t<std::is_integral_v<T>
