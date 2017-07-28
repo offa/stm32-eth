@@ -35,6 +35,10 @@ namespace eth::byte
     constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
 
 
+    template<class T>
+    concept bool ByteCompatible = is_byte_compatible_v<T>;
+
+
     template<std::size_t pos, class T,
         std::enable_if_t<std::is_integral_v<T>
                             && ( pos < sizeof(T) ), int> = 0>
@@ -47,25 +51,18 @@ namespace eth::byte
 
 
     template<class T, class U,
-        std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
-    constexpr void to(U) noexcept
-    {
-        static_assert(is_byte_compatible_v<U>, "Invalid type for 'U'");
-    }
-
-    template<class T, class U,
-        std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
         std::enable_if_t<std::is_integral_v<T>
                             && ( sizeof(T) >= sizeof(std::uint8_t) ), int> = 0>
+        requires ByteCompatible<U>
     constexpr T to(U value) noexcept
     {
         return value;
     }
 
     template<class T, class U, class... Us,
-        std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
         std::enable_if_t<std::is_integral_v<T>
                             && ( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
+        requires ByteCompatible<U>
     constexpr T to(U valueN, Us... values) noexcept
     {
         constexpr auto shift = sizeof...(values) * 8;
