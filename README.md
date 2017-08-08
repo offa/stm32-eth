@@ -8,7 +8,7 @@
 Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
 
 
-## Requirements
+## • Requirements
 
  - [**CMake**](http://www.cmake.org/)
  - [**GSL**](https://github.com/microsoft/gsl)
@@ -16,7 +16,7 @@ Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
  - [**GNU ARM Embedded Toolchain**](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm) (*arm-none-eabi-gcc*)
  
 
-## Testing
+## • Testing
 
 Build and execute Unit Tests:
 
@@ -30,13 +30,13 @@ make unittest
 Executing tests using CTest: `make test` or `ctest`. For `unittest` it's possible to switch verbosity by CMake option.
 
 
-## Integration Test
+## • Integration Test
 
 Integration Test for *Stm32F4* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
 
 
 
-## Experimental Branches
+## • Experimental Branches
 
 There are following *experimental* branches, these require appropriate compiler support.
 
@@ -49,7 +49,7 @@ Using the *C++17* Standard
 Using the *C++17* Standard and *Concepts TS*.
 
 
-## Flashing (OpenOCD)
+## • Flashing (OpenOCD)
 
 Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.org/):
 
@@ -60,9 +60,9 @@ Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.
  1. `reset run`
 
 
-## Wiring
+## • Wiring & Pin Assignment
 
-#### W5100
+#### W5100 Wiring
 
 Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 
@@ -76,7 +76,6 @@ Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 | MISO | PB14  |
 | SCK  | PB13  |
 | SS   | PB12  |
-
 
 
 
