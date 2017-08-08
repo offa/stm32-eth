@@ -28,6 +28,7 @@
 #include "NetConfig.h"
 #include "w5100/Register.h"
 #include "Byte.h"
+#include "Concepts.h"
 #include <algorithm>
 #include <iterator>
 #include <cstdint>
@@ -69,8 +70,8 @@ namespace eth::w5100
         std::uint16_t receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer);
 
         template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0>
+            requires IntegralType<T>
         void write(Register<T> reg, T data)
         {
             constexpr auto pos = n - 1;
@@ -79,8 +80,8 @@ namespace eth::w5100
         }
 
         template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+                std::enable_if_t<(n <= 1), int> = 0>
+            requires IntegralType<T>
         void write(Register<T> reg, T data)
         {
             write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
@@ -98,8 +99,8 @@ namespace eth::w5100
         }
 
         template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0>
+            requires IntegralType<T>
         T read(Register<T> reg)
         {
             constexpr auto pos = sizeof(T) - n;
@@ -109,8 +110,8 @@ namespace eth::w5100
         }
 
         template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+                std::enable_if_t<(n <= 1), int> = 0>
+            requires IntegralType<T>
         T read(Register<T> reg)
         {
             return read(reg.address(), sizeof(T) - n);
