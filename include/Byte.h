@@ -55,17 +55,17 @@ namespace eth::byte
     }
 
 
-    template<class T, class U,
-        std::enable_if_t<( sizeof(T) >= sizeof(std::uint8_t) ), int> = 0>
+    template<class T, class U>
         requires IntegralType<T> && ByteCompatible<U>
+                && SizeAtLeast<T, sizeof(std::uint8_t)>
     constexpr T to(U value) noexcept
     {
         return value;
     }
 
-    template<class T, class U, class... Us,
-        std::enable_if_t<( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
+    template<class T, class U, class... Us>
         requires IntegralType<T> && ByteCompatible<U>
+                && SizeAtLeast<T, (sizeof...(Us) + sizeof(std::uint8_t))>
     constexpr T to(U valueN, Us... values) noexcept
     {
         constexpr auto shift = sizeof...(values) * 8;

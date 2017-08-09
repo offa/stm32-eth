@@ -28,5 +28,8 @@ namespace eth
     template<class T>
     concept bool IntegralType = std::is_integral_v<T>;
 
+    template<class T, std::size_t minSize>
+    concept bool SizeAtLeast = (sizeof(T) >= minSize);
 
 }
+
