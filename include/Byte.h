@@ -44,9 +44,8 @@ namespace eth::byte
 
 
 
-    template<std::size_t pos, class T,
-        std::enable_if_t<(pos < sizeof(T)), int> = 0>
-        requires IntegralType<T>
+    template<std::size_t pos, class T>
+        requires IntegralType<T> && IndexWithinTypesize<T, pos>
     constexpr std::uint8_t get(T value) noexcept
     {
         constexpr auto shift = pos * 8;

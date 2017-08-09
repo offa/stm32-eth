@@ -31,5 +31,8 @@ namespace eth
     template<class T, std::size_t minSize>
     concept bool SizeAtLeast = (sizeof(T) >= minSize);
 
+    template<class T, std::size_t index>
+    concept bool IndexWithinTypesize = (index < sizeof(T));
+
 }
 
