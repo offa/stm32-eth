@@ -42,7 +42,7 @@ There are following *experimental* branches, these require appropriate compiler 
 
 ###### cpp17
 
-Using the *C++17* Standard
+Using the *C++17* Standard.
 
 ###### cpp17-concepts
 
