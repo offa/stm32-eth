@@ -24,25 +24,25 @@ macro(add_linker_flag)
 endmacro()
 
 
-macro(add_hex_target _target)
+function(add_hex_target _target)
     add_custom_target(${_target}.hex DEPENDS ${_target}
                                     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${_target}> ${_target}.hex
                                     VERBATIM
                                     )
-endmacro()
+endfunction()
 
 
-macro(add_bin_target _target)
+function(add_bin_target _target)
     add_custom_target(${_target}.bin DEPENDS ${_target}
                                     COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${_target}> ${_target}.bin
                                     VERBATIM
                                     )
-endmacro()
+endfunction()
 
 
 find_program(SIZE_EXE size)
 
-macro(add_size_target _target)
+function(add_size_target _target)
     if( NOT SIZE_EXE )
         message(WARNING "'size' not found!")
     else()
@@ -51,7 +51,7 @@ macro(add_size_target _target)
                                         VERBATIM
                                         )
     endif()
-endmacro()
+endfunction()
 
 
 
