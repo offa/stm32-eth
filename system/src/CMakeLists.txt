@@ -33,9 +33,9 @@ add_library(misc OBJECT _initialize_hardware.c)
 add_library(trace OBJECT diag/Trace.c diag/trace_impl.c)
 
 
-macro(disable_compiler_warnings _target)
+function(disable_compiler_warnings _target)
     target_compile_options(${_target} PUBLIC -Wno-error -Wno-pedantic -Wno-extra)
-endmacro()
+endfunction()
 
 disable_compiler_warnings(cmsis)
 disable_compiler_warnings(cortexm)
