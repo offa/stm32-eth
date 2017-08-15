@@ -7,12 +7,12 @@ add_subdirectory("mock")
 add_library(testmain OBJECT TestMain.cpp)
 
 
-function(add_test_suite suitename sources)
-    add_executable(${suitename} ${${sources}}
+function(add_test_suite name src)
+    add_executable(${name} ${${src}}
                                 $<TARGET_OBJECTS:testmain>
                                 )
-    add_test(NAME ${suitename} COMMAND ${suitename})
-    target_link_libraries(${suitename} ${CppUTest_LIBRARY}
+    add_test(NAME ${name} COMMAND ${name})
+    target_link_libraries(${name} ${CppUTest_LIBRARY}
                                     ${CppUTest_Ext_LIBRARY}
                                     )
 endfunction()
