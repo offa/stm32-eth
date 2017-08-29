@@ -26,6 +26,7 @@ matrix:
 
 
 install:
+    - pwd && ls
     - mkdir -p "${DEPENDENCY_DIR}" && cd "${DEPENDENCY_DIR}"
     - |
         if [[ ! -d "$(ls -A ${DEPENDENCY_DIR}/cmake)" ]]; then
@@ -33,11 +34,17 @@ install:
           mkdir -p cmake && travis_retry wget --no-check-certificate --quiet -O - "${CMAKE_URL}" | tar --strip-components=1 -xz -C cmake
         fi
         export PATH="${DEPENDENCY_DIR}/cmake/bin:${PATH}"
+    - pwd && ls
+    - cmake --version
 
 script:
+    - pwd && ls
     - if [[ "$CXX" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi
     - script/ci_build.sh
+    - pwd && ls
 
 before_install:
+    - pwd && ls
     - script/ci_install.sh
+    - pwd && ls
 
