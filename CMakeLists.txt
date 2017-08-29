@@ -18,12 +18,12 @@ if( ${BUILD_TYPE_DEBUG} )
 endif()
 
 
-add_compiler_flag(-Wall
-                -Wextra
-                -pedantic
-                -Werror
-                -Wshadow
-                )
+add_compile_options(-Wall
+                    -Wextra
+                    -pedantic
+                    -Werror
+                    -Wshadow
+                    )
 add_cxx_flag(-Wold-style-cast)
 
 if( COVERAGE )
