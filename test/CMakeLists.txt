@@ -7,15 +7,15 @@ add_subdirectory("mock")
 add_library(testmain OBJECT TestMain.cpp)
 
 
-macro(_add_test _name _src_list)
-    add_executable(${_name} ${${_src_list}}
+function(add_test_suite name src)
+    add_executable(${name} ${${src}}
                                 $<TARGET_OBJECTS:testmain>
                                 )
-    add_test(NAME ${_name} COMMAND ${_name})
-    target_link_libraries(${_name} ${CppUTest_LIBRARY}
+    add_test(NAME ${name} COMMAND ${name})
+    target_link_libraries(${name} ${CppUTest_LIBRARY}
                                     ${CppUTest_Ext_LIBRARY}
                                     )
-endmacro()
+endfunction()
 
 
 
@@ -25,7 +25,7 @@ list(APPEND COMMONTEST_SRC RegisterValueTest.cpp
                                     SocketHandleTest.cpp
                                     NetConfigTest.cpp
                                     )
-_add_test(CommonTest COMMONTEST_SRC)
+add_test_suite(CommonTest COMMONTEST_SRC)
 
 
 list(APPEND SOCKETTEST_SRC SocketTest.cpp
@@ -34,7 +34,7 @@ list(APPEND SOCKETTEST_SRC SocketTest.cpp
                     $<TARGET_OBJECTS:platform-mock>
                     $<TARGET_OBJECTS:spiwriter-mock>
                     )
-_add_test(SocketTest SOCKETTEST_SRC)
+add_test_suite(SocketTest SOCKETTEST_SRC)
 
 
 list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
@@ -42,7 +42,7 @@ list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
                         $<TARGET_OBJECTS:w5100device>
                         $<TARGET_OBJECTS:spiwriter-mock>
                         )
-_add_test(W5100DeviceTest W5100TEST_SRC)
+add_test_suite(W5100DeviceTest W5100TEST_SRC)
 
 
 list(APPEND SPIWRITERTEST_SRC SpiWriterTest.cpp
@@ -50,7 +50,7 @@ list(APPEND SPIWRITERTEST_SRC SpiWriterTest.cpp
                             $<TARGET_OBJECTS:spiwriter>
                             $<TARGET_OBJECTS:platform-mock>
                             )
-_add_test(SpiWriterTest SPIWRITERTEST_SRC)
+add_test_suite(SpiWriterTest SPIWRITERTEST_SRC)
 
 
 
