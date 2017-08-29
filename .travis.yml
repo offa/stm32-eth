@@ -37,6 +37,9 @@ install:
     - pwd && ls
     - cmake --version
 
+before_script:
+    - cd ${TRAVIS_BUILD_DIR}
+
 script:
     - pwd && ls
     - if [[ "$CXX" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi
