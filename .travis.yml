@@ -4,6 +4,16 @@ dist: trusty
 sudo: required
 
 
+env:
+  global:
+    - DEPENDENCY_DIR="${TRAVIS_BUILD_DIR}/dependencies"
+    - CMAKE_VERSION="3.9"
+
+cache:
+    directories:
+        - ${DEPENDENCY_DIR}/cmake
+
+
 matrix:
     include:
     - env: CXX=g++-7 CC=gcc-7
@@ -14,6 +24,14 @@ matrix:
           sources: &sources
             - ubuntu-toolchain-r-test
 
+
+install:
+    - script/ci_install_travis.sh
+    - export PATH="${DEPENDENCY_DIR}/cmake/bin:${PATH}"
+    - cmake --version
+
+before_script:
+    - cd ${TRAVIS_BUILD_DIR}
 
 script:
     - if [[ "$CXX" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi

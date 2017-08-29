@@ -6,8 +6,8 @@ set -ex
 GSL_VERSION=master
 wget https://github.com/Microsoft/GSL/archive/${GSL_VERSION}.tar.gz -O gsl.tar.gz
 tar -xzf gsl.tar.gz
-mkdir dependencies
-mv GSL-* dependencies/gsl
+mkdir -p ${DEPENDENCY_DIR}
+mv GSL-* ${DEPENDENCY_DIR}/gsl
 
 
 if [ "$CXX" != "arm-none-eabi-g++" ]; then
