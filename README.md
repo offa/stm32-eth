@@ -48,7 +48,7 @@ Using the *C++17* Standard.
 
 Using the *C++17* Standard and *Concepts TS*.
 
-**Note:** Appropriate compiler support is required.
+_**Note:** Appropriate compiler support is required._
 
 
 ## • Flashing (OpenOCD)
