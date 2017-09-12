@@ -38,7 +38,7 @@ Integration Test for *Stm32F4* are enabled by the `INTEGRATION_TEST` option. The
 
 ## • Experimental Branches
 
-There are following *experimental* branches, these require appropriate compiler support.
+There are following *experimental* branches:
 
 ###### cpp17
 
@@ -47,6 +47,8 @@ Using the *C++17* Standard.
 ###### cpp17-concepts
 
 Using the *C++17* Standard and *Concepts TS*.
+
+**Note:** Appropriate compiler support is required.
 
 
 ## • Flashing (OpenOCD)
