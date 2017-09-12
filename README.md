@@ -55,12 +55,16 @@ _**Note:** Appropriate compiler support is required._
 
 Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.org/):
 
-1. `openocd -f stm32f4discovery.cfg`
-1. `telnet localhost 4444`
- 1. `reset halt`
- 1. `flash write_image erase <filename.[elf|hex]>`
- 1. `reset run`
+```sh
+$ openocd -f stm32f4discovery.cfg
+```
 
+```sh
+$ telnet localhost 4444
+> reset halt
+> flash write_image erase <filename.[elf|hex]>
+> reset run
+```
 
 ## • Wiring & Pin Assignment
 
