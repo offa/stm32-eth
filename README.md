@@ -99,5 +99,5 @@ Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 
 ### Third party licenses
 
-The License does ***not*** apply to files of `system` directory. Files included in the `system` folder are licensed under different conditions – please refer to it's files for more details.
+The License does ***not*** apply to files of [*system*](system/) directory. Files included in the [*system*](system/) folder are licensed under different conditions – please refer to it's files for more details.
 
