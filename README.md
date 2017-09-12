@@ -44,7 +44,7 @@ Integration Test for *Stm32F4* are enabled by the `INTEGRATION_TEST` option. The
 
 ## • Experimental Branches
 
-There are following *experimental* branches, these require appropriate compiler support.
+There are following *experimental* branches:
 
 ###### cpp17
 
@@ -54,17 +54,23 @@ Using the *C++17* Standard.
 
 Using the *C++17* Standard and *Concepts TS*.
 
+_**Note:** Appropriate compiler support is required._
+
 
 ## • Flashing (OpenOCD)
 
 Both *ELF*- and *HEX*-files can be flashed using [***OpenOCD***](http://openocd.org/):
 
-1. `openocd -f stm32f4discovery.cfg`
-1. `telnet localhost 4444`
- 1. `reset halt`
- 1. `flash write_image erase <filename.[elf|hex]>`
- 1. `reset run`
+```sh
+$ openocd -f stm32f4discovery.cfg
+```
 
+```sh
+$ telnet localhost 4444
+> reset halt
+> flash write_image erase <filename.[elf|hex]>
+> reset run
+```
 
 ## • Wiring & Pin Assignment
 
@@ -105,5 +111,5 @@ Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 
 ### Third party licenses
 
-The License does ***not*** apply to files of `system` directory. Files included in the `system` folder are licensed under different conditions – please refer to it's files for more details.
+The License does ***not*** apply to files of [*system*](system/) directory. Files included in the [*system*](system/) folder are licensed under different conditions – please refer to it's files for more details.
 
