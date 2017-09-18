@@ -27,27 +27,27 @@ add_test_suite(CommonTest COMMONTEST_SRC)
 
 list(APPEND SOCKETTEST_SRC SocketTest.cpp
                     $<TARGET_OBJECTS:socket>
-                    $<TARGET_OBJECTS:w5100device-mock>
-                    $<TARGET_OBJECTS:platform-mock>
-                    $<TARGET_OBJECTS:spiwriter-mock>
                     )
 add_test_suite(SocketTest SOCKETTEST_SRC)
+target_link_libraries(SocketTest spiwriter-mock
+                                w5100device-mock
+                                platform-mock
+                                )
 
 
 list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
                         W5100RegisterTest.cpp
                         $<TARGET_OBJECTS:w5100device>
-                        $<TARGET_OBJECTS:spiwriter-mock>
                         )
 add_test_suite(W5100DeviceTest W5100TEST_SRC)
+target_link_libraries(W5100DeviceTest spiwriter-mock)
 
 
 list(APPEND SPIWRITERTEST_SRC SpiWriterTest.cpp
-                            $<TARGET_OBJECTS:stm32hal-mock>
                             $<TARGET_OBJECTS:spiwriter>
-                            $<TARGET_OBJECTS:platform-mock>
                             )
 add_test_suite(SpiWriterTest SPIWRITERTEST_SRC)
+target_link_libraries(SpiWriterTest platform-mock stm32hal-mock)
 
 
 
