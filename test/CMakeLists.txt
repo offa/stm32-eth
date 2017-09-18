@@ -8,46 +8,47 @@ add_library(testmain TestMain.cpp)
 target_link_libraries(testmain ${CppUTest_LIBRARY} ${CppUTest_Ext_LIBRARY})
 
 
-function(add_test_suite name src)
-    add_executable(${name} ${${src}})
+function(add_test_suite name)
     add_test(NAME ${name} COMMAND ${name})
     target_link_libraries(${name} testmain)
 endfunction()
 
 
 
-list(APPEND COMMONTEST_SRC RegisterValueTest.cpp
-                                    SocketInterruptTest.cpp
-                                    ByteTest.cpp
-                                    SocketHandleTest.cpp
-                                    NetConfigTest.cpp
-                                    )
-add_test_suite(CommonTest COMMONTEST_SRC)
+add_executable(CommonTest RegisterValueTest.cpp
+                        SocketInterruptTest.cpp
+                        ByteTest.cpp
+                        SocketHandleTest.cpp
+                        NetConfigTest.cpp
+                        )
+add_test_suite(CommonTest)
 
 
-list(APPEND SOCKETTEST_SRC SocketTest.cpp
-                    $<TARGET_OBJECTS:socket>
-                    )
-add_test_suite(SocketTest SOCKETTEST_SRC)
+add_executable(SocketTest SocketTest.cpp
+                        $<TARGET_OBJECTS:socket>
+                        )
 target_link_libraries(SocketTest spiwriter-mock
                                 w5100device-mock
                                 platform-mock
                                 )
+add_test_suite(SocketTest)
 
 
-list(APPEND W5100TEST_SRC W5100DeviceTest.cpp
-                        W5100RegisterTest.cpp
-                        $<TARGET_OBJECTS:w5100device>
-                        )
-add_test_suite(W5100DeviceTest W5100TEST_SRC)
+add_executable(W5100DeviceTest W5100DeviceTest.cpp
+                            W5100RegisterTest.cpp
+                            $<TARGET_OBJECTS:w5100device>
+                            )
 target_link_libraries(W5100DeviceTest spiwriter-mock)
+add_test_suite(W5100DeviceTest)
 
 
-list(APPEND SPIWRITERTEST_SRC SpiWriterTest.cpp
+add_executable(SpiWriterTest SpiWriterTest.cpp
                             $<TARGET_OBJECTS:spiwriter>
                             )
-add_test_suite(SpiWriterTest SPIWRITERTEST_SRC)
-target_link_libraries(SpiWriterTest platform-mock stm32hal-mock)
+target_link_libraries(SpiWriterTest platform-mock
+                                    stm32hal-mock
+                                    )
+add_test_suite(SpiWriterTest)
 
 
 
