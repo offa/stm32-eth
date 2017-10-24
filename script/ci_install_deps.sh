@@ -2,31 +2,41 @@
 
 set -ex
 
-## Install GSL
-GSL_VERSION=master
-wget https://github.com/Microsoft/GSL/archive/${GSL_VERSION}.tar.gz -O gsl.tar.gz
-tar -xzf gsl.tar.gz
-mkdir dependencies
-mv GSL-* dependencies/gsl
+BUILD_DIR=${TRAVIS_BUILD_DIR}
+
+mkdir -p "${DEPENDENCY_DIR}" && cd "${DEPENDENCY_DIR}"
 
 
-if [ "$CXX" != "arm-none-eabi-g++" ]; then
-    ## Install CppUTest
-    CPPUTEST_VERSION=master
-    CPPUTEST=cpputest-${CPPUTEST_VERSION}
+# ---  GSL
+if [[ ! -d "${DEPENDENCY_DIR}/gsl" ]]
+then
+    git clone --depth=1 https://github.com/Microsoft/GSL.git gsl
+fi
+
+
+cd ${DEPENDENCY_DIR}
+
+
+
+# --- CppUTest
+if [[ "$CXX" != "arm-none-eabi-g++" ]]
+then
+    if [[ ! -d "${DEPENDENCY_DIR}/cpputest" ]]
+    then
+        git --depth=1 https://github.com/cpputest/cpputest.git cpputest
+    fi
 
     BUILD_FLAGS="-DC++11=ON -DTESTS=OFF"
 
-    if [[ "$CXX" == clang* ]]; then
-        BUILD_FLAGS="$BUILD_FLAGS -DCMAKE_CXX_FLAGS=-stdlib=libc++" 
+    if [[ "$CXX" == clang* ]]
+    then
+        BUILD_FLAGS="${BUILD_FLAGS} -DCMAKE_CXX_FLAGS=-stdlib=libc++"
     fi
 
-
-    wget https://github.com/offa/cpputest/archive/${CPPUTEST_VERSION}.tar.gz
-    tar -xzf ${CPPUTEST_VERSION}.tar.gz
-    pushd ${CPPUTEST}
-    mkdir _build && cd _build
-    cmake $BUILD_FLAGS ..
+    mkdir -p _build && cd _build
+    cmake ${BUILD_FLAGS} ..
     make -j4 && sudo make install
-    popd
 fi
+
+cd ${DEPENDENCY_DIR}
+

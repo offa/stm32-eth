@@ -5,16 +5,18 @@ set -ex
 LTO_ENABLED=${LTO_ENABLED:=OFF}
 BUILD_TYPE=${BUILD_TYPE:=Release}
 
-if [ ! -v GSL_INCLUDE_DIR ]; then
+if [[ ! -v GSL_INCLUDE_DIR ]]
+then
     if [ -d "dependencies/gsl" ]; then
-        export GSL_INCLUDE_DIR=dependencies/gsl/include
+        export GSL_INCLUDE_DIR=${DEPENDENCY_DIR}/gsl/include
     fi
 fi
 
 
 mkdir build && cd build
 
-if [ "$CXX" == "arm-none-eabi-g++" ]; then
+if [[ "$CXX" == "arm-none-eabi-g++" ]]
+then
     cmake -DUNITTEST=OFF \
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
             -DINTEGRATION_TEST=ON \
