@@ -25,7 +25,8 @@ then
             ..
     make
 
-    if [ "${LTO_ENABLED}" != "ON" ]; then
+    if [[ "${LTO_ENABLED}" != "ON" ]]
+    then
         make eth-stm32.size
     fi
 else
