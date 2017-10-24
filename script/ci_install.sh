@@ -2,31 +2,50 @@
 
 set -ex
 
-## Install GSL
-GSL_VERSION=master
-wget https://github.com/Microsoft/GSL/archive/${GSL_VERSION}.tar.gz -O gsl.tar.gz
-tar -xzf gsl.tar.gz
-mkdir -p ${DEPENDENCY_DIR}
-mv GSL-* ${DEPENDENCY_DIR}/gsl
+BUILD_DIR=${TRAVIS_BUILD_DIR}
+
+mkdir -p "${DEPENDENCY_DIR}" && cd "${DEPENDENCY_DIR}"
 
 
-if [ "$CXX" != "arm-none-eabi-g++" ]; then
-    ## Install CppUTest
-    CPPUTEST_VERSION=master
-    CPPUTEST=cpputest-${CPPUTEST_VERSION}
+# --- CMake
+CMAKE_INSTALLER=install-cmake.sh
 
-    BUILD_FLAGS="-DC++11=ON -DTESTS=OFF"
+if [[ ! -f ${CMAKE_INSTALLER} ]]
+then
+    curl -sSL https://cmake.org/files/v3.8/cmake-3.8.2-Linux-x86_64.sh -o ${CMAKE_INSTALLER}
+    chmod +x ${CMAKE_INSTALLER}
+fi
 
-    if [[ "$CXX" == clang* ]]; then
-        BUILD_FLAGS="$BUILD_FLAGS -DCMAKE_CXX_FLAGS=-stdlib=libc++" 
+sudo ./${CMAKE_INSTALLER} --prefix=/usr/local --skip-license
+cmake --version
+
+
+cd ${DEPENDENCY_DIR}
+
+
+# --- LibC++
+if [[ "${CXX}" = clang* ]]
+then
+    if [[ ! -d "${DEPENDENCY_DIR}/llvm-source" ]]
+    then
+        LLVM_RELEASE=release_40
+        git clone --depth=1 -b ${LLVM_RELEASE} https://github.com/llvm-mirror/llvm.git llvm-source
+        git clone --depth=1 -b ${LLVM_RELEASE} https://github.com/llvm-mirror/libcxx.git llvm-source/projects/libcxx
+        git clone --depth=1 -b ${LLVM_RELEASE} https://github.com/llvm-mirror/libcxxabi.git llvm-source/projects/libcxxabi
     fi
 
+    mkdir -p build-${CC} && cd build-${CC}
 
-    wget https://github.com/offa/cpputest/archive/${CPPUTEST_VERSION}.tar.gz
-    tar -xzf ${CPPUTEST_VERSION}.tar.gz
-    pushd ${CPPUTEST}
-    mkdir _build && cd _build
-    cmake $BUILD_FLAGS ..
-    make -j4 && sudo make install
-    popd
+    cmake -DCMAKE_C_COMPILER=${CC} \
+        -DCMAKE_CXX_COMPILER=${CXX} \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DLIBCXX_ABI_UNSTABLE=ON \
+        ../llvm-source
+    make cxx -j4
+
+    sudo make install-cxxabi install-cxx
 fi
+
+
+cd ${BUILD_DIR}
