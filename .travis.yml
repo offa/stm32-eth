@@ -3,6 +3,14 @@ language: generic
 dist: trusty
 sudo: required
 
+env:
+  global:
+    - DEPENDENCY_DIR="${TRAVIS_BUILD_DIR}/dependencies"
+
+cache:
+  directories:
+    - ${DEPENDENCY_DIR}
+
 
 matrix:
     include:
@@ -78,6 +86,7 @@ matrix:
 
 
 install:
+    - script/ci_install.sh
     - script/ci_install_deps.sh
 
 script:
