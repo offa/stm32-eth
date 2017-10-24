@@ -34,7 +34,7 @@ then
         git clone --depth=1 -b ${LLVM_RELEASE} https://github.com/llvm-mirror/libcxxabi.git llvm-source/projects/libcxxabi
     fi
 
-    mkdir -p build && cd build
+    mkdir -p build-${CC} && cd build-${CC}
 
     cmake -DCMAKE_C_COMPILER=${CC} \
         -DCMAKE_CXX_COMPILER=${CXX} \
