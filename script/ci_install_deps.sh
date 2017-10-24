@@ -23,7 +23,7 @@ if [[ "$CXX" != "arm-none-eabi-g++" ]]
 then
     if [[ ! -d "${DEPENDENCY_DIR}/cpputest" ]]
     then
-        git --depth=1 https://github.com/cpputest/cpputest.git cpputest
+        git clone --depth=1 https://github.com/cpputest/cpputest.git cpputest
     fi
 
     BUILD_FLAGS="-DC++11=ON -DTESTS=OFF"
