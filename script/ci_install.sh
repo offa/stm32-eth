@@ -28,7 +28,7 @@ if [[ "${CXX}" = clang* ]]
 then
     if [[ ! -d "${DEPENDENCY_DIR}/llvm-source" ]]
     then
-        LLVM_RELEASE=release_50
+        LLVM_RELEASE=release_40
         git clone --depth=1 -b ${LLVM_RELEASE} https://github.com/llvm-mirror/llvm.git llvm-source
         git clone --depth=1 -b ${LLVM_RELEASE} https://github.com/llvm-mirror/libcxx.git llvm-source/projects/libcxx
         git clone --depth=1 -b ${LLVM_RELEASE} https://github.com/llvm-mirror/libcxxabi.git llvm-source/projects/libcxxabi
