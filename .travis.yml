@@ -30,7 +30,7 @@ matrix:
           packages:
             - g++-5
           sources: *sources
-    - env: CXX=clang++-5.0 CC=clang-4.0
+    - env: CXX=clang++-5.0 CC=clang-5.0
       addons:
         apt:
           packages:
