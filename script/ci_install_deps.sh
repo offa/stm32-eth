@@ -26,6 +26,8 @@ then
         git clone --depth=1 https://github.com/cpputest/cpputest.git cpputest
     fi
 
+    cd cpputest
+
     BUILD_FLAGS="-DC++11=ON -DTESTS=OFF"
 
     if [[ "$CXX" == clang* ]]
