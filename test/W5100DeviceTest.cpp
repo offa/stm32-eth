@@ -23,7 +23,6 @@
 #include "TestHelper.h"
 #include <vector>
 #include <algorithm>
-#include <numeric>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
@@ -121,13 +120,6 @@ TEST_GROUP(W5100DeviceTest)
         {
             expectRead(addr++, value);
         });
-    }
-
-    std::vector<std::uint8_t> createBuffer(std::size_t size) const
-    {
-        std::vector<std::uint8_t> buffer(size);
-        std::iota(buffer.begin(), buffer.end(), 0);
-        return buffer;
     }
 
     template<class T>

@@ -97,14 +97,6 @@ TEST_GROUP(SocketTest)
             .withParameter("value", static_cast<std::uint8_t>(cmd));
     }
 
-    std::vector<std::uint8_t> createBuffer(std::size_t size) const
-    {
-        std::vector<std::uint8_t> buffer(size);
-        std::uint8_t value = 0;
-        std::generate(buffer.begin(), buffer.end(), [&value] { return value++; });
-        return buffer;
-    }
-
     void ignoreDestruction()
     {
         auto f = gsl::finally([] { mock().enable(); });

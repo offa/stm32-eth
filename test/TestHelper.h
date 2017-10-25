@@ -23,6 +23,8 @@
 #include "SocketCommand.h"
 #include "SocketStatus.h"
 #include "Socket.h"
+#include <vector>
+#include <algorithm>
 #include <CppUTest/TestHarness.h>
 
 inline SimpleString StringFrom(eth::SocketStatus status)
@@ -53,3 +55,13 @@ inline SimpleString StringFrom(eth::Socket::Status status)
             return "UNKNOWN";
     }
 }
+
+
+inline std::vector<std::uint8_t> createBuffer(std::size_t size)
+{
+    std::vector<std::uint8_t> buffer(size);
+    std::uint8_t value = 0;
+    std::generate(buffer.begin(), buffer.end(), [&value] { return value++; });
+    return buffer;
+}
+
