@@ -26,7 +26,6 @@
 #include "spi/SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>
-#include <numeric>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
@@ -96,13 +95,6 @@ TEST_GROUP(SocketTest)
         deviceMock.expectOneCall("executeSocketCommand")
             .withParameter("socket", s.value())
             .withParameter("value", static_cast<std::uint8_t>(cmd));
-    }
-
-    std::vector<std::uint8_t> createBuffer(std::size_t size) const
-    {
-        std::vector<std::uint8_t> buffer(size);
-        std::iota(buffer.begin(), buffer.end(), 0);
-        return buffer;
     }
 
     void ignoreDestruction()

@@ -3,15 +3,13 @@ language: generic
 dist: trusty
 sudo: required
 
-
 env:
   global:
     - DEPENDENCY_DIR="${TRAVIS_BUILD_DIR}/dependencies"
-    - CMAKE_VERSION="3.9"
 
 cache:
-    directories:
-        - ${DEPENDENCY_DIR}/cmake
+  directories:
+    - ${DEPENDENCY_DIR}
 
 
 matrix:
@@ -23,20 +21,21 @@ matrix:
             - g++-7
           sources: &sources
             - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty
+            - llvm-toolchain-trusty-5.0
+    - env: CXX=clang++-5.0 CC=clang-5.0
+      addons:
+        apt:
+          packages:
+            - clang-5.0
+          sources: *sources
 
 
 install:
-    - script/ci_install_travis.sh
-    - export PATH="${DEPENDENCY_DIR}/cmake/bin:${PATH}"
-    - cmake --version
-
-before_script:
-    - cd ${TRAVIS_BUILD_DIR}
+    - script/ci_install.sh
+    - script/ci_install_deps.sh
 
 script:
-    - if [[ "$CXX" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi
+    - if [[ "${CXX}" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi
     - script/ci_build.sh
-
-before_install:
-    - script/ci_install.sh
 
