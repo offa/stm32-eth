@@ -26,7 +26,6 @@
 #include "spi/SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>
-#include <numeric>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
@@ -101,7 +100,8 @@ TEST_GROUP(SocketTest)
     std::vector<std::uint8_t> createBuffer(std::size_t size) const
     {
         std::vector<std::uint8_t> buffer(size);
-        std::iota(buffer.begin(), buffer.end(), 0);
+        std::uint8_t value = 0;
+        std::generate(buffer.begin(), buffer.end(), [&value] { return value++; });
         return buffer;
     }
 
