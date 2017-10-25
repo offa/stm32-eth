@@ -28,7 +28,7 @@ then
 
     cd cpputest
 
-    BUILD_FLAGS="-DC++11=ON -DTESTS=OFF"
+    BUILD_FLAGS="-DC++11=ON -DTESTS=OFF -DMEMORY_LEAK_DETECTION=OFF"
 
     if [[ "$CXX" == clang* ]]
     then
