@@ -20,7 +20,6 @@
 
 #pragma once
 
-
 #include "SocketCommand.h"
 #include "SocketStatus.h"
 #include "Socket.h"
