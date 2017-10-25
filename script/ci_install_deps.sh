@@ -35,7 +35,7 @@ then
         BUILD_FLAGS="${BUILD_FLAGS} -DCMAKE_CXX_FLAGS=-stdlib=libc++"
     fi
 
-    mkdir -p _build && cd _build
+    mkdir -p _build-${CC} && cd _build-${CC}
     cmake ${BUILD_FLAGS} ..
     make -j4 && sudo make install
 fi
