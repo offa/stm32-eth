@@ -13,7 +13,7 @@ then
     git clone --depth=1 https://github.com/Microsoft/GSL.git gsl
 fi
 
-if [[ "${CXX}" != "arm-none-eabi-g++" ]]
+if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
     GSL_BUILD_PARAMS="-DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc"
 fi
