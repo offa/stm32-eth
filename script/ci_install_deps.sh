@@ -16,7 +16,7 @@ fi
 cd gsl
 mkdir -p build-${CC} && cd build-${CC}
 cmake -DGSL_TEST=OFF ..
-sudo make install
+make install
 
 
 
@@ -43,8 +43,7 @@ then
 
     mkdir -p _build-${CC} && cd _build-${CC}
     cmake ${BUILD_FLAGS} ..
-    make -j4
-    sudo make install
+    make -j4 && sudo make install
 fi
 
 cd ${DEPENDENCY_DIR}
