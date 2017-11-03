@@ -15,7 +15,7 @@ fi
 
 if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
-    GSL_BUILD_PARAMS="-DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc"
+    GSL_BUILD_PARAMS="-DCMAKE_CXX_COMPILER=g++-7 -DCMAKE_C_COMPILER=gcc-7"
 fi
 
 
