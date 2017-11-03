@@ -13,12 +13,6 @@ then
     git clone --depth=1 https://github.com/Microsoft/GSL.git gsl
 fi
 
-cd gsl
-mkdir -p build-${CC} && cd build-${CC}
-cmake -DGSL_TEST=OFF ..
-make install
-
-
 
 cd ${DEPENDENCY_DIR}
 
