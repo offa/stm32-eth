@@ -13,9 +13,15 @@ then
     git clone --depth=1 https://github.com/Microsoft/GSL.git gsl
 fi
 
+if [[ "${CXX}" != "arm-none-eabi-g++" ]]
+then
+    GSL_BUILD_PARAMS="-DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc"
+fi
+
+
 cd gsl
 mkdir -p build-${CC} && cd build-${CC}
-cmake -DGSL_TEST=OFF ..
+cmake -DGSL_TEST=OFF ${GSL_BUILD_PARAMS} ..
 sudo make install
 
 
@@ -25,7 +31,7 @@ cd ${DEPENDENCY_DIR}
 
 
 # --- CppUTest
-if [[ "$CXX" != "arm-none-eabi-g++" ]]
+if [[ "${CXX}" != "arm-none-eabi-g++" ]]
 then
     if [[ ! -d "${DEPENDENCY_DIR}/cpputest" ]]
     then
@@ -36,7 +42,7 @@ then
 
     BUILD_FLAGS="-DC++11=ON -DTESTS=OFF"
 
-    if [[ "$CXX" == clang* ]]
+    if [[ "${CXX}" == clang* ]]
     then
         BUILD_FLAGS="${BUILD_FLAGS} -DCMAKE_CXX_FLAGS=-stdlib=libc++"
     fi
