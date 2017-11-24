@@ -27,6 +27,6 @@ before_install:
   - docker pull ${DOCKER_IMG}/${COMPILER}:latest
 
 script:
-  - if [[ "${COMPILER}" == "arm-none-eabi-gcc" ]]; then export CC=arm-none-abi-gcc CXX=arm-none-eabi-g++; fi
-  - docker run -v ${PWD}:/mnt -it ${DOCKER_IMG}/${COMPILER} /bin/bash -c "cd /mnt; script/ci_build.sh"
+  - if [[ "${COMPILER}" == "arm-none-eabi-gcc" ]]; then ARGS="-e CC=arm-none-abi-gcc -e CXX=arm-none-eabi-g++"; fi
+  - docker run -v ${PWD}:/mnt -it ${DOCKER_IMG}/${COMPILER} ${ARGS} /bin/bash -c "cd /mnt; script/ci_build.sh"
 
