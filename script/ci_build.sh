@@ -17,9 +17,10 @@ fi
 
 
 
+
 mkdir build && cd build
 
-if [[ "$CXX" == "arm-none-eabi-g++" ]]
+if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
     cmake -DUNITTEST=OFF \
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
