@@ -1,7 +1,12 @@
 
 if( LTO )
-    include(CheckIPOSupported)
-    check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
+    if( NOT CMAKE_CROSSCOMPILING )
+        include(CheckIPOSupported)
+        check_ipo_supported(RESULT lto_supported OUTPUT lto_error)
+    else()
+        set(lto_supported TRUE)
+    endif()
+
 
     if( lto_supported )
         message(STATUS "IPO / LTO enabled")
