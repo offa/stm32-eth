@@ -24,7 +24,7 @@ matrix:
 
 
 before_install:
-  - docker pull ${DOCKER_IMG}/${COMPILER}:stable
+  - docker pull ${DOCKER_IMG}/${COMPILER}:latest
 
 script:
     - docker run -v ${PWD}:/mnt -it ${DOCKER_IMG}/${COMPILER} /bin/bash -c "cd /mnt; script/ci_build.sh"
