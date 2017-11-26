@@ -10,7 +10,7 @@ RUN mkdir deps && cd deps && \
     cd ../.. && \
     git clone --depth=1 https://github.com/cpputest/cpputest.git cpputest && \
     cd cpputest && mkdir _build && cd _build && \
-    if [[ "${CXX}" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi; \
+    case ${CXX} in clang* ) export CXXFLAGS="-stdlib=libc++"; esac; \
     cmake -DC++11=ON -DTESTS=OFF .. && make && make install && \
     cd ../../.. && rm -rf deps
 
