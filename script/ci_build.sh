@@ -3,7 +3,7 @@
 set -ex
 
 LTO_ENABLED=${LTO_ENABLED:=OFF}
-BUILD_TYPE=${BUILD_TYPE:=Release}
+BUILD_TYPE=${BUILD_TYPE:=Debug}
 
 if [[ ! -v GSL_INCLUDE_DIR ]]
 then
