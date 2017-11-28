@@ -30,7 +30,10 @@ then
         make eth-stm32.size
     fi
 else
-    cmake -DUNITTEST_VERBOSE=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+    cmake -DUNITTEST_VERBOSE=ON \
+            -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+            -DLTO=${LTO_ENABLED} \
+            ..
     make
     make unittest
 fi
