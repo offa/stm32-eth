@@ -7,16 +7,20 @@ BUILD_TYPE=${BUILD_TYPE:=Release}
 
 if [[ ! -v GSL_INCLUDE_DIR ]]
 then
-    if [[ -d "dependencies/gsl" ]]
-    then
-        export GSL_INCLUDE_DIR=${DEPENDENCY_DIR}/gsl/include
-    fi
+    export GSL_INCLUDE_DIR=/usr/local/include
 fi
+
+if [[ "${CXX}" == clang* ]]
+then
+    export CXXFLAGS="-stdlib=libc++"
+fi
+
+
 
 
 mkdir build && cd build
 
-if [[ "$CXX" == "arm-none-eabi-g++" ]]
+if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
     cmake -DUNITTEST=OFF \
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \

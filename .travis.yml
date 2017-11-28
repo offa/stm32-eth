@@ -3,33 +3,23 @@ language: generic
 dist: trusty
 sudo: required
 
+services:
+  - docker
+
 env:
   global:
-    - DEPENDENCY_DIR="${TRAVIS_BUILD_DIR}/dependencies"
-
-cache:
-  directories:
-    - ${DEPENDENCY_DIR}
+    - DOCKER_IMG="registry.gitlab.com/offa/ci-playground/experimental"
 
 
 matrix:
     include:
-    - env: CXX=g++-7 CC=gcc-7
-      addons:
-        apt:
-          packages:
-            - g++-7
-          sources: &sources
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty
-            - llvm-toolchain-trusty-5.0
+    - env: COMPILER=gcc-7
 
 
-install:
-    - script/ci_install.sh
-    - script/ci_install_deps.sh
+before_install:
+  - docker pull ${DOCKER_IMG}/${COMPILER}:latest
 
 script:
-    - if [[ "${CXX}" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi
-    - script/ci_build.sh
+  - if [[ "${COMPILER}" == "arm-none-eabi-gcc" ]]; then ARGS="-e CC=arm-none-abi-gcc -e CXX=arm-none-eabi-g++ -e BUILD_TYPE -e LTO_ENABLED"; fi
+  - docker run -v ${PWD}:/mnt ${ARGS} -it ${DOCKER_IMG}/${COMPILER} /bin/bash -c "cd /mnt; script/ci_build.sh"
 
