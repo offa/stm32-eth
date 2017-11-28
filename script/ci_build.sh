@@ -4,17 +4,12 @@ set -ex
 
 LTO_ENABLED=${LTO_ENABLED:=OFF}
 BUILD_TYPE=${BUILD_TYPE:=Debug}
-
-if [[ ! -v GSL_INCLUDE_DIR ]]
-then
-    export GSL_INCLUDE_DIR=/usr/local/include
-fi
+GSL_INCLUDE_DIR=${GSL_INCLUDE_DIR:=/usr/local/include}
 
 if [[ "${CXX}" == clang* ]]
 then
     export CXXFLAGS="-stdlib=libc++"
 fi
-
 
 
 
