@@ -3,18 +3,13 @@
 set -ex
 
 LTO_ENABLED=${LTO_ENABLED:=OFF}
-BUILD_TYPE=${BUILD_TYPE:=Release}
-
-if [[ ! -v GSL_INCLUDE_DIR ]]
-then
-    export GSL_INCLUDE_DIR=/usr/local/include
-fi
+BUILD_TYPE=${BUILD_TYPE:=Debug}
+GSL_INCLUDE_DIR=${GSL_INCLUDE_DIR:=/usr/local/include}
 
 if [[ "${CXX}" == clang* ]]
 then
     export CXXFLAGS="-stdlib=libc++"
 fi
-
 
 
 
@@ -35,7 +30,10 @@ then
         make eth-stm32.size
     fi
 else
-    cmake -DUNITTEST_VERBOSE=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+    cmake -DUNITTEST_VERBOSE=ON \
+            -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+            -DLTO=${LTO_ENABLED} \
+            ..
     make
     make unittest
 fi
