@@ -8,7 +8,7 @@ services:
 
 env:
   global:
-    - DOCKER_IMG="registry.gitlab.com/offa/ci-playground/experimental"
+    - DOCKER_IMG="registry.gitlab.com/offa/ci-playground/dist-stm32"
 
 
 matrix:
