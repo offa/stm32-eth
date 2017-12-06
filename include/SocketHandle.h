@@ -59,7 +59,7 @@ namespace eth
     constexpr auto makeHandle() noexcept
     {
         static_assert(id < supportedSockets, "Socket-Id out of range");
-        return SocketHandle(id);
+        return SocketHandle{id};
     }
 
 }

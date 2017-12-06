@@ -57,7 +57,7 @@ namespace w5100
     template<class T>
     constexpr auto makeRegister(std::uint16_t address) noexcept
     {
-        return Register<T>(address);
+        return Register<T>{address};
     }
 
     template<class T>
