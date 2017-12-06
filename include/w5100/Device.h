@@ -69,9 +69,9 @@ namespace eth::w5100
         void sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer);
         std::uint16_t receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer);
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0>
+        template<class T, std::size_t n = sizeof(T)>
             requires IntegralType<T>
+                    && ( (n > 1) && (n <= sizeof(T)) )
         void write(Register<T> reg, T data)
         {
             constexpr auto pos = n - 1;
@@ -79,9 +79,9 @@ namespace eth::w5100
             write<T, pos>(reg, data);
         }
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n <= 1), int> = 0>
+        template<class T, std::size_t n = sizeof(T)>
             requires IntegralType<T>
+                    && (n <= 1)
         void write(Register<T> reg, T data)
         {
             write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
@@ -98,9 +98,9 @@ namespace eth::w5100
             });
         }
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0>
+        template<class T, std::size_t n = sizeof(T)>
             requires IntegralType<T>
+                    && ( (n > 1) && (n <= sizeof(T)) )
         T read(Register<T> reg)
         {
             constexpr auto pos = sizeof(T) - n;
@@ -109,9 +109,9 @@ namespace eth::w5100
             return byte::to<T>(byte0, byte1);
         }
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n <= 1), int> = 0>
+        template<class T, std::size_t n = sizeof(T)>
             requires IntegralType<T>
+                    && (n <= 1)
         T read(Register<T> reg)
         {
             return read(reg.address(), sizeof(T) - n);
