@@ -49,7 +49,7 @@ namespace eth
 
     private:
 
-        const value_type m_id;
+        value_type m_id;
 
     };
 
