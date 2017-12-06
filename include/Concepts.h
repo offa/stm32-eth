@@ -34,5 +34,12 @@ namespace eth
     template<class T, std::size_t index>
     concept bool IndexWithinTypesize = (index < sizeof(T));
 
+
+    template<class T, std::size_t n>
+    concept bool SizeSingleByte = ( n <= 1 );
+
+    template<class T, std::size_t n>
+    concept bool SizeMultiByte = ((n > 1) && (n <= sizeof(T)));
+
 }
 
