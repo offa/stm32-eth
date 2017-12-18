@@ -5,7 +5,7 @@ target_link_libraries(eth-stm32-it eth-stm32
                                 hal
                                 newlib
                                 cortexm
-                                misc
+                                hw-init
                                 trace
                                 )
 
@@ -15,7 +15,7 @@ target_link_libraries(eth-stm32-client-it eth-stm32
                                         hal
                                         newlib
                                         cortexm
-                                        misc
+                                        hw-init
                                         trace
                                         )
 

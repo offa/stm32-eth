@@ -29,7 +29,7 @@ add_library(hal stm32f4-hal/stm32f4xx_hal.c
                 )
 
 
-add_library(misc _initialize_hardware.c)
+add_library(hw-init _initialize_hardware.c)
 add_library(trace diag/Trace.c diag/trace_impl.c)
 
 
@@ -41,5 +41,5 @@ disable_compiler_warnings(cmsis)
 disable_compiler_warnings(cortexm)
 disable_compiler_warnings(newlib)
 disable_compiler_warnings(hal)
-disable_compiler_warnings(misc)
+disable_compiler_warnings(hw-init)
 disable_compiler_warnings(trace)
