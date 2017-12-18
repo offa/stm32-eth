@@ -34,7 +34,11 @@ add_library(trace diag/Trace.c diag/trace_impl.c)
 
 
 function(disable_compiler_warnings target_name)
-    target_compile_options(${target_name} PUBLIC -Wno-error -Wno-pedantic -Wno-extra)
+    target_compile_options(${target_name} PUBLIC
+                                -Wno-error
+                                -Wno-pedantic
+                                -Wno-extra
+                                )
 endfunction()
 
 disable_compiler_warnings(cmsis)
