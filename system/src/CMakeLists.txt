@@ -33,8 +33,8 @@ add_library(hw-init _initialize_hardware.c)
 add_library(trace diag/Trace.c diag/trace_impl.c)
 
 
-function(disable_compiler_warnings _target)
-    target_compile_options(${_target} PUBLIC -Wno-error -Wno-pedantic -Wno-extra)
+function(disable_compiler_warnings target_name)
+    target_compile_options(${target_name} PUBLIC -Wno-error -Wno-pedantic -Wno-extra)
 endfunction()
 
 disable_compiler_warnings(cmsis)
