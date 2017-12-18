@@ -1,24 +1,22 @@
 
-add_executable(eth-stm32-it Main.cpp
-                        $<TARGET_OBJECTS:hal>
-                        $<TARGET_OBJECTS:newlib>
-                        $<TARGET_OBJECTS:cortexm>
-                        $<TARGET_OBJECTS:misc>
-                        $<TARGET_OBJECTS:trace>
-                        )
+add_executable(eth-stm32-it Main.cpp)
 target_link_libraries(eth-stm32-it eth-stm32
                                 cmsis
+                                hal
+                                newlib
+                                cortexm
+                                misc
+                                trace
                                 )
 
-add_executable(eth-stm32-client-it ClientMain.cpp
-                        $<TARGET_OBJECTS:hal>
-                        $<TARGET_OBJECTS:newlib>
-                        $<TARGET_OBJECTS:cortexm>
-                        $<TARGET_OBJECTS:misc>
-                        $<TARGET_OBJECTS:trace>
-                        )
+add_executable(eth-stm32-client-it ClientMain.cpp)
 target_link_libraries(eth-stm32-client-it eth-stm32
                                         cmsis
+                                        hal
+                                        newlib
+                                        cortexm
+                                        misc
+                                        trace
                                         )
 
 
