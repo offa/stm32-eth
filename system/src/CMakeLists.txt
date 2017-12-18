@@ -1,6 +1,6 @@
-add_library(cmsis OBJECT cmsis/system_stm32f4xx.c
-                        cmsis/vectors_stm32f407xx.c
-                        )
+add_library(cmsis cmsis/system_stm32f4xx.c
+                    cmsis/vectors_stm32f407xx.c
+                    )
 
 add_library(cortexm OBJECT cortexm/exception_handlers.c
                        cortexm/initialize-hardware.c
