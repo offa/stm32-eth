@@ -4,7 +4,8 @@ SYSTEM_DIR="system"
 
 cd ../${SYSTEM_DIR}
 
-if [[ "${SYSTEM_DIR}" != "${PWD##*/}" ]]; then
+if [[ "${SYSTEM_DIR}" != "${PWD##*/}" ]]
+then
     echo "Update failed - wrong path (${PWD})"
     exit 1
 fi
@@ -15,7 +16,8 @@ load() {
 
     wget -nv "$1${SUBDIR}/$2" -O $2
 
-    if [[ "$?" -ne 0 ]]; then
+    if [[ "$?" -ne 0 ]]
+    then
         echo "Unable to update $2"
         exit 1
     fi

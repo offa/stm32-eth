@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016 - 2017  offa
+ * Copyright (C) 2016-2018  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -55,7 +55,7 @@ namespace eth::w5100
     template<class T>
     constexpr auto makeRegister(std::uint16_t address) noexcept
     {
-        return Register<T>(address);
+        return Register<T>{address};
     }
 
     template<class T>

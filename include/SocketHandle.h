@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016 - 2017  offa
+ * Copyright (C) 2016-2018  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -49,7 +49,7 @@ namespace eth
 
     private:
 
-        const value_type m_id;
+        value_type m_id;
 
     };
 
@@ -59,7 +59,7 @@ namespace eth
     constexpr auto makeHandle() noexcept
     {
         static_assert(id < supportedSockets, "Socket-Id out of range");
-        return SocketHandle(id);
+        return SocketHandle{id};
     }
 
 }
