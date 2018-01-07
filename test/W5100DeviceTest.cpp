@@ -190,10 +190,9 @@ TEST(W5100DeviceTest, writeBuffer)
     const auto data = createBuffer(size);
     const auto reg = asRegister(0xa1b2, data);
 
-    writerMock.ignoreOtherCalls();
+    expectWrite(reg.address(), data);
 
     device->write(reg, data.cbegin(), data.cend());
-    checkWriteCalls(size);
 }
 
 TEST(W5100DeviceTest, writeBufferByPointerAndSize)
@@ -203,10 +202,9 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
     auto span = gsl::make_span(data);
     auto reg = asRegister(0xa1b2, span);
 
-    writerMock.ignoreOtherCalls();
+    expectWrite(reg.address(), data);
 
     device->write(reg, data.data(), data.data() + size);
-    checkWriteCalls(size);
 }
 
 TEST(W5100DeviceTest, readRegisterByte)
