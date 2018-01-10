@@ -12,7 +12,7 @@ add_subdirectory("mock")
 
 
 add_library(testmain TestMain.cpp)
-target_link_libraries(testmain PRIVATE CppUTestLib)
+target_link_libraries(testmain PRIVATE CppUTestLib build-libs)
 
 
 function(add_test_suite name)
