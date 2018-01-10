@@ -38,6 +38,8 @@ else
     cmake -DUNITTEST_VERBOSE=ON \
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
             -DLTO=${LTO_ENABLED} \
+            -DSANITIZER_ASAN=ON \
+            -DSANITIZER_UBSAN=ON \
             ..
     make
     make unittest
