@@ -1,10 +1,10 @@
-function(print_option _option _text)
-    message(STATUS "${_text} : ${${_option}}")
+function(print_option opt text)
+    message(STATUS "${text} : ${${opt}}")
 endfunction()
 
-function(print_option_if_enabled _option _text)
-    if( ${_option} )
-        print_option(${_option} ${_text})
+function(print_option_if_enabled opt text)
+    if( ${opt} )
+        print_option(${opt} ${text})
     endif()
 endfunction()
 
