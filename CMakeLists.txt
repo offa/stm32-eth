@@ -34,6 +34,8 @@ if( LTO )
     include(LTO)
 endif()
 
+include(Sanitizer)
+
 
 add_definitions(-DSTM32F407xx
                 -DUSE_HAL_DRIVER

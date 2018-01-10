@@ -19,11 +19,12 @@ matrix:
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Release
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED=ON
+    - env: COMPILER=gcc-7 BUILD_OPTS="-asan -ubsan"
 
 before_install:
   - docker pull ${DOCKER_IMG}/${COMPILER}:latest
 
 script:
   - if [[ "${COMPILER}" == "arm-none-eabi-gcc" ]]; then ARGS="-e CC=arm-none-abi-gcc -e CXX=arm-none-eabi-g++ -e BUILD_TYPE -e LTO_ENABLED"; fi
-  - docker run -v ${PWD}:/mnt ${ARGS} -it ${DOCKER_IMG}/${COMPILER} /bin/bash -c "cd /mnt; script/ci_build.sh"
+  - docker run -v ${PWD}:/mnt ${ARGS} -it ${DOCKER_IMG}/${COMPILER} /bin/bash -c "cd /mnt; script/ci_build.sh ${BUILD_OPTS}"
 
