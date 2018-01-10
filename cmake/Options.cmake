@@ -31,3 +31,9 @@ print_option(INTEGRATION_TEST "Build Integration Tests")
 option(GSL_CONTRACT_UNENFORCED "GSL contract violations unenforced" ${CMAKE_CROSSCOMPILING})
 print_option(GSL_CONTRACT_UNENFORCED "Unenforced GSL contracts")
 
+option(SANITIZER_ASAN "Enable ASan" OFF)
+print_option(SANITIZER_ASAN "ASan")
+
+option(SANITIZER_UBSAN "Enable UBSan" OFF)
+print_option(SANITIZER_UBSAN "UBSan")
+
