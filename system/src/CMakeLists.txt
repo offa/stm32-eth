@@ -36,10 +36,10 @@ add_library(trace diag/Trace.c diag/trace_impl.c)
 add_library(system-libs INTERFACE)
 target_link_libraries(system-libs
                         INTERFACE
-                            cmsis
-                            cortexm
-                            newlib
                             hal
+                            cmsis
+                            newlib
+                            cortexm
                             hw-init
                             trace
                             )
