@@ -9,24 +9,24 @@ message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(Options)
 include(BuildType)
+include(CompilerOptions)
 include(Compiler)
-include(CppStd)
 
 
 if( ${BUILD_TYPE_DEBUG} )
     add_definitions(-DDEBUG -DUSE_FULL_ASSERT -DTRACE)
 endif()
 
+add_common_flags(-Wall
+                -Wextra
+                -pedantic
+                -Werror
+                -Wshadow
+                )
+add_cpp_flags(-Wold-style-cast
+                -fconcepts
+                )
 
-add_compile_options(-Wall
-                    -Wextra
-                    -pedantic
-                    -Werror
-                    -Wshadow
-                    )
-add_cxx_flag(-Wold-style-cast
-            -fconcepts
-            )
 
 if( COVERAGE )
     include(Coverage)

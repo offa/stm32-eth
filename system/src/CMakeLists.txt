@@ -33,6 +33,18 @@ add_library(hw-init _initialize_hardware.c)
 add_library(trace diag/Trace.c diag/trace_impl.c)
 
 
+add_library(system-libs INTERFACE)
+target_link_libraries(system-libs
+                        INTERFACE
+                            hal
+                            cmsis
+                            newlib
+                            cortexm
+                            hw-init
+                            trace
+                            )
+
+
 function(disable_compiler_warnings target_name)
     target_compile_options(${target_name} PUBLIC
                                 -Wno-error
