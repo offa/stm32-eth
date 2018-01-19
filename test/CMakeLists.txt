@@ -19,6 +19,10 @@ function(add_test_suite name)
     add_cpp_executable(${name} ${ARGN})
     add_test(NAME ${name} COMMAND ${name})
     target_link_libraries(${name} PRIVATE testmain CppUTestLib)
+
+    if( COVERAGE )
+        target_link_libraries(${name} PRIVATE gcov)
+    endif()
 endfunction()
 
 
