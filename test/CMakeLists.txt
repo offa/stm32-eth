@@ -12,13 +12,13 @@ add_subdirectory("mock")
 
 
 add_library(testmain TestMain.cpp)
-target_link_libraries(testmain PRIVATE CppUTestLib build-libs)
+target_link_libraries(testmain PUBLIC CppUTestLib build-libs)
 
 
 function(add_test_suite name)
     add_cpp_executable(${name} ${ARGN})
     add_test(NAME ${name} COMMAND ${name})
-    target_link_libraries(${name} PRIVATE testmain CppUTestLib)
+    target_link_libraries(${name} PRIVATE testmain)
 
     if( COVERAGE )
         target_link_libraries(${name} PRIVATE gcov)
