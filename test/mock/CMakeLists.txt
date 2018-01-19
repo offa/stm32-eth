@@ -1,6 +1,6 @@
 
 function(add_mock name src)
-    add_library(${name} ${src})
+    add_cpp_library(${name} ${src})
     target_link_libraries(${name} PRIVATE CppUTestLib)
 endfunction()
 
