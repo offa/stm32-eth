@@ -11,7 +11,6 @@ include(Options)
 include(BuildType)
 include(CompilerOptions)
 include(Compiler)
-include(CppStd)
 
 
 if( ${BUILD_TYPE_DEBUG} )

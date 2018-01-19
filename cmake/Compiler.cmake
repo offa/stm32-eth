@@ -1,4 +1,9 @@
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+
 function(add_hex_target targetname)
     add_custom_target(${targetname}.hex DEPENDS ${targetname}
                                     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${targetname}> ${targetname}.hex
