@@ -1,5 +1,5 @@
 
-add_executable(eth-stm32-it Main.cpp)
+add_cpp_executable(eth-stm32-it Main.cpp)
 target_link_libraries(eth-stm32-it
                         PRIVATE
                             eth-stm32
@@ -8,7 +8,7 @@ target_link_libraries(eth-stm32-it
                            system-libs
                         )
 
-add_executable(eth-stm32-client-it ClientMain.cpp)
+add_cpp_executable(eth-stm32-client-it ClientMain.cpp)
 target_link_libraries(eth-stm32-client-it
                         PRIVATE
                             eth-stm32
