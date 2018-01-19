@@ -33,7 +33,7 @@ add_c_library(hw-init _initialize_hardware.c)
 add_c_library(trace diag/Trace.c diag/trace_impl.c)
 
 
-add_c_library(system-libs INTERFACE)
+add_library(system-libs INTERFACE)
 target_link_libraries(system-libs
                         INTERFACE
                             hal
