@@ -35,8 +35,7 @@ add_test_suite(CommonTest RegisterValueTest.cpp
                         )
 
 
-add_test_suite(SocketTest SocketTest.cpp
-                        )
+add_test_suite(SocketTest SocketTest.cpp)
 target_link_libraries(SocketTest PRIVATE
                         socket
                         spiwriter-mock
@@ -54,8 +53,7 @@ target_link_libraries(W5100DeviceTest PRIVATE
                         )
 
 
-add_test_suite(SpiWriterTest SpiWriterTest.cpp
-                            )
+add_test_suite(SpiWriterTest SpiWriterTest.cpp)
 target_link_libraries(SpiWriterTest PRIVATE
                             spiwriter
                             platform-mock
