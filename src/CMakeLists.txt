@@ -14,6 +14,7 @@ target_link_libraries(eth-stm32 PUBLIC
                         stm32-w5100device
                         stm32-spiwriter
                         stm32-platform
+                        GSL
                         )
 add_size_target(eth-stm32)
 
