@@ -47,6 +47,7 @@ add_test_suite(W5100DeviceTest W5100DeviceTest.cpp
 target_link_libraries(W5100DeviceTest PRIVATE
                         stm32-w5100device
                         spiwriter-mock
+                        GSL::GSL
                         )
 
 
