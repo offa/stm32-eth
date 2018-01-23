@@ -55,9 +55,9 @@ target_link_libraries(W5100DeviceTest PRIVATE
 
 
 add_test_suite(SpiWriterTest SpiWriterTest.cpp
-                            $<TARGET_OBJECTS:spiwriter>
                             )
 target_link_libraries(SpiWriterTest PRIVATE
+                            spiwriter
                             platform-mock
                             stm32hal-mock
                             GSL::GSL
