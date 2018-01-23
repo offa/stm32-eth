@@ -47,7 +47,8 @@ then
 
     if [[ "${LTO_ENABLED}" != "ON" ]]
     then
-        make eth-stm32.size
+        #make eth-stm32.size
+        # Disabled as not supported at the moment
     fi
 else
     cmake ${BUILD_ARGS} \
