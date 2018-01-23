@@ -9,9 +9,6 @@ find_path(GSL_INCLUDE_DIR "gsl/gsl"
                             ENV GSL_INCLUDE_DIR
                             )
 
-set(GSL_INCLUDE_DIRS ${GSL_INCLUDE_DIR})
-
-
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GSL DEFAULT_MSG
                                     GSL_INCLUDE_DIR
