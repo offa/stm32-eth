@@ -3,7 +3,7 @@ add_subdirectory(spi)
 add_subdirectory(w5100)
 
 add_cpp_library(stm32-socket Socket.cpp)
-target_link_libraries(stm32-socket PRIVATE GSL::GSL)
+target_link_libraries(stm32-socket PRIVATE GSL)
 
 add_cpp_library(stm32-platform PlatformStm32.cpp)
 
