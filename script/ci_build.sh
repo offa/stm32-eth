@@ -50,6 +50,9 @@ then
         #make eth-stm32.size
         echo "*** Size of the library target is unsupported at the moment ***"
         # Disabled as not supported at the moment
+
+        make eth-stm32-it.size
+        make eth-stm32-client-it.size
     fi
 else
     cmake ${BUILD_ARGS} \
