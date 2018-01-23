@@ -48,6 +48,9 @@ then
     if [[ "${LTO_ENABLED}" != "ON" ]]
     then
         make eth-stm32.size
+
+        make eth-stm32-it.size
+        make eth-stm32-client-it.size
     fi
 else
     cmake ${BUILD_ARGS} \
