@@ -34,7 +34,7 @@ add_test_suite(CommonTest RegisterValueTest.cpp
 
 add_test_suite(SocketTest SocketTest.cpp)
 target_link_libraries(SocketTest PRIVATE
-                        socket
+                        stm32-socket
                         spiwriter-mock
                         w5100device-mock
                         platform-mock
@@ -45,14 +45,14 @@ add_test_suite(W5100DeviceTest W5100DeviceTest.cpp
                             W5100RegisterTest.cpp
                             )
 target_link_libraries(W5100DeviceTest PRIVATE
-                        w5100device
+                        stm32-w5100device
                         spiwriter-mock
                         )
 
 
 add_test_suite(SpiWriterTest SpiWriterTest.cpp)
 target_link_libraries(SpiWriterTest PRIVATE
-                            spiwriter
+                            stm32-spiwriter
                             platform-mock
                             stm32hal-mock
                             GSL::GSL

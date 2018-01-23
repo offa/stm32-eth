@@ -1,3 +1,3 @@
 
-add_cpp_library(spiwriter SpiWriter.cpp)
+add_cpp_library(stm32-spiwriter SpiWriter.cpp)
 
