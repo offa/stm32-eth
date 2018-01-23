@@ -22,9 +22,6 @@ find_library(CppUTest_Ext_LIBRARY NAMES CppUTestExt CppUTestExt
                                 )
 
 
-set(CppUTest_LIBRARIES ${CppUTest_LIBRARY} ${CppUTest_Ext_LIBRARY})
-set(CppUTest_INCLUDE_DIRS ${CppUTest_INCLUDE_DIR})
-
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CppUTest DEFAULT_MSG
                                         CppUTest_LIBRARY
