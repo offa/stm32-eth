@@ -53,7 +53,6 @@ endif()
 
 
 find_package(GSL REQUIRED)
-include_directories(${GSL_INCLUDE_DIR})
 
 if( GSL_CONTRACT_UNENFORCED )
     add_definitions(-DGSL_UNENFORCED_ON_CONTRACT_VIOLATION)

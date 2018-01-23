@@ -13,5 +13,11 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GSL DEFAULT_MSG
                                     GSL_INCLUDE_DIR
                                     )
-
 mark_as_advanced(GSL_INCLUDE_DIR)
+
+
+add_library(GSL::GSL INTERFACE IMPORTED)
+set_target_properties(GSL::GSL PROPERTIES
+                        INTERFACE_INCLUDE_DIRECTORIES "${GSL_INCLUDE_DIR}"
+                        )
+

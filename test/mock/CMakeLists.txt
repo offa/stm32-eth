@@ -6,5 +6,7 @@ endfunction()
 
 add_mock(spiwriter-mock SpiWriterMock.cpp)
 add_mock(w5100device-mock W5100DeviceMock.cpp)
+target_link_libraries(w5100device-mock PUBLIC GSL::GSL)
 add_mock(stm32hal-mock Stm32HalMock.cpp)
 add_mock(platform-mock PlatformMock.cpp)
+
