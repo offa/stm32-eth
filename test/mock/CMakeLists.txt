@@ -1,7 +1,7 @@
 
 function(add_mock name src)
     add_cpp_library(${name} ${src})
-    target_link_libraries(${name} PRIVATE CppUTestLib)
+    target_link_libraries(${name} PRIVATE CppUTest::CppUTest CppUTest::Mock)
 endfunction()
 
 add_mock(spiwriter-mock SpiWriterMock.cpp)

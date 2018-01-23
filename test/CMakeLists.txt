@@ -1,18 +1,15 @@
 
 find_package(CppUTest REQUIRED)
-add_library(CppUTestLib INTERFACE)
-target_include_directories(CppUTestLib SYSTEM INTERFACE ${CppUTest_INCLUDE_DIR})
-target_link_libraries(CppUTestLib INTERFACE
-                        ${CppUTest_LIBRARY}
-                        ${CppUTest_Ext_LIBRARY}
-                        )
-
 
 add_subdirectory("mock")
 
 
 add_library(testmain TestMain.cpp)
-target_link_libraries(testmain PUBLIC CppUTestLib build-libs)
+target_link_libraries(testmain PUBLIC
+                        CppUTest::CppUTest
+                        CppUTest::Mock
+                        build-libs
+                        )
 
 
 function(add_test_suite name)

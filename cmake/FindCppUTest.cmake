@@ -29,5 +29,23 @@ find_package_handle_standard_args(CppUTest DEFAULT_MSG
                                         CppUTest_INCLUDE_DIR
                                         )
 
-mark_as_advanced(CppUTest_INCLUDE_DIR CppUTest_LIBRARY CppUTest_Ext_LIBRARY)
+mark_as_advanced(CppUTest_INCLUDE_DIR
+                CppUTest_LIBRARY
+                CppUTest_Ext_LIBRARY
+                )
+
+
+add_library(CppUTest::CppUTest UNKNOWN IMPORTED)
+set_target_properties(CppUTest::CppUTest PROPERTIES
+                        IMPORTED_LOCATION "${CppUTest_LIBRARY}"
+                        IMPORTED_LINK_INTERFACE_LANGUAGES CXX
+                        INTERFACE_INCLUDE_DIRECTORIES "${CppUTest_INCLUDE_DIR}"
+                        )
+
+add_library(CppUTest::Mock UNKNOWN IMPORTED)
+set_target_properties(CppUTest::Mock PROPERTIES
+                        IMPORTED_LOCATION "${CppUTest_Ext_LIBRARY}"
+                        IMPORTED_LINK_INTERFACE_LANGUAGES CXX
+                        INTERFACE_INCLUDE_DIRECTORIES "${CppUTest_INCLUDE_DIR}"
+                        )
 
