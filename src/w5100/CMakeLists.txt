@@ -1,4 +1,4 @@
 
 add_cpp_library(stm32-w5100device Device.cpp)
-target_link_libraries(stm32-w5100device PRIVATE GSL::GSL)
+target_include_directories(stm32-w5100device PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
 
