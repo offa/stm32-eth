@@ -46,8 +46,8 @@ namespace spi
         }
 
 
-        const std::array<SPI_TypeDef*, 3> spiInstances{{SPI1, SPI2, SPI3}};
-        const std::array<GPIO_TypeDef*, 3> pinBlocks{{GPIOA, GPIOB, GPIOC}};
+        constexpr std::array<SPI_TypeDef*, 3> spiInstances{{SPI1, SPI2, SPI3}};
+        constexpr std::array<GPIO_TypeDef*, 3> pinBlocks{{GPIOA, GPIOB, GPIOC}};
     }
 
 
