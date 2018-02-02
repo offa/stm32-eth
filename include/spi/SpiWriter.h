@@ -61,7 +61,6 @@ namespace spi
 
         Handle m_handle{};
         const SpiConfig& m_config;
-        static constexpr std::uint32_t timeout = ~0;
     };
 
 }
