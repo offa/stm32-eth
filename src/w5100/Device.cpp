@@ -137,7 +137,7 @@ namespace w5100
     void Device::sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer)
     {
         constexpr std::uint16_t transmitBufferMask = 0x07ff;
-        const auto size = buffer.length();
+        const auto size = buffer.size();
         const std::uint16_t writePointer = read(registers::socketTransmitWritePointer(s));
         const std::uint16_t offset = writePointer & transmitBufferMask;
         const std::uint16_t destAddress = offset + toTransmitBufferAddress(s);
@@ -160,7 +160,7 @@ namespace w5100
     std::uint16_t Device::receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer)
     {
         constexpr std::uint16_t receiveBufferMask = 0x07ff;
-        const auto size = buffer.length();
+        const auto size = buffer.size();
         const std::uint16_t readPointer = read(registers::socketReceiveReadPointer(s));
         const std::uint16_t offset = readPointer & receiveBufferMask;
         const std::uint16_t destAddress = offset + toReceiveBufferAddress(s);

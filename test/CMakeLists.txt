@@ -1,18 +1,15 @@
 
 find_package(CppUTest REQUIRED)
-add_library(CppUTestLib INTERFACE)
-target_include_directories(CppUTestLib SYSTEM INTERFACE ${CppUTest_INCLUDE_DIR})
-target_link_libraries(CppUTestLib INTERFACE
-                        ${CppUTest_LIBRARY}
-                        ${CppUTest_Ext_LIBRARY}
-                        )
-
 
 add_subdirectory("mock")
 
 
 add_library(testmain TestMain.cpp)
-target_link_libraries(testmain PUBLIC CppUTestLib build-libs)
+target_link_libraries(testmain PUBLIC
+                        CppUTest::CppUTest
+                        CppUTest::Mock
+                        build-libs
+                        )
 
 
 function(add_test_suite name)
@@ -35,31 +32,32 @@ add_test_suite(CommonTest RegisterValueTest.cpp
                         )
 
 
-add_test_suite(SocketTest SocketTest.cpp
-                        $<TARGET_OBJECTS:socket>
-                        )
+add_test_suite(SocketTest SocketTest.cpp)
 target_link_libraries(SocketTest PRIVATE
+                        stm32-socket
                         spiwriter-mock
                         w5100device-mock
                         platform-mock
+                        GSL::GSL
                         )
 
 
 add_test_suite(W5100DeviceTest W5100DeviceTest.cpp
                             W5100RegisterTest.cpp
-                            $<TARGET_OBJECTS:w5100device>
                             )
 target_link_libraries(W5100DeviceTest PRIVATE
+                        stm32-w5100device
                         spiwriter-mock
+                        GSL::GSL
                         )
 
 
-add_test_suite(SpiWriterTest SpiWriterTest.cpp
-                            $<TARGET_OBJECTS:spiwriter>
-                            )
+add_test_suite(SpiWriterTest SpiWriterTest.cpp)
 target_link_libraries(SpiWriterTest PRIVATE
+                            stm32-spiwriter
                             platform-mock
                             stm32hal-mock
+                            GSL::GSL
                             )
 
 

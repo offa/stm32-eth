@@ -4,18 +4,18 @@ target_link_libraries(eth-stm32-it
                         PRIVATE
                             eth-stm32
                             build-libs
-                        PUBLIC
-                           system-libs
+                            system-libs
                         )
+target_include_directories(eth-stm32-it PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
 
 add_cpp_executable(eth-stm32-client-it ClientMain.cpp)
 target_link_libraries(eth-stm32-client-it
                         PRIVATE
                             eth-stm32
                             build-libs
-                        PUBLIC
                             system-libs
                         )
+target_include_directories(eth-stm32-client-it PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
 
 
 add_hex_target(eth-stm32-it)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9.4)
+cmake_minimum_required(VERSION 3.10.1)
 
 project(stm32-eth VERSION 0.8.0)
 message(STATUS "~~~ ${PROJECT_NAME} v${PROJECT_VERSION} ~~~")
@@ -55,7 +55,6 @@ endif()
 
 
 find_package(GSL REQUIRED)
-include_directories(${GSL_INCLUDE_DIR})
 
 if( GSL_CONTRACT_UNENFORCED )
     add_definitions(-DGSL_UNENFORCED_ON_CONTRACT_VIOLATION)
@@ -74,4 +73,5 @@ endif()
 if( INTEGRATION_TEST )
     add_subdirectory("test/integration")
 endif()
+
 
