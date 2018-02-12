@@ -300,12 +300,6 @@ TEST(SocketTest, sendIgnoresEmptyBuffer)
     CHECK_EQUAL(0, result);
 }
 
-TEST(SocketTest, sendIgnoresNullptrBuffer)
-{
-    const auto result = socket->send(nullptr);
-    CHECK_EQUAL(0, result);
-}
-
 TEST(SocketTest, sendLimitsBufferSize)
 {
     constexpr std::uint16_t maxSendSize = 2048;
@@ -437,12 +431,6 @@ TEST(SocketTest, receiveIgnoresEmptyBuffer)
 {
     std::vector<std::uint8_t> buffer;
     const auto result = socket->receive(buffer);
-    CHECK_EQUAL(0, result);
-}
-
-TEST(SocketTest, receiveIgnoresNullptrBuffer)
-{
-    const auto result = socket->receive(nullptr);
     CHECK_EQUAL(0, result);
 }
 

@@ -43,6 +43,7 @@ namespace eth::spi
                             params... }};
         }
 
+        constexpr auto timeout = std::numeric_limits<std::uint32_t>::max();
 
         const std::array<SPI_TypeDef*, 3> spiInstances{{SPI1, SPI2, SPI3}};
         const std::array<GPIO_TypeDef*, 3> pinBlocks{{GPIOA, GPIOB, GPIOC}};
