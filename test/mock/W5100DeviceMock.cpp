@@ -91,8 +91,8 @@ namespace w5100
     {
         mock("Device").actualCall("sendData")
                 .withParameter("socket", s.value())
-                .withMemoryBufferParameter("buffer", buffer.data(), buffer.length())
-                .withParameter("size", buffer.length());
+                .withMemoryBufferParameter("buffer", buffer.data(), buffer.size())
+                .withParameter("size", buffer.size());
     }
 
     std::uint16_t Device::receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer)
@@ -100,7 +100,7 @@ namespace w5100
         return mock("Device").actualCall("receiveData")
                     .withParameter("socket", s.value())
                     .withOutputParameter("buffer", buffer.data())
-                    .withParameter("size", buffer.length())
+                    .withParameter("size", buffer.size())
                     .returnUnsignedIntValue();
     }
 

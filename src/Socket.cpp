@@ -124,7 +124,7 @@ namespace eth
             return 0;
         }
 
-        const std::uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), std::uint16_t(buffer.length()));
+        const std::uint16_t sendSize = std::min(m_device.getTransmitBufferSize(), static_cast<std::uint16_t>(buffer.size()));
         const auto freeSize = waitFor([this] { return m_device.getTransmitFreeSize(m_handle); },
                                         [this] { return connectionReady(getStatus()); },
                                         sendSize);
@@ -157,7 +157,7 @@ namespace eth
             return 0;
         }
 
-        const std::uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), std::uint16_t(buffer.length()));
+        const std::uint16_t sizeLimited = std::min(m_device.getReceiveBufferSize(), static_cast<std::uint16_t>(buffer.size()));
         const std::uint16_t receiveSize = std::min(available, sizeLimited);
         auto shrinkedBuffer = buffer.first(receiveSize);
         m_device.receiveData(m_handle, shrinkedBuffer);
