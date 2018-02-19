@@ -21,8 +21,6 @@
 #include "Byte.h"
 #include <CppUTest/TestHarness.h>
 
-namespace byte = eth::byte;
-
 TEST_GROUP(ByteTest)
 {
     void setup() override
@@ -37,55 +35,55 @@ TEST_GROUP(ByteTest)
 TEST(ByteTest, getByteUint8)
 {
     constexpr std::uint8_t value = 0xab;
-    CHECK_EQUAL(0xab, byte::get<0>(value));
+    CHECK_EQUAL(0xab, eth::byte::get<0>(value));
 }
 
 TEST(ByteTest, getByteUint16)
 {
     constexpr std::uint16_t value = 0xabcd;
-    CHECK_EQUAL(0xcd, byte::get<0>(value));
-    CHECK_EQUAL(0xab, byte::get<1>(value));
+    CHECK_EQUAL(0xcd, eth::byte::get<0>(value));
+    CHECK_EQUAL(0xab, eth::byte::get<1>(value));
 }
 
 TEST(ByteTest, getByteUint32)
 {
     constexpr std::uint32_t value = 0xabcdef01;
-    CHECK_EQUAL(0x01, byte::get<0>(value));
-    CHECK_EQUAL(0xef, byte::get<1>(value));
-    CHECK_EQUAL(0xcd, byte::get<2>(value));
-    CHECK_EQUAL(0xab, byte::get<3>(value));
+    CHECK_EQUAL(0x01, eth::byte::get<0>(value));
+    CHECK_EQUAL(0xef, eth::byte::get<1>(value));
+    CHECK_EQUAL(0xcd, eth::byte::get<2>(value));
+    CHECK_EQUAL(0xab, eth::byte::get<3>(value));
 }
 
 TEST(ByteTest, getByteWithLessValue)
 {
     constexpr std::uint16_t value = 0xab;
-    CHECK_EQUAL(0xab, byte::get<0>(value));
-    CHECK_EQUAL(0x00, byte::get<1>(value));
+    CHECK_EQUAL(0xab, eth::byte::get<0>(value));
+    CHECK_EQUAL(0x00, eth::byte::get<1>(value));
 }
 
 TEST(ByteTest, toByteUint8)
 {
     constexpr std::uint8_t b0 = 0xab;
-    CHECK_EQUAL(0xab, byte::to<std::uint8_t>(b0));
+    CHECK_EQUAL(0xab, eth::byte::to<std::uint8_t>(b0));
 }
 
 TEST(ByteTest, toByteUint16)
 {
     constexpr std::uint8_t b0 = 0xcd;
-    CHECK_EQUAL(0xabcd, byte::to<std::uint16_t>(0xab, b0));
+    CHECK_EQUAL(0xabcd, eth::byte::to<std::uint16_t>(0xab, b0));
 }
 
 TEST(ByteTest, toByteUint32)
 {
     constexpr std::uint8_t b0 = 0x01;
     constexpr std::uint8_t b3 = 0xab;
-    CHECK_EQUAL(0xabcdef01, byte::to<std::uint32_t>(b3, 0xcd, 0xef, b0));
+    CHECK_EQUAL(0xabcdef01, eth::byte::to<std::uint32_t>(b3, 0xcd, 0xef, b0));
 }
 
 TEST(ByteTest, toByteWithLessThanSize)
 {
     constexpr std::uint8_t b0 = 0x01;
     constexpr std::uint8_t b1 = 0x02;
-    CHECK_EQUAL(0x0201, byte::to<std::uint32_t>(b1, b0));
+    CHECK_EQUAL(0x0201, eth::byte::to<std::uint32_t>(b1, b0));
 }
 
