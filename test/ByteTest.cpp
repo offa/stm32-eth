@@ -21,7 +21,7 @@
 #include "Byte.h"
 #include <CppUTest/TestHarness.h>
 
-using namespace eth;
+namespace byte = eth::byte;
 
 TEST_GROUP(ByteTest)
 {
