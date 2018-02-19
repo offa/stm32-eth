@@ -21,7 +21,8 @@
 #include "SocketHandle.h"
 #include <CppUTest/TestHarness.h>
 
-using namespace eth;
+using eth::SocketHandle;
+using eth::makeHandle;
 
 TEST_GROUP(SocketHandleTest)
 {
@@ -36,7 +37,7 @@ TEST_GROUP(SocketHandleTest)
 
 TEST(SocketHandleTest, creation)
 {
-    constexpr auto handle = SocketHandle(1);
+    constexpr SocketHandle handle{1};
     constexpr auto handle2 = makeHandle<2>();
     CHECK_EQUAL(1, handle.value());
     CHECK_EQUAL(2, handle2.value());
