@@ -24,7 +24,8 @@
 #include <gsl/span>
 #include <CppUTest/TestHarness.h>
 
-using namespace eth::w5100;
+using eth::w5100::Register;
+using eth::w5100::makeRegister;
 
 TEST_GROUP(W5100RegisterTest)
 {
@@ -35,7 +36,6 @@ TEST_GROUP(W5100RegisterTest)
     void teardown() override
     {
     }
-
 };
 
 TEST(W5100RegisterTest, address)
