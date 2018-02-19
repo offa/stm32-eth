@@ -40,7 +40,7 @@ TEST_GROUP(W5100RegisterTest)
 
 TEST(W5100RegisterTest, address)
 {
-    constexpr Register<std::uint16_t> reg(0xabcd);
+    constexpr Register<std::uint16_t> reg{0xabcd};
     CHECK_EQUAL(0xabcd, reg.address());
 }
 
