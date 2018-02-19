@@ -21,7 +21,8 @@
 #include "SocketHandle.h"
 #include <CppUTest/TestHarness.h>
 
-using namespace eth;
+using eth::SocketHandle;
+using eth::makeHandle;
 
 TEST_GROUP(SocketHandleTest)
 {
