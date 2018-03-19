@@ -24,41 +24,50 @@ endfunction()
 
 
 
-add_test_suite(CommonTest RegisterValueTest.cpp
-                        SocketInterruptTest.cpp
-                        ByteTest.cpp
-                        SocketHandleTest.cpp
-                        NetConfigTest.cpp
+add_test_suite(CommonTest
+                RegisterValueTest.cpp
+                SocketInterruptTest.cpp
+                ByteTest.cpp
+                SocketHandleTest.cpp
+                NetConfigTest.cpp
+                )
+
+
+add_test_suite(SocketTest
+                SocketTest.cpp
+                $<TARGET_OBJECTS:stm32-socket>
+                )
+target_link_libraries(SocketTest
+                        PRIVATE
+                            spiwriter-mock
+                            w5100device-mock
+                            platform-mock
+                            GSL::GSL
                         )
 
 
-add_test_suite(SocketTest SocketTest.cpp)
-target_link_libraries(SocketTest PRIVATE
-                        stm32-socket
-                        spiwriter-mock
-                        w5100device-mock
-                        platform-mock
-                        GSL::GSL
+add_test_suite(W5100DeviceTest
+                W5100DeviceTest.cpp
+                W5100RegisterTest.cpp
+                $<TARGET_OBJECTS:stm32-w5100device>
+                )
+target_link_libraries(W5100DeviceTest
+                        PRIVATE
+                            spiwriter-mock
+                            GSL::GSL
                         )
 
 
-add_test_suite(W5100DeviceTest W5100DeviceTest.cpp
-                            W5100RegisterTest.cpp
-                            )
-target_link_libraries(W5100DeviceTest PRIVATE
-                        stm32-w5100device
-                        spiwriter-mock
-                        GSL::GSL
-                        )
-
-
-add_test_suite(SpiWriterTest SpiWriterTest.cpp)
-target_link_libraries(SpiWriterTest PRIVATE
-                            stm32-spiwriter
+add_test_suite(SpiWriterTest
+                SpiWriterTest.cpp
+                $<TARGET_OBJECTS:stm32-spiwriter>
+                )
+target_link_libraries(SpiWriterTest
+                        PRIVATE
                             platform-mock
                             stm32hal-mock
                             GSL::GSL
-                            )
+                        )
 
 
 
