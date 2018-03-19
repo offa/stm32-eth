@@ -9,11 +9,8 @@ add_cpp_library(stm32-platform PlatformStm32.cpp)
 
 
 add_library(eth-stm32 $<TARGET_OBJECTS:stm32-socket>
+                    $<TARGET_OBJECTS:stm32-w5100device>
                     $<TARGET_OBJECTS:stm32-spiwriter>
+                    $<TARGET_OBJECTS:stm32-platform>
                     )
-target_link_libraries(eth-stm32 INTERFACE
-                        stm32-w5100device
-                        stm32-spiwriter
-                        stm32-platform
-                        )
 add_size_target(eth-stm32)
