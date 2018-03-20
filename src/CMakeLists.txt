@@ -14,3 +14,9 @@ add_library(eth-stm32 $<TARGET_OBJECTS:stm32-socket>
                     $<TARGET_OBJECTS:stm32-platform>
                     )
 add_size_target(eth-stm32)
+
+
+
+install(EXPORT eth-stm32-config DESTINATION share/stm32-eth/cmake)
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/" DESTINATION include)
+install(TARGETS eth-stm32 EXPORT eth-stm32-config DESTINATION lib)
