@@ -47,10 +47,7 @@ then
 
     if [[ "${LTO_ENABLED}" != "ON" ]]
     then
-        #make stm32-eth.size
-        echo "*** Size of the library target is unsupported at the moment ***"
-        # Disabled as not supported at the moment
-
+        make stm32-eth.size
         make stm32-eth-it.size
         make stm32-eth-client-it.size
     fi
