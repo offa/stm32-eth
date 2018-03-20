@@ -8,15 +8,15 @@ target_include_directories(stm32-socket PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTER
 add_cpp_library(stm32-platform OBJECT PlatformStm32.cpp)
 
 
-add_library(eth-stm32 $<TARGET_OBJECTS:stm32-socket>
+add_library(stm32-eth $<TARGET_OBJECTS:stm32-socket>
                     $<TARGET_OBJECTS:stm32-w5100device>
                     $<TARGET_OBJECTS:stm32-spiwriter>
                     $<TARGET_OBJECTS:stm32-platform>
                     )
-add_size_target(eth-stm32)
+add_size_target(stm32-eth)
 
 
 
-install(EXPORT eth-stm32-config DESTINATION share/stm32-eth/cmake)
+install(EXPORT stm32-eth-config DESTINATION share/stm32-eth/cmake)
 install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/" DESTINATION include)
-install(TARGETS eth-stm32 EXPORT eth-stm32-config DESTINATION lib)
+install(TARGETS stm32-eth EXPORT stm32-eth-config DESTINATION lib)
