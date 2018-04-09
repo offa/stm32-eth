@@ -34,7 +34,7 @@ fi
 
 
 
-mkdir build && cd build
+mkdir -p build && cd build
 
 if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
