@@ -23,6 +23,7 @@
 #include "TestHelper.h"
 #include <vector>
 #include <algorithm>
+#include <memory>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 

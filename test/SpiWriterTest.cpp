@@ -20,6 +20,7 @@
 
 #include "spi/SpiWriter.h"
 #include "mock/Stm32HalComparator.h"
+#include <memory>
 #include <gsl/span>
 #include <gsl/gsl_util>
 #include <CppUTest/TestHarness.h>

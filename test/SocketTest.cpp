@@ -26,6 +26,7 @@
 #include "spi/SpiWriter.h"
 #include "TestHelper.h"
 #include <vector>
+#include <memory>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
