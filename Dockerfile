@@ -11,7 +11,8 @@ RUN mkdir deps && cd deps && \
         git clone --depth=1 https://github.com/cpputest/cpputest.git cpputest && \
         cd cpputest && mkdir _build && cd _build && \
         case ${CXX} in clang* ) export CXXFLAGS="-stdlib=libc++"; esac; \
-        cmake -DC++11=ON -DTESTS=OFF .. && make && make install && \
+        cmake -DC++11=ON -DTESTS=OFF -DMEMORY_LEAK_DETECTION=OFF .. && \
+        make && make install && \
         cd ../..; \
     fi && \
     cd .. && rm -rf deps

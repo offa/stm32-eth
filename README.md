@@ -38,7 +38,7 @@ Executing tests using CTest: `make test` or `ctest`. For `unittest` it's possibl
 
 ## • Integration Test
 
-Integration Test for *Stm32F4* are enabled by the `INTEGRATION_TEST` option. The target `eth-stm32-it` is available as *ELF* (default) and *HEX*.
+Integration Test for *Stm32F4* are enabled by the `INTEGRATION_TEST` option. The target `stm32-eth-it` is available as *ELF* (default) and *HEX*.
 
 
 
