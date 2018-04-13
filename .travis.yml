@@ -13,12 +13,11 @@ env:
 
 matrix:
     include:
-    - env: COMPILER=gcc-7
+    - env: COMPILER=gcc-7 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Debug
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Release
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED=ON
-    - env: COMPILER=gcc-7 BUILD_OPTS="-asan -ubsan"
 
 before_install:
   - docker pull ${DOCKER_IMG}/${COMPILER}:latest

@@ -34,7 +34,7 @@ fi
 
 
 
-mkdir build && cd build
+mkdir -p build && cd build
 
 if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
@@ -47,12 +47,9 @@ then
 
     if [[ "${LTO_ENABLED}" != "ON" ]]
     then
-        #make eth-stm32.size
-        echo "*** Size of the library target is unsupported at the moment ***"
-        # Disabled as not supported at the moment
-
-        make eth-stm32-it.size
-        make eth-stm32-client-it.size
+        make stm32-eth.size
+        make stm32-eth-it.size
+        make stm32-eth-client-it.size
     fi
 else
     cmake ${BUILD_ARGS} \
