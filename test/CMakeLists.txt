@@ -1,6 +1,13 @@
 
 find_package(CppUTest REQUIRED)
 
+if( SANITIZER_ENABLED )
+    set_target_properties(CppUTest::CppUTest PROPERTIES
+                            INTERFACE_COMPILE_DEFINITIONS
+                                CPPUTEST_MEM_LEAK_DETECTION_DISABLED
+                            )
+endif()
+
 add_subdirectory("mock")
 
 

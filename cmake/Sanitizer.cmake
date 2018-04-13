@@ -5,6 +5,7 @@ macro(enable_sanitizer san)
     set(SAN_FLAG "-fsanitize=${san}")
     add_common_flags(${SAN_FLAG})
     target_link_libraries(build-libs INTERFACE ${SAN_FLAG})
+    set(SANITIZER_ENABLED TRUE)
 endmacro()
 
 
