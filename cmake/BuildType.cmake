@@ -1,6 +1,6 @@
 
-macro(enable_build_type type)
-    list(APPEND VALID_BUILD_TYPES ${type})
+macro(enable_build_type)
+    list(APPEND VALID_BUILD_TYPES ${ARGN})
 endmacro()
 
 function(set_build_type type)
@@ -15,10 +15,11 @@ function(set_build_type type)
 endfunction()
 
 
-enable_build_type("Debug")
-enable_build_type("Release")
-enable_build_type("RelWithDebInfo")
-enable_build_type("MinSizeRel")
+enable_build_type(Debug
+                Release
+                RelWithDebInfo
+                MinSizeRel
+                )
 
 
 if( CMAKE_BUILD_TYPE )
