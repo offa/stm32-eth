@@ -40,7 +40,7 @@ if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
     cmake ${BUILD_ARGS} \
             -DUNITTEST=OFF \
-            -DINTEGRATION_TEST=ON \
+            -DINTEGRATIONTEST=ON \
             -DCMAKE_TOOLCHAIN_FILE=../arm-embedded-toolchain.cmake \
             ..
     make
