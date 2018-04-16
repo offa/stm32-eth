@@ -53,10 +53,7 @@ endif()
 
 
 find_package(GSL REQUIRED)
-
-if( GSL_CONTRACT_UNENFORCED )
-    add_definitions(-DGSL_UNENFORCED_ON_CONTRACT_VIOLATION)
-endif()
+set_target_properties(GSL::GSL PROPERTIES INTERFACE_COMPILE_DEFINITIONS GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
 
 
 include_directories("include")
