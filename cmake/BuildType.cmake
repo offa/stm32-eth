@@ -1,14 +1,14 @@
 
-macro(enable_build_type _type)
-    list(APPEND VALID_BUILD_TYPES ${_type})
+macro(enable_build_type type)
+    list(APPEND VALID_BUILD_TYPES ${type})
 endmacro()
 
-function(set_build_type _type)
-    list(FIND VALID_BUILD_TYPES ${_type} _type_found)
+function(set_build_type type)
+    list(FIND VALID_BUILD_TYPES ${type} type_found)
 
-    if( NOT ( ${_type_found} LESS 0 ) )
-        string(TOUPPER ${_type} _type_name)
-        set(BUILD_TYPE_${_type_name} TRUE)
+    if( NOT ( ${type_found} LESS 0 ) )
+        string(TOUPPER ${type} type_name)
+        set(BUILD_TYPE_${type_name} TRUE)
     else()
         message(SEND_ERROR "Warning:\tInvalid / unsupported build type: '${CMAKE_BUILD_TYPE}'")
     endif()
