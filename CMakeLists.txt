@@ -47,16 +47,13 @@ include_directories(SYSTEM "system/include"
                             "system/include/cmsis"
                             )
 
-if( INTEGRATION_TEST OR BUILD_SYSTEM_DRIVER )
+if( INTEGRATIONTEST OR BUILD_SYSTEM_DRIVER )
     add_subdirectory("system")
 endif()
 
 
 find_package(GSL REQUIRED)
-
-if( GSL_CONTRACT_UNENFORCED )
-    add_definitions(-DGSL_UNENFORCED_ON_CONTRACT_VIOLATION)
-endif()
+set_target_properties(GSL::GSL PROPERTIES INTERFACE_COMPILE_DEFINITIONS GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
 
 
 include_directories("include")
@@ -68,7 +65,7 @@ if( UNITTEST )
     add_subdirectory("test")
 endif()
 
-if( INTEGRATION_TEST )
+if( INTEGRATIONTEST )
     add_subdirectory("test/integration")
 endif()
 
