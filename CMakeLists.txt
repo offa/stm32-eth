@@ -47,7 +47,7 @@ include_directories(SYSTEM "system/include"
                             "system/include/cmsis"
                             )
 
-if( INTEGRATION_TEST OR BUILD_SYSTEM_DRIVER )
+if( INTEGRATIONTEST OR BUILD_SYSTEM_DRIVER )
     add_subdirectory("system")
 endif()
 
@@ -65,7 +65,7 @@ if( UNITTEST )
     add_subdirectory("test")
 endif()
 
-if( INTEGRATION_TEST )
+if( INTEGRATIONTEST )
     add_subdirectory("test/integration")
 endif()
 
