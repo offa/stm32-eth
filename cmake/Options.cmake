@@ -1,10 +1,11 @@
-function(print_option opt text)
-    message(STATUS "${text} : ${${opt}}")
-endfunction()
+include(CMakeParseArguments)
 
-function(print_option_if_enabled opt text)
-    if( ${opt} )
-        print_option(${opt} ${text})
+function(print_option opt text)
+    set(options ENABLED_ONLY)
+    cmake_parse_arguments(PRINT_OPTION "${options}" "" "" ${ARGN})
+
+    if( NOT (PRINT_OPTION_ENABLED_ONLY AND NOT ${opt}) )
+        message(STATUS "${text} : ${${opt}}")
     endif()
 endfunction()
 
@@ -14,7 +15,7 @@ option(UNITTEST_VERBOSE "Verbose Unit Tests" OFF)
 option(UNITTEST_JUNIT "Create JUnit XML Files of Unit Tests" OFF)
 print_option(UNITTEST "Build Unit Tests")
 print_option(UNITTEST_VERBOSE "Verbose Unit Tests")
-print_option_if_enabled(UNITTEST_JUNIT "JUnit XML output enabled")
+print_option(UNITTEST_JUNIT "JUnit XML output enabled" ENABLED_ONLY)
 
 option(COVERAGE "Enable Coverage" OFF)
 print_option(COVERAGE "Enable Coverage")
