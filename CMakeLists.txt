@@ -11,6 +11,7 @@ include(Options)
 include(BuildType)
 include(CompilerOptions)
 include(Compiler)
+include(UtilityTargets)
 
 
 if( ${BUILD_TYPE_DEBUG} )
