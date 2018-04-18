@@ -1,5 +1,3 @@
-include(CMakeParseArguments)
-
 function(print_option opt text)
     set(options ENABLED_ONLY)
     cmake_parse_arguments(PRINT_OPTION "${options}" "" "" ${ARGN})

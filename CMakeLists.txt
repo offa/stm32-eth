@@ -7,6 +7,7 @@ message(STATUS "Target: ${CMAKE_SYSTEM_PROCESSOR} (${CMAKE_SYSTEM_NAME})")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(CMakeParseArguments)
 include(Options)
 include(BuildType)
 include(CompilerOptions)
