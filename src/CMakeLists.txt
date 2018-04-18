@@ -13,7 +13,7 @@ add_library(stm32-eth $<TARGET_OBJECTS:stm32-socket>
                     $<TARGET_OBJECTS:stm32-spiwriter>
                     $<TARGET_OBJECTS:stm32-platform>
                     )
-add_size_target(stm32-eth)
+add_utility_target(stm32-eth SIZE)
 
 
 
