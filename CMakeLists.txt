@@ -14,11 +14,6 @@ include(CompilerOptions)
 include(Compiler)
 include(UtilityTargets)
 
-
-if( ${BUILD_TYPE_DEBUG} )
-    add_definitions(-DDEBUG -DUSE_FULL_ASSERT -DTRACE)
-endif()
-
 add_common_flags(-Wall
                 -Wextra
                 -pedantic

@@ -32,30 +32,28 @@ add_library(hal stm32f4-hal/stm32f4xx_hal.c
 add_library(hw-init _initialize_hardware.c)
 add_library(trace diag/Trace.c diag/trace_impl.c)
 
-
 add_library(system-libs INTERFACE)
-target_link_libraries(system-libs
-                        INTERFACE
-                            hal
-                            cmsis
-                            newlib
-                            cortexm
-                            hw-init
-                            trace
-                            )
+
+if( BUILD_TYPE_DEBUG )
+    message(STATUS "HAL Debug enabled")
+endif()
 
 
-function(disable_compiler_warnings target_name)
-    target_compile_options(${target_name} PRIVATE
-                                -Wno-error
-                                -Wno-pedantic
-                                -Wno-extra
-                                )
+function(add_system_components)
+    foreach(argTarget IN LISTS ARGN)
+        if( BUILD_TYPE_DEBUG )
+            target_compile_definitions(${argTarget} PUBLIC DEBUG USE_FULL_ASSERT TRACE)
+        endif()
+
+        target_link_libraries(system-libs INTERFACE ${ARGN})
+    endforeach()
 endfunction()
 
-disable_compiler_warnings(cmsis)
-disable_compiler_warnings(cortexm)
-disable_compiler_warnings(newlib)
-disable_compiler_warnings(hal)
-disable_compiler_warnings(hw-init)
-disable_compiler_warnings(trace)
+add_system_components(hal
+                        cmsis
+                        newlib
+                        cortexm
+                        hw-init
+                        trace
+                        )
+
