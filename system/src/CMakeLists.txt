@@ -46,7 +46,7 @@ target_link_libraries(system-libs
 
 
 function(disable_compiler_warnings target_name)
-    target_compile_options(${target_name} PUBLIC
+    target_compile_options(${target_name} PRIVATE
                                 -Wno-error
                                 -Wno-pedantic
                                 -Wno-extra
