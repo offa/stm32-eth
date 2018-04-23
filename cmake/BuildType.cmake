@@ -12,7 +12,7 @@ macro(set_build_type type)
     else()
         message(SEND_ERROR "Warning:\tInvalid / unsupported build type: '${CMAKE_BUILD_TYPE}'")
     endif()
-macro()
+endmacro()
 
 
 enable_build_type(Debug
