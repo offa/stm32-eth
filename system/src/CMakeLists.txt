@@ -44,9 +44,9 @@ function(add_system_components)
         if( BUILD_TYPE_DEBUG )
             target_compile_definitions(${argTarget} PUBLIC DEBUG USE_FULL_ASSERT TRACE)
         endif()
-
-        target_link_libraries(system-libs INTERFACE ${ARGN})
     endforeach()
+
+    target_link_libraries(system-libs INTERFACE ${ARGN})
 endfunction()
 
 add_system_components(hal
