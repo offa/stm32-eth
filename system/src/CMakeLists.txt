@@ -44,6 +44,8 @@ function(add_system_components)
         if( BUILD_TYPE_DEBUG )
             target_compile_definitions(${argTarget} PUBLIC DEBUG USE_FULL_ASSERT TRACE)
         endif()
+
+        target_link_libraries(${argTarget} PRIVATE stm32hal-api)
     endforeach()
 
     target_link_libraries(system-libs INTERFACE ${ARGN})
