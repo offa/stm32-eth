@@ -1,11 +1,18 @@
+function(link_hal_api targetName)
+    target_include_directories(${targetName} SYSTEM PRIVATE $<TARGET_PROPERTY:stm32hal-api,INTERFACE_INCLUDE_DIRECTORIES>)
+    target_compile_definitions(${targetName} PRIVATE $<TARGET_PROPERTY:stm32hal-api,INTERFACE_COMPILE_DEFINITIONS>)
+endfunction()
+
 
 add_subdirectory(spi)
 add_subdirectory(w5100)
 
 add_cpp_library(stm32-socket OBJECT Socket.cpp)
 target_include_directories(stm32-socket PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
+link_hal_api(stm32-socket)
 
 add_cpp_library(stm32-platform OBJECT PlatformStm32.cpp)
+link_hal_api(stm32-platform)
 
 
 add_library(stm32-eth $<TARGET_OBJECTS:stm32-socket>

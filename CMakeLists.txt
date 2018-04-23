@@ -34,14 +34,19 @@ endif()
 include(Sanitizer)
 
 
-add_definitions(-DSTM32F407xx
-                -DUSE_HAL_DRIVER
-                -DHSE_VALUE=8000000
-                -DOS_USE_TRACE_SEMIHOSTING_DEBUG
-                )
-include_directories(SYSTEM "system/include"
-                            "system/include/stm32f4-hal"
-                            "system/include/cmsis"
+add_library(stm32hal-api INTERFACE)
+target_compile_definitions(stm32hal-api
+                            INTERFACE
+                                STM32F407xx
+                                USE_HAL_DRIVER
+                                HSE_VALUE=8000000
+                                OS_USE_TRACE_SEMIHOSTING_DEBUG
+                            )
+target_include_directories(stm32hal-api SYSTEM
+                            INTERFACE
+                                "system/include"
+                                "system/include/stm32f4-hal"
+                                "system/include/cmsis"
                             )
 
 if( INTEGRATIONTEST OR BUILD_SYSTEM_DRIVER )

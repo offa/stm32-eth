@@ -40,7 +40,7 @@ endif()
 
 
 function(add_system_components)
-    foreach(argTarget IN LISTS ARGN)
+    foreach( argTarget IN LISTS ARGN )
         if( BUILD_TYPE_DEBUG )
             target_compile_definitions(${argTarget} PUBLIC DEBUG USE_FULL_ASSERT TRACE)
         endif()
