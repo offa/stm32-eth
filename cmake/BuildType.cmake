@@ -3,7 +3,7 @@ macro(enable_build_type)
     list(APPEND VALID_BUILD_TYPES ${ARGN})
 endmacro()
 
-function(set_build_type type)
+macro(set_build_type type)
     list(FIND VALID_BUILD_TYPES ${type} type_found)
 
     if( NOT ( ${type_found} LESS 0 ) )
@@ -12,7 +12,7 @@ function(set_build_type type)
     else()
         message(SEND_ERROR "Warning:\tInvalid / unsupported build type: '${CMAKE_BUILD_TYPE}'")
     endif()
-endfunction()
+macro()
 
 
 enable_build_type(Debug
