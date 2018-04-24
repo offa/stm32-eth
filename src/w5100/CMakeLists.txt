@@ -1,4 +1,3 @@
 
 add_cpp_library(stm32-w5100device OBJECT Device.cpp)
-target_include_directories(stm32-w5100device PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
-
+link_to_obj(stm32-w5100device DEFAULT GSL::GSL SYSTEM stm32hal-api)

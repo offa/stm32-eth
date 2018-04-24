@@ -7,15 +7,12 @@ message(STATUS "Target: ${CMAKE_SYSTEM_PROCESSOR} (${CMAKE_SYSTEM_NAME})")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(CMakeParseArguments)
 include(Options)
 include(BuildType)
 include(CompilerOptions)
 include(Compiler)
-
-
-if( ${BUILD_TYPE_DEBUG} )
-    add_definitions(-DDEBUG -DUSE_FULL_ASSERT -DTRACE)
-endif()
+include(UtilityTargets)
 
 add_common_flags(-Wall
                 -Wextra
@@ -38,24 +35,16 @@ endif()
 
 include(Sanitizer)
 
-
-add_definitions(-DSTM32F407xx
-                -DUSE_HAL_DRIVER
-                -DHSE_VALUE=8000000
-                -DOS_USE_TRACE_SEMIHOSTING_DEBUG
-                )
-include_directories(SYSTEM "system/include"
-                            "system/include/stm32f4-hal"
-                            "system/include/cmsis"
-                            )
-
-if( INTEGRATIONTEST OR BUILD_SYSTEM_DRIVER )
-    add_subdirectory("system")
-endif()
+add_subdirectory("system")
 
 
 find_package(GSL REQUIRED)
-set_target_properties(GSL::GSL PROPERTIES INTERFACE_COMPILE_DEFINITIONS GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+
+if( GSL_CONTRACT_UNENFORCED )
+    set_target_properties(GSL::GSL PROPERTIES
+                            INTERFACE_COMPILE_DEFINITIONS
+                            GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+endif()
 
 
 include_directories("include")
