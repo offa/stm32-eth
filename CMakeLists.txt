@@ -37,7 +37,12 @@ add_subdirectory("system")
 
 
 find_package(GSL REQUIRED)
-set_target_properties(GSL::GSL PROPERTIES INTERFACE_COMPILE_DEFINITIONS GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+
+if( GSL_CONTRACT_UNENFORCED )
+    set_target_properties(GSL::GSL PROPERTIES 
+                            INTERFACE_COMPILE_DEFINITIONS
+                            GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+endif()
 
 
 include_directories("include")
