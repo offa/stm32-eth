@@ -25,7 +25,6 @@ add_library(hal stm32f4-hal/stm32f4xx_hal.c
                 stm32f4-hal/stm32f4xx_hal_spi.c
                 stm32f4-hal/stm32f4xx_hal_tim.c
                 stm32f4-hal/stm32f4xx_hal_dma.c
-                stm32f4-hal/stm32f4xx_hal_msp_template.c
                 )
 
 
@@ -52,10 +51,10 @@ function(add_system_components)
 endfunction()
 
 add_system_components(hal
-                        cmsis
-                        newlib
-                        cortexm
-                        hw-init
-                        trace
-                        )
+                    cmsis
+                    newlib
+                    cortexm
+                    hw-init
+                    trace
+                    )
 
