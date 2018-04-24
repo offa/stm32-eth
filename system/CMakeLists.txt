@@ -8,9 +8,9 @@ target_compile_definitions(stm32hal-api
                             )
 target_include_directories(stm32hal-api SYSTEM
                             INTERFACE
-                                "${PROJECT_SOURCE_DIR}/system/include"
-                                "${PROJECT_SOURCE_DIR}/system/include/stm32f4-hal"
-                                "${PROJECT_SOURCE_DIR}/system/include/cmsis"
+                                "${CMAKE_CURRENT_SOURCE_DIR}/include"
+                                "${CMAKE_CURRENT_SOURCE_DIR}/include/stm32f4-hal"
+                                "${CMAKE_CURRENT_SOURCE_DIR}/include/cmsis"
                             )
 
 
