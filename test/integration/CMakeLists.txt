@@ -5,6 +5,7 @@ target_link_libraries(stm32-eth-it
                             stm32-eth
                             build-libs
                             system-libs
+                            stm32hal-api
                         )
 target_include_directories(stm32-eth-it PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
 
@@ -14,6 +15,7 @@ target_link_libraries(stm32-eth-client-it
                             stm32-eth
                             build-libs
                             system-libs
+                            stm32hal-api
                         )
 target_include_directories(stm32-eth-client-it PRIVATE $<TARGET_PROPERTY:GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
 
