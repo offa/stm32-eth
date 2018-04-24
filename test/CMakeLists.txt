@@ -19,62 +19,76 @@ target_link_libraries(testmain PUBLIC
                         )
 
 
-function(add_test_suite name)
-    add_cpp_executable(${name} ${ARGN})
-    add_test(NAME ${name} COMMAND ${name})
-    target_link_libraries(${name} PRIVATE testmain)
+function(add_test_suite)
+    set(oneValueArgs NAME)
+    set(multiValueArgs SOURCE DEPENDS)
+    cmake_parse_arguments(TEST_OPTION "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if( NOT TEST_OPTION_NAME )
+        message(FATAL_ERROR "No name passed")
+    endif()
+
+    if( NOT TEST_OPTION_SOURCE )
+        message(FATAL_ERROR "No sources passed")
+    endif()
+
+    add_cpp_executable(${TEST_OPTION_NAME} ${TEST_OPTION_SOURCE})
+    add_test(NAME ${TEST_OPTION_NAME} COMMAND ${TEST_OPTION_NAME})
+    target_link_libraries(${TEST_OPTION_NAME} PRIVATE testmain)
+
+    if( TEST_OPTION_DEPENDS )
+        target_link_libraries(${TEST_OPTION_NAME} PRIVATE ${TEST_OPTION_DEPENDS})
+    endif()
 
     if( COVERAGE )
-        target_link_libraries(${name} PRIVATE gcov)
+        target_link_libraries(${TEST_OPTION_NAME} PRIVATE gcov)
     endif()
 endfunction()
 
 
 
-add_test_suite(CommonTest
-                RegisterValueTest.cpp
-                SocketInterruptTest.cpp
-                ByteTest.cpp
-                SocketHandleTest.cpp
-                NetConfigTest.cpp
+add_test_suite(NAME CommonTest
+                SOURCE
+                    RegisterValueTest.cpp
+                    SocketInterruptTest.cpp
+                    ByteTest.cpp
+                    SocketHandleTest.cpp
+                    NetConfigTest.cpp
                 )
 
 
-add_test_suite(SocketTest
-                SocketTest.cpp
-                $<TARGET_OBJECTS:stm32-socket>
+add_test_suite(NAME SocketTest
+                SOURCE
+                    SocketTest.cpp
+                    $<TARGET_OBJECTS:stm32-socket>
+                DEPENDS
+                    spiwriter-mock
+                    w5100device-mock
+                    platform-mock
+                    GSL::GSL
                 )
-target_link_libraries(SocketTest
-                        PRIVATE
-                            spiwriter-mock
-                            w5100device-mock
-                            platform-mock
-                            GSL::GSL
-                        )
 
 
-add_test_suite(W5100DeviceTest
-                W5100DeviceTest.cpp
-                W5100RegisterTest.cpp
-                $<TARGET_OBJECTS:stm32-w5100device>
+add_test_suite(NAME W5100DeviceTest
+                SOURCE
+                    W5100DeviceTest.cpp
+                    W5100RegisterTest.cpp
+                    $<TARGET_OBJECTS:stm32-w5100device>
+                DEPENDS
+                    spiwriter-mock
+                    GSL::GSL
                 )
-target_link_libraries(W5100DeviceTest
-                        PRIVATE
-                            spiwriter-mock
-                            GSL::GSL
-                        )
 
 
-add_test_suite(SpiWriterTest
-                SpiWriterTest.cpp
-                $<TARGET_OBJECTS:stm32-spiwriter>
+add_test_suite(NAME SpiWriterTest
+                SOURCE
+                    SpiWriterTest.cpp
+                    $<TARGET_OBJECTS:stm32-spiwriter>
+                DEPENDS
+                    platform-mock
+                    stm32hal-mock
+                    GSL::GSL
                 )
-target_link_libraries(SpiWriterTest
-                        PRIVATE
-                            platform-mock
-                            stm32hal-mock
-                            GSL::GSL
-                        )
 
 
 
