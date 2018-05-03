@@ -111,11 +111,11 @@ TEST_GROUP(SocketTest)
     Device device{spi};
     MockSupport& deviceMock = mock("Device");
     MockSupport& platformMock = mock("platform");
-    static constexpr std::uint16_t port = 1234;
+    static constexpr std::uint16_t port{1234};
     static constexpr Protocol protocol = Protocol::tcp;
-    static constexpr std::uint8_t flag = 0;
+    static constexpr std::uint8_t flag{0};
     static constexpr auto statusSendOk = static_cast<std::uint8_t>(SocketInterrupt::Mask::send);
-    static constexpr std::uint16_t defaultSize = 10;
+    static constexpr std::uint16_t defaultSize{10};
 };
 
 TEST(SocketTest, openReturnsErrorOnUnsupportedProtocol)
