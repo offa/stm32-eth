@@ -596,16 +596,16 @@ TEST(SocketTest, getStatus)
 TEST(SocketTest, connect)
 {
     NetAddress<4> addr = {{127, 0, 0, 1}};
-    constexpr std::uint16_t port = 4567;
+    constexpr std::uint16_t portValue{4567};
 
     deviceMock.expectOneCall("setDestAddress")
                 .withParameter("socket", socketHandle.value())
                 .withMemoryBufferParameter("buffer", addr.data(), addr.size())
-                .withParameter("port", port);
+                .withParameter("port", portValue);
     expectSocketCommand(socketHandle, SocketCommand::connect);
     expectSocketStatusRead(socketHandle, SocketStatus::established);
 
-    const auto rtn = socket->connect(addr, port);
+    const auto rtn = socket->connect(addr, portValue);
     CHECK_EQUAL(Socket::Status::ok, rtn);
 }
 
