@@ -13,6 +13,7 @@ env:
 
 matrix:
     include:
+    - env: COMPILER=gcc-8 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=gcc-7 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=gcc-6 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=clang-6 BUILD_OPTS="-asan -ubsan"
