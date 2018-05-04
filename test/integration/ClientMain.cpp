@@ -51,10 +51,11 @@ int main(int argc, char* argv[])
     eth::w5100::setupDevice(device, config);
 
     eth::Socket socket(eth::makeHandle<0>(), device);
+    constexpr std::uint16_t port{5000};
 
     while(true)
     {
-        if( socket.connect({{192, 168, 1, 6}}, 5000) != eth::Socket::Status::ok )
+        if( socket.connect({{192, 168, 1, 6}}, port) != eth::Socket::Status::ok )
         {
             trace_puts("connect() failed");
         }
@@ -87,7 +88,7 @@ int main(int argc, char* argv[])
 }
 
 
-extern "C" void SysTick_Handler(void)
+extern "C" void SysTick_Handler()
 {
     HAL_IncTick();
 }
