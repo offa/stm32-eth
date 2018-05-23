@@ -88,7 +88,7 @@ TEST_GROUP(SpiWriterTest)
     MockSupport& halGpioMock = mock("HAL_GPIO");
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
-    static constexpr std::uint32_t timeout = 0xffffffff;
+    static constexpr std::uint32_t timeout{0xffffffff};
 };
 
 TEST(SpiWriterTest, initSetupsGpioPins)
