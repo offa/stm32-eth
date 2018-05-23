@@ -61,10 +61,15 @@ namespace spi
             m_writer.setSlaveSelect(PinState::set);
         }
 
+        SlaveSelect(const SlaveSelect&) = delete;
+
         ~SlaveSelect()
         {
             m_writer.setSlaveSelect(PinState::reset);
         }
+
+
+        SlaveSelect& operator=(const SlaveSelect&) = delete;
 
 
     private:
