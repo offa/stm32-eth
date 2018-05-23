@@ -17,5 +17,5 @@ mark_as_advanced(GSL_INCLUDE_DIR)
 
 
 add_library(GSL::GSL IMPORTED INTERFACE)
-set_target_properties(GSL::GSL PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${GSL_INCLUDE_DIR}")
+target_include_directories(GSL::GSL INTERFACE ${GSL_INCLUDE_DIR})
 

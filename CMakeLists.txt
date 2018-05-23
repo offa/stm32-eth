@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.1)
+cmake_minimum_required(VERSION 3.11)
 
 project(stm32-eth VERSION 0.8.0)
 message(STATUS "~~~ ${PROJECT_NAME} v${PROJECT_VERSION} ~~~")
@@ -39,9 +39,7 @@ add_subdirectory("system")
 find_package(GSL REQUIRED)
 
 if( GSL_CONTRACT_UNENFORCED )
-    set_target_properties(GSL::GSL PROPERTIES
-                            INTERFACE_COMPILE_DEFINITIONS
-                            GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+    target_compile_definitions(GSL::GSL INTERFACE GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
 endif()
 
 

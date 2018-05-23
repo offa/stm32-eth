@@ -25,7 +25,7 @@
 namespace eth
 {
 
-    static constexpr std::uint8_t supportedSockets = 4;
+    static constexpr std::uint8_t supportedSockets{4};
 
 
 
