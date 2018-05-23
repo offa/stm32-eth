@@ -31,13 +31,13 @@ namespace w5100
     {
         constexpr std::uint16_t toTransmitBufferAddress(SocketHandle s)
         {
-            constexpr std::uint16_t baseAddress = 0x4000;
+            constexpr std::uint16_t baseAddress{0x4000};
             return baseAddress + ( Device::getTransmitBufferSize() * s.value() );
         }
 
         constexpr std::uint16_t toReceiveBufferAddress(SocketHandle s)
         {
-            constexpr std::uint16_t baseAddress = 0x6000;
+            constexpr std::uint16_t baseAddress{0x6000};
             return baseAddress + ( Device::getReceiveBufferSize() * s.value() );
         }
 
@@ -55,7 +55,7 @@ namespace w5100
     {
         writeModeRegister(Mode::reset);
 
-        constexpr std::uint8_t memorySize = 0x55;
+        constexpr std::uint8_t memorySize{0x55};
         write(registers::transmitMemorySize, memorySize);
         write(registers::receiveMemorySize, memorySize);
     }
@@ -117,8 +117,8 @@ namespace w5100
 
     std::uint16_t Device::readFreesize(Register<std::uint16_t> freesizeReg)
     {
-        std::uint16_t firstRead = 0;
-        std::uint16_t secondRead = 0;
+        std::uint16_t firstRead{0};
+        std::uint16_t secondRead{0};
 
         do
         {
@@ -136,7 +136,7 @@ namespace w5100
 
     void Device::sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer)
     {
-        constexpr std::uint16_t transmitBufferMask = 0x07ff;
+        constexpr std::uint16_t transmitBufferMask{0x07ff};
         const auto size = buffer.size();
         const std::uint16_t writePointer = read(registers::socketTransmitWritePointer(s));
         const std::uint16_t offset = writePointer & transmitBufferMask;
@@ -159,7 +159,7 @@ namespace w5100
 
     std::uint16_t Device::receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer)
     {
-        constexpr std::uint16_t receiveBufferMask = 0x07ff;
+        constexpr std::uint16_t receiveBufferMask{0x07ff};
         const auto size = buffer.size();
         const std::uint16_t readPointer = read(registers::socketReceiveReadPointer(s));
         const std::uint16_t offset = readPointer & receiveBufferMask;

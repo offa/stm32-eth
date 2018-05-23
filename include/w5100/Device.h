@@ -94,7 +94,7 @@ namespace w5100
         {
             static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
 
-            std::uint16_t offset = 0;
+            std::uint16_t offset{0};
             std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
             {
                 write(reg.address(), offset++, data);
@@ -125,7 +125,7 @@ namespace w5100
         {
             static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
 
-            std::size_t offset = 0;
+            std::size_t offset{0};
             std::generate(begin, end, [this, &reg, &offset]
             {
                 return read(reg.address(), offset++);
@@ -162,7 +162,7 @@ namespace w5100
 
 
         spi::SpiWriter& m_writer;
-        static constexpr std::uint16_t transmitBufferSize = 2048;
+        static constexpr std::uint16_t transmitBufferSize{2048};
         static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
 
