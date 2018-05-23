@@ -113,7 +113,7 @@ namespace spi
         SlaveSelect ss{*this};
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
-        std::array<std::uint8_t, 1> buffer;
+        std::array<std::uint8_t, 1> buffer{{0}};
         HAL_SPI_Receive(&m_handle, buffer.data(), buffer.size(), timeout);
 
         return buffer[0];
