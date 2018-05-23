@@ -76,7 +76,7 @@ namespace w5100
                 std::enable_if_t<std::is_integral<T>::value, int> = 0>
         void write(Register<T> reg, T data)
         {
-            constexpr auto pos = n - 1;
+            constexpr auto pos{n - 1};
             write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
             write<T, pos>(reg, data);
         }
@@ -106,7 +106,7 @@ namespace w5100
                 std::enable_if_t<std::is_integral<T>::value, int> = 0>
         T read(Register<T> reg)
         {
-            constexpr auto pos = sizeof(T) - n;
+            constexpr auto pos{sizeof(T) - n};
             const auto byte0 = read(reg.address(), pos);
             const auto byte1 = read<T, (pos + 1)>(reg);
             return byte::to<T>(byte0, byte1);
