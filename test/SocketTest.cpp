@@ -49,6 +49,7 @@ namespace
 
 TEST_GROUP(SocketTest)
 {
+    enum class Mode { receive, send };
 
     void setup() override
     {
@@ -97,6 +98,17 @@ TEST_GROUP(SocketTest)
         mock("Device").expectOneCall("executeSocketCommand")
             .withParameter("socket", s.value())
             .withParameter("value", static_cast<std::uint8_t>(cmd));
+    }
+
+    void expectWaitForFreeRxTx(Mode mode, SocketHandle handle, std::uint16_t freeSize) const
+    {
+        expectSocketStatusRead(handle, SocketStatus::established);
+        const auto fn = ( mode == Mode::receive
+                            ? "getReceiveFreeSize"
+                            : "getTransmitFreeSize" );
+        mock("Device").expectOneCall(fn)
+            .withParameter("socket", handle.value())
+            .andReturnValue(freeSize);
     }
 
     void ignoreDestruction()
@@ -284,8 +296,7 @@ TEST(SocketTest, acceptWaitsForConnection)
 
 TEST(SocketTest, sendReturnsBytesTransmitted)
 {
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(100);
+    expectWaitForFreeRxTx(Mode::send, socketHandle, 100);
     mock("Device").expectOneCall("sendData").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
@@ -303,8 +314,7 @@ TEST(SocketTest, sendIgnoresEmptyBuffer)
 TEST(SocketTest, sendLimitsBufferSize)
 {
     constexpr std::uint16_t maxSendSize = 2048;
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(maxSendSize);
+    expectWaitForFreeRxTx(Mode::send, socketHandle, maxSendSize);
     mock("Device").expectOneCall("sendData").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
@@ -316,10 +326,7 @@ TEST(SocketTest, sendLimitsBufferSize)
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
 {
     constexpr std::uint16_t freeSize = defaultSize + 2;
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.value())
-        .andReturnValue(freeSize);
+    expectWaitForFreeRxTx(Mode::send, socketHandle, freeSize);
     mock("Device").expectOneCall("sendData").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
@@ -331,10 +338,7 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfEstablished)
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfCloseWait)
 {
     constexpr std::uint16_t freeSize = defaultSize + 2;
-    expectSocketStatusRead(socketHandle, SocketStatus::closeWait);
-    mock("Device").expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.value())
-        .andReturnValue(freeSize);
+    expectWaitForFreeRxTx(Mode::send, socketHandle, freeSize);
     mock("Device").expectOneCall("sendData").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
@@ -346,14 +350,8 @@ TEST(SocketTest, sendChecksFreesizeAndStatusFlagIfCloseWait)
 TEST(SocketTest, sendChecksFreesizeAndStatusFlagNotEnoughFreeMemory)
 {
     constexpr std::uint16_t freeSize = defaultSize;
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.value())
-        .andReturnValue(freeSize - 2);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize")
-        .withParameter("socket", socketHandle.value())
-        .andReturnValue(freeSize);
+    expectWaitForFreeRxTx(Mode::send, socketHandle, freeSize - 2);
+    expectWaitForFreeRxTx(Mode::send, socketHandle, freeSize);
     mock("Device").expectOneCall("sendData").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
@@ -374,8 +372,7 @@ TEST(SocketTest, sendReturnsErrorIfStatusNotEstablished)
 TEST(SocketTest, sendSendsDataAndCommand)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
+    expectWaitForFreeRxTx(Mode::send, socketHandle, static_cast<std::uint16_t>(buffer.size()));
     mock("Device").expectOneCall("sendData")
         .withParameter("socket", socketHandle.value())
         .withMemoryBufferParameter("buffer", buffer.data(), buffer.size())
@@ -389,8 +386,7 @@ TEST(SocketTest, sendSendsDataAndCommand)
 TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize").ignoreOtherParameters().andReturnValue(static_cast<unsigned int>(buffer.size()));
+    expectWaitForFreeRxTx(Mode::send, socketHandle, static_cast<std::uint16_t>(buffer.size()));
     mock("Device").expectOneCall("sendData").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
@@ -401,10 +397,7 @@ TEST(SocketTest, sendWaitsForStatusFlagAfterSend)
 TEST(SocketTest, sendSetsOkAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getTransmitFreeSize")
-        .ignoreOtherParameters()
-        .andReturnValue(static_cast<unsigned int>(buffer.size()));
+    expectWaitForFreeRxTx(Mode::send, socketHandle, static_cast<std::uint16_t>(buffer.size()));
     mock("Device").expectOneCall("sendData").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
@@ -415,8 +408,7 @@ TEST(SocketTest, sendSetsOkAfterSend)
 TEST(SocketTest, receiveReturnsBytesReceived)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(static_cast<std::uint16_t>(buffer.size()));
@@ -438,10 +430,7 @@ TEST(SocketTest, receiveLimitsBuffer)
 {
     constexpr std::uint16_t maxReceiveSize = 2048;
     std::array<std::uint8_t, maxReceiveSize + 1> data;
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize")
-        .ignoreOtherParameters()
-        .andReturnValue(maxReceiveSize);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, maxReceiveSize);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(maxReceiveSize);
@@ -455,10 +444,7 @@ TEST(SocketTest, receiveLimitsBufferToReceiveFreeSize)
 {
     constexpr std::uint16_t size = defaultSize - 2;
     std::array<std::uint8_t, defaultSize> data;
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize")
-        .ignoreOtherParameters()
-        .andReturnValue(size);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, size);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(size);
@@ -471,8 +457,7 @@ TEST(SocketTest, receiveLimitsBufferToReceiveFreeSize)
 TEST(SocketTest, receiveChecksStatusFlagIfEstablished)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
@@ -486,8 +471,7 @@ TEST(SocketTest, receiveChecksStatusFlagIfEstablished)
 TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::closeWait);
-    mock("Device").expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
@@ -512,8 +496,7 @@ TEST(SocketTest, receiveReceivesData)
 {
     auto buffer = createBuffer(defaultSize);
     gsl::span<std::uint8_t> bufferSpan(buffer);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device").expectOneCall("receiveData")
         .withParameter("socket", socketHandle.value())
         .withOutputParameterReturning("buffer", buffer.data(), buffer.size())
@@ -530,8 +513,7 @@ TEST(SocketTest, receiveSendsCommandAfterReceive)
 {
     auto buffer = createBuffer(defaultSize);
     gsl::span<std::uint8_t> bufferSpan(buffer);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize").ignoreOtherParameters().andReturnValue(100);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
@@ -545,10 +527,7 @@ TEST(SocketTest, receiveSendsCommandAfterReceive)
 TEST(SocketTest, receiveWaitsForStatusFlagAfterSend)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize")
-        .ignoreOtherParameters()
-        .andReturnValue(100);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
         .andReturnValue(defaultSize);
@@ -563,15 +542,9 @@ TEST(SocketTest, receiveWaitsForStatusFlagAfterSend)
 TEST(SocketTest, receiveWaitsForDataAvailable)
 {
     auto buffer = createBuffer(defaultSize);
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize")
-        .ignoreOtherParameters()
-        .andReturnValue(0);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, 0);
+    expectWaitForFreeRxTx(Mode::receive, socketHandle, defaultSize);
 
-    expectSocketStatusRead(socketHandle, SocketStatus::established);
-    mock("Device").expectOneCall("getReceiveFreeSize")
-        .ignoreOtherParameters()
-        .andReturnValue(defaultSize);
     mock("Device").expectOneCall("receiveData")
         .withParameter("socket", socketHandle.value())
         .withParameter("size", defaultSize)
