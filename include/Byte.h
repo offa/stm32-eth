@@ -48,8 +48,8 @@ namespace eth::byte
         requires IntegralType<T> && IndexWithinTypesize<T, pos>
     constexpr std::uint8_t get(T value) noexcept
     {
-        constexpr auto shift = pos * 8;
-        constexpr auto mask = ( 0xff << shift );
+        constexpr auto shift{pos * 8};
+        constexpr auto mask{0xff << shift};
         return ( value & mask ) >> shift;
     }
 
@@ -67,7 +67,7 @@ namespace eth::byte
                 && SizeAtLeast<T, (sizeof...(Us) + sizeof(std::uint8_t))>
     constexpr T to(U valueN, Us... values) noexcept
     {
-        constexpr auto shift = sizeof...(values) * 8;
+        constexpr auto shift{sizeof...(values) * 8};
         return ( valueN << shift ) | to<T>(values...);
     }
 

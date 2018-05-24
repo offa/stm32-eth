@@ -73,7 +73,7 @@ namespace eth::w5100
             requires IntegralType<T> && SizeMultiByte<T, n>
         void write(Register<T> reg, T data)
         {
-            constexpr auto pos = n - 1;
+            constexpr auto pos{n - 1};
             write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
             write<T, pos>(reg, data);
         }
@@ -100,7 +100,7 @@ namespace eth::w5100
             requires IntegralType<T> && SizeMultiByte<T, n>
         T read(Register<T> reg)
         {
-            constexpr auto pos = sizeof(T) - n;
+            constexpr auto pos{sizeof(T) - n};
             const auto byte0 = read(reg.address(), pos);
             const auto byte1 = read<T, (pos + 1)>(reg);
             return byte::to<T>(byte0, byte1);
@@ -154,7 +154,7 @@ namespace eth::w5100
 
 
         spi::SpiWriter& m_writer;
-        static constexpr std::uint16_t transmitBufferSize = 2048;
+        static constexpr std::uint16_t transmitBufferSize{2048};
         static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
 

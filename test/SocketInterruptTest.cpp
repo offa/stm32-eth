@@ -42,14 +42,14 @@ TEST(SocketInterruptTest, defaultNothingSet)
 
 TEST(SocketInterruptTest, initWithValue)
 {
-    SocketInterrupt si(0xab);
+    SocketInterrupt si{0xab};
     CHECK_EQUAL(0xab, si.value());
 }
 
 TEST(SocketInterruptTest, initWithMask)
 {
     constexpr auto mask = SocketInterrupt::Mask::send;
-    SocketInterrupt si(mask);
+    SocketInterrupt si{mask};
     CHECK_EQUAL(static_cast<std::uint8_t>(mask), si.value());
 }
 
@@ -57,7 +57,7 @@ TEST(SocketInterruptTest, testValue)
 {
     using Mask = SocketInterrupt::Mask;
 
-    SocketInterrupt si(0b00011001);
+    SocketInterrupt si{0b00011001};
     CHECK_TRUE(si.test(Mask::connect));
     CHECK_FALSE(si.test(Mask::disconnect));
     CHECK_FALSE(si.test(Mask::receive));
@@ -69,7 +69,7 @@ TEST(SocketInterruptTest, setValue)
 {
     using Mask = SocketInterrupt::Mask;
 
-    SocketInterrupt si(0x00);
+    SocketInterrupt si{0x00};
     si.set(Mask::disconnect);
     si.set(Mask::receive);
     si.set(Mask::timeout);
