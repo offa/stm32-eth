@@ -42,7 +42,10 @@ TEST_GROUP(NetConfigTest)
 
 TEST(NetConfigTest, getValues)
 {
-    constexpr eth::NetConfig cfg{{{0, 0, 0, 0}}, {{1, 1, 1, 1}}, {{2, 2, 2, 2}}, {{9, 9, 9, 9, 9, 9}}};
+    constexpr eth::NetConfig cfg{{{0, 0, 0, 0}},
+                                {{1, 1, 1, 1}},
+                                {{2, 2, 2, 2}},
+                                {{9, 9, 9, 9, 9, 9}}};
     const auto[ip, subnet, gateway, mac] = cfg;
     CHECK_TRUE(checkValue({{0, 0, 0, 0}}, ip));
     CHECK_TRUE(checkValue({{1, 1, 1, 1}}, subnet));

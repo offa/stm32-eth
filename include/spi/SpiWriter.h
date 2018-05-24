@@ -58,7 +58,7 @@ namespace eth::spi
         class SlaveSelect;
 
         Handle m_handle{};
-        const SpiConfig& m_config;
+        SpiConfig m_config;
     };
 
 }

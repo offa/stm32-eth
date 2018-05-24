@@ -36,12 +36,12 @@ namespace eth::byte
 
 
     template<std::size_t pos, class T,
-        std::enable_if_t<std::is_integral_v<T>
+        std::enable_if_t<std::is_integral<T>::value
                             && ( pos < sizeof(T) ), int> = 0>
     constexpr std::uint8_t get(T value) noexcept
     {
-        constexpr auto shift = pos * 8;
-        constexpr auto mask = ( 0xff << shift );
+        constexpr auto shift{pos * 8};
+        constexpr auto mask{0xff << shift};
         return ( value & mask ) >> shift;
     }
 
@@ -68,7 +68,7 @@ namespace eth::byte
                             && ( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
     constexpr T to(U valueN, Us... values) noexcept
     {
-        constexpr auto shift = sizeof...(values) * 8;
+        constexpr auto shift{sizeof...(values) * 8};
         return ( valueN << shift ) | to<T>(values...);
     }
 

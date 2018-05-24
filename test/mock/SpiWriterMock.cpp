@@ -28,7 +28,7 @@ namespace eth::spi
     {
         static inline void incrementCalls(const ::SimpleString& name)
         {
-            const int count = mock("SpiWriter").getData(name).getUnsignedIntValue();
+            const auto count = mock("SpiWriter").getData(name).getUnsignedIntValue();
             mock("SpiWriter").setData(name, count + 1);
         }
     }

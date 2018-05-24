@@ -73,7 +73,7 @@ namespace eth::w5100
                 std::enable_if_t<std::is_integral_v<T>, int> = 0>
         void write(Register<T> reg, T data)
         {
-            constexpr auto pos = n - 1;
+            constexpr auto pos{n - 1};
             write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
             write<T, pos>(reg, data);
         }
@@ -91,7 +91,7 @@ namespace eth::w5100
         {
             static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
 
-            std::uint16_t offset = 0;
+            std::uint16_t offset{0};
             std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
             {
                 write(reg.address(), offset++, data);
@@ -103,7 +103,7 @@ namespace eth::w5100
                 std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
-            constexpr auto pos = sizeof(T) - n;
+            constexpr auto pos{sizeof(T) - n};
             const auto byte0 = read(reg.address(), pos);
             const auto byte1 = read<T, (pos + 1)>(reg);
             return byte::to<T>(byte0, byte1);
@@ -122,7 +122,7 @@ namespace eth::w5100
         {
             static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
 
-            std::size_t offset = 0;
+            std::size_t offset{0};
             std::generate(begin, end, [this, &reg, &offset]
             {
                 return read(reg.address(), offset++);
@@ -159,7 +159,7 @@ namespace eth::w5100
 
 
         spi::SpiWriter& m_writer;
-        static constexpr std::uint16_t transmitBufferSize = 2048;
+        static constexpr std::uint16_t transmitBufferSize{2048};
         static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
 
