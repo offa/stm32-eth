@@ -50,8 +50,7 @@ TEST_GROUP(W5100DeviceTest)
     {
         mock().strictOrder();
 
-        auto f = gsl::finally([this]
-        {
+        auto f = gsl::finally([] {
             mock().enable();
             mock("SpiWriter").setData("write::count", 0);
         });
