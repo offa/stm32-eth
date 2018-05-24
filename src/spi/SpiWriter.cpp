@@ -121,7 +121,7 @@ namespace spi
 
     void SpiWriter::setSlaveSelect(PinState state)
     {
-        const auto value = ( state == PinState::set ? GPIO_PIN_SET : GPIO_PIN_RESET );
+        const auto value = ( state == PinState::set ? GPIO_PIN_RESET : GPIO_PIN_SET );
         const auto blockRef = pinBlocks[static_cast<std::size_t>(std::get<1>(m_config))];
         HAL_GPIO_WritePin(blockRef, std::get<3>(m_config).Pin, value);
     }
