@@ -159,8 +159,8 @@ namespace eth::w5100
 
 
         spi::SpiWriter& m_writer;
-        static constexpr std::uint16_t transmitBufferSize{2048};
-        static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
+        static inline constexpr std::uint16_t transmitBufferSize{2048};
+        static inline constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
 
 

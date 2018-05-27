@@ -28,11 +28,11 @@ namespace eth::byte
 {
 
     template<class T>
-    constexpr bool is_byte_compatible_v = std::is_convertible_v<std::remove_cv_t<T>, std::uint8_t>
+    constexpr bool inline is_byte_compatible_v = std::is_convertible_v<std::remove_cv_t<T>, std::uint8_t>
                                         && std::is_integral_v<T>;
 
     template<class Itr>
-    constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
+    constexpr bool inline is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
 
 
     template<std::size_t pos, class T,
