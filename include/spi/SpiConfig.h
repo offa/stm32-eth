@@ -43,7 +43,7 @@ namespace eth::spi
 
     using SpiConfig = std::tuple<Assign, PinBlock, GPIO_InitTypeDef, GPIO_InitTypeDef, SPI_InitTypeDef>;
 
-    constexpr inline SpiConfig spi2{Assign::spi2, PinBlock::B,
+    inline constexpr SpiConfig spi2{Assign::spi2, PinBlock::B,
             {(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
                 GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_HIGH, GPIO_AF5_SPI2},
             {GPIO_PIN_12,

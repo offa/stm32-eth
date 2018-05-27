@@ -86,7 +86,7 @@ TEST_GROUP(SpiWriterTest)
     std::unique_ptr<eth::spi::SpiWriter> spiWriter;
     SpiHandleComparator spiHandleCompare;
     GpioInitComparator gpioInitCompare;
-    static constexpr std::uint32_t timeout{0xffffffff};
+    static inline constexpr std::uint32_t timeout{0xffffffff};
 };
 
 TEST(SpiWriterTest, initSetupsGpioPins)

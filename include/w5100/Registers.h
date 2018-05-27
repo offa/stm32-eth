@@ -26,14 +26,14 @@
 namespace eth::w5100::registers
 {
 
-    constexpr inline auto mode = makeRegister<std::uint8_t>(0x0000);
-    constexpr inline auto transmitMemorySize = makeRegister<std::uint8_t>(0x001b);
-    constexpr inline auto receiveMemorySize = makeRegister<std::uint8_t>(0x001a);
+    inline constexpr auto mode = makeRegister<std::uint8_t>(0x0000);
+    inline constexpr auto transmitMemorySize = makeRegister<std::uint8_t>(0x001b);
+    inline constexpr auto receiveMemorySize = makeRegister<std::uint8_t>(0x001a);
 
-    constexpr inline auto gatewayAddress = makeRegister<std::array<std::uint8_t, 4>>(0x0001);
-    constexpr inline auto subnetMask = makeRegister<std::array<std::uint8_t, 4>>(0x0005);
-    constexpr inline auto sourceMacAddress = makeRegister<std::array<std::uint8_t, 6>>(0x0009);
-    constexpr inline auto sourceIpAddress = makeRegister<std::array<std::uint8_t, 4>>(0x000f);
+    inline constexpr auto gatewayAddress = makeRegister<std::array<std::uint8_t, 4>>(0x0001);
+    inline constexpr auto subnetMask = makeRegister<std::array<std::uint8_t, 4>>(0x0005);
+    inline constexpr auto sourceMacAddress = makeRegister<std::array<std::uint8_t, 6>>(0x0009);
+    inline constexpr auto sourceIpAddress = makeRegister<std::array<std::uint8_t, 4>>(0x000f);
 
 
 
