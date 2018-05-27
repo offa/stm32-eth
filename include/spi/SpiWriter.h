@@ -33,7 +33,7 @@ namespace eth::spi
 
 
         SpiWriter(const SpiConfig& config);
-        SpiWriter(SpiWriter&&) = default;
+        SpiWriter(const SpiWriter&) = delete;
 
 
         void write(std::uint16_t address, std::uint8_t data);
@@ -42,7 +42,7 @@ namespace eth::spi
         Handle& nativeHandle() noexcept;
 
 
-        SpiWriter& operator=(SpiWriter&&) = default;
+        SpiWriter& operator=(const SpiWriter&) = delete;
 
 
     private:

@@ -40,7 +40,7 @@ using eth::w5100::makeRegister;
 
 namespace
 {
-    constexpr SocketHandle socketHandle = eth::makeHandle<0>();
+    constexpr inline SocketHandle socketHandle = eth::makeHandle<0>();
 }
 
 

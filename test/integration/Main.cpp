@@ -31,11 +31,8 @@ void spiClockEnable()
 }
 
 
-int main(int argc, char* argv[])
+int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
-    static_cast<void>(argc);
-    static_cast<void>(argv);
-
     HAL_Init();
     spiClockEnable();
 
