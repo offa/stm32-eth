@@ -567,7 +567,7 @@ TEST(SocketTest, getStatus)
 
 TEST(SocketTest, connect)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
     constexpr std::uint16_t portValue{4567};
 
     mock("Device").expectOneCall("setDestAddress")
@@ -583,7 +583,7 @@ TEST(SocketTest, connect)
 
 TEST(SocketTest, connectWaitsForEstablishedStatus)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
 
     mock("Device").expectOneCall("setDestAddress").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -601,7 +601,7 @@ TEST(SocketTest, connectWaitsForEstablishedStatus)
 
 TEST(SocketTest, connectErrorOnClosedConnection)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
 
     mock("Device").expectOneCall("setDestAddress").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -614,7 +614,7 @@ TEST(SocketTest, connectErrorOnClosedConnection)
 
 TEST(SocketTest, connectErrorOnTimeout)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
 
     mock("Device").expectOneCall("setDestAddress").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
