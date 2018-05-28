@@ -20,6 +20,7 @@
 
 #include "w5100/Device.h"
 #include "spi/SpiWriter.h"
+#include "Byte.h"
 #include "TestHelper.h"
 #include <vector>
 #include <algorithm>
@@ -75,8 +76,8 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectWrite(std::uint16_t addr, std::uint16_t data) const
     {
-        expectWrite(addr, static_cast<std::uint8_t>(data >> 8));
-        expectWrite(addr + 1, static_cast<std::uint8_t>(data & 0xff));
+        expectWrite(addr, eth::byte::get<1>(data));
+        expectWrite(addr + 1, eth::byte::get<0>(data));
     }
 
     template<class Container>
