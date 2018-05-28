@@ -135,7 +135,7 @@ TEST(SpiWriterTest, initSetupsSpi)
 
 TEST(SpiWriterTest, writeTransmitsByte)
 {
-    std::array<std::uint8_t, 4> data = {{ 0xf0, 0x22, 0x11, 0xab }};
+    std::array<std::uint8_t, 4> data{{ 0xf0, 0x22, 0x11, 0xab }};
     expectSlaveSelectSet();
     expectWrite(data);
     expectSlaveSelectReset();
@@ -146,7 +146,7 @@ TEST(SpiWriterTest, writeTransmitsByte)
 TEST(SpiWriterTest, readReceivesByte)
 {
     const std::uint8_t value = 0xcd;
-    std::array<std::uint8_t, 3> data = {{ 0x0f, 0x33, 0x55 }};
+    std::array<std::uint8_t, 3> data{{ 0x0f, 0x33, 0x55 }};
     expectSlaveSelectSet();
     expectWrite(data);
     expectRead(&value);
