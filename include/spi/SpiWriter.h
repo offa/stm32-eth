@@ -34,7 +34,7 @@ namespace spi
         using Handle = SPI_HandleTypeDef;
 
 
-        SpiWriter(const SpiConfig& config);
+        explicit SpiWriter(const SpiConfig& config);
         SpiWriter(const SpiWriter&) = delete;
 
 
