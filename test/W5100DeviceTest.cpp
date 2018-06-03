@@ -233,7 +233,7 @@ TEST(W5100DeviceTest, readRegisterSpan)
     const auto data = createBuffer(size);
     expectRead(0xddee, data);
 
-    std::array<std::uint8_t, size> buffer;
+    std::array<std::uint8_t, size> buffer{};
     const auto reg = asRegister(0xddee, buffer);
 
     const auto result = device->read(reg, buffer.begin(), buffer.end());
@@ -384,7 +384,7 @@ TEST(W5100DeviceTest, receiveData)
     expectRead(destAddress, buffer);
     expectWrite(address, static_cast<std::uint16_t>(value + size));
 
-    std::array<std::uint8_t, size> data;
+    std::array<std::uint8_t, size> data{};
     const auto rtn = device->receiveData(socketHandle, data);
     CHECK_EQUAL(size, rtn);
     CHECK_TRUE(std::equal(buffer.begin(), buffer.end(), data.begin()));
@@ -397,7 +397,7 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
     auto buffer = createBuffer(size);
     mock("SpiWriter").ignoreOtherCalls();
 
-    std::array<std::uint8_t, size> data;
+    std::array<std::uint8_t, size> data{};
     const auto rtn = device->receiveData(socketHandle, data);
     CHECK_EQUAL(size, rtn);
     checkReadCalls(size + ptrReads);
