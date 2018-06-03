@@ -204,7 +204,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 
     expectWrite(reg.address(), data);
 
-    device->write(reg, data.data(), data.data() + size);
+    device->write(reg, data.data(), std::next(data.data(), size));
 }
 
 TEST(W5100DeviceTest, readRegisterByte)
