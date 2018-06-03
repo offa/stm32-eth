@@ -43,7 +43,7 @@ namespace eth
         {
         }
 
-        constexpr SocketInterrupt(SocketInterrupt::Mask mask) : SocketInterrupt(static_cast<std::uint8_t>(mask))
+        constexpr explicit SocketInterrupt(SocketInterrupt::Mask mask) : SocketInterrupt(static_cast<std::uint8_t>(mask))
         {
         }
 
