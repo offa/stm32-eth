@@ -61,6 +61,7 @@ namespace spi
             m_writer.setSlaveSelect(PinState::set);
         }
 
+        SlaveSelect(SlaveSelect&&) = delete;
         SlaveSelect(const SlaveSelect&) = delete;
 
         ~SlaveSelect()
@@ -69,6 +70,7 @@ namespace spi
         }
 
 
+        SlaveSelect& operator=(SlaveSelect&&) = delete;
         SlaveSelect& operator=(const SlaveSelect&) = delete;
 
 
