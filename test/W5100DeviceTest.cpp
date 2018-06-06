@@ -123,12 +123,6 @@ TEST_GROUP(W5100DeviceTest)
         });
     }
 
-    template<class T>
-    Register<T> asRegister(std::uint16_t address, T) const
-    {
-        return makeRegister<T>(address);
-    }
-
     static constexpr std::uint16_t toAddress(eth::SocketHandle s, std::uint16_t address)
     {
         return makeRegister<std::uint8_t>(s, address).address();
@@ -178,7 +172,7 @@ TEST(W5100DeviceTest, writeSpan)
     constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
     auto span = gsl::make_span(data);
-    const auto reg = asRegister(0xa1b2, span);
+    const auto reg = Register<decltype(span)>(0xa1b2);
 
     expectWrite(0xa1b2, span);
     device->write(reg, span.cbegin(), span.cend());
@@ -188,7 +182,7 @@ TEST(W5100DeviceTest, writeBuffer)
 {
     constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
-    const auto reg = asRegister(0xa1b2, data);
+    const auto reg = Register<decltype(data)>(0xa1b2);
 
     expectWrite(reg.address(), data);
 
@@ -200,7 +194,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
     constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
     auto span = gsl::make_span(data);
-    auto reg = asRegister(0xa1b2, span);
+    auto reg = Register<decltype(span)>(0xa1b2);
 
     expectWrite(reg.address(), data);
 
@@ -234,7 +228,7 @@ TEST(W5100DeviceTest, readRegisterSpan)
     expectRead(0xddee, data);
 
     std::array<std::uint8_t, size> buffer{};
-    const auto reg = asRegister(0xddee, buffer);
+    const auto reg = Register<decltype(buffer)>(0xddee);
 
     const auto result = device->read(reg, buffer.begin(), buffer.end());
     CHECK_EQUAL(size, result);
