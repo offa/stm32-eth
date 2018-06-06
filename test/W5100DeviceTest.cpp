@@ -303,9 +303,9 @@ TEST(W5100DeviceTest, executeSocketCommand)
     constexpr std::uint8_t registerCleared{0x00};
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0001);
     expectWrite(address, static_cast<std::uint8_t>(cmd));
-    expectRead(address, static_cast<std::uint8_t>(0x01));
-    expectRead(address, static_cast<std::uint8_t>(0x01));
-    expectRead(address, static_cast<std::uint8_t>(registerCleared));
+    expectRead(address, std::uint8_t{0x01});
+    expectRead(address, std::uint8_t{0x01});
+    expectRead(address, std::uint8_t{registerCleared});
 
     device->executeSocketCommand(socketHandle, cmd);
 }
@@ -324,10 +324,10 @@ TEST(W5100DeviceTest, getTransmitFreeSize)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0020);
     constexpr std::uint16_t value{0x1234};
-    expectRead(address, static_cast<std::uint16_t>(0xaaaa));
-    expectRead(address, static_cast<std::uint16_t>(0xbbbb));
-    expectRead(address, static_cast<std::uint16_t>(0x1234));
-    expectRead(address, static_cast<std::uint16_t>(0x1234));
+    expectRead(address, std::uint16_t{0xaaaa});
+    expectRead(address, std::uint16_t{0xbbbb});
+    expectRead(address, std::uint16_t{0x1234});
+    expectRead(address, std::uint16_t{0x1234});
 
     const std::uint16_t rtn = device->getTransmitFreeSize(socketHandle);
     CHECK_EQUAL(value, rtn);
@@ -337,10 +337,10 @@ TEST(W5100DeviceTest, getReceiveFreeSize)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0026);
     constexpr std::uint16_t value{0x1234};
-    expectRead(address, static_cast<std::uint16_t>(0xaaaa));
-    expectRead(address, static_cast<std::uint16_t>(0xbbbb));
-    expectRead(address, static_cast<std::uint16_t>(0x1234));
-    expectRead(address, static_cast<std::uint16_t>(0x1234));
+    expectRead(address, std::uint16_t{0xaaaa});
+    expectRead(address, std::uint16_t{0xbbbb});
+    expectRead(address, std::uint16_t{0x1234});
+    expectRead(address, std::uint16_t{0x1234});
 
     const std::uint16_t rtn = device->getReceiveFreeSize(socketHandle);
     CHECK_EQUAL(value, rtn);
@@ -356,7 +356,7 @@ TEST(W5100DeviceTest, sendData)
     constexpr std::uint16_t size{5};
     auto buffer = createBuffer(size);
     expectWrite(destAddress, buffer);
-    expectWrite(address, static_cast<std::uint16_t>(value + size));
+    expectWrite(address, std::uint16_t{value + size});
 
     device->sendData(socketHandle, buffer);
 }
@@ -382,7 +382,7 @@ TEST(W5100DeviceTest, receiveData)
     constexpr std::uint16_t size{4};
     auto buffer = createBuffer(size);
     expectRead(destAddress, buffer);
-    expectWrite(address, static_cast<std::uint16_t>(value + size));
+    expectWrite(address, std::uint16_t{value + size});
 
     std::array<std::uint8_t, size> data{};
     const auto rtn = device->receiveData(socketHandle, data);
