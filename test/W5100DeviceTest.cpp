@@ -141,14 +141,14 @@ TEST_GROUP(W5100DeviceTest)
 
 TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
 {
-    constexpr std::uint16_t addressModeReg = 0x0000;
-    constexpr std::uint8_t resetBit = 7;
-    constexpr std::uint8_t valueReset = 1 << resetBit;
+    constexpr std::uint16_t addressModeReg{0x0000};
+    constexpr std::uint8_t resetBit{7};
+    constexpr std::uint8_t valueReset{1 << resetBit};
     expectWrite(addressModeReg, valueReset);
 
-    constexpr std::uint16_t addressRxSize = 0x001a;
-    constexpr std::uint16_t addressTxSize = 0x001b;
-    constexpr std::uint8_t valueMemorySize = 0x55;
+    constexpr std::uint16_t addressRxSize{0x001a};
+    constexpr std::uint16_t addressTxSize{0x001b};
+    constexpr std::uint8_t valueMemorySize{0x55};
     expectWrite(addressTxSize, valueMemorySize);
     expectWrite(addressRxSize, valueMemorySize);
 
@@ -158,7 +158,7 @@ TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
 TEST(W5100DeviceTest, writeRegisterByte)
 {
     constexpr auto reg = makeRegister<std::uint8_t>(0xabcd);
-    constexpr std::uint8_t data = 0xef;
+    constexpr std::uint8_t data{0xef};
     expectWrite(0xabcd, data);
 
     device->write(reg, data);
@@ -167,7 +167,7 @@ TEST(W5100DeviceTest, writeRegisterByte)
 TEST(W5100DeviceTest, writeRegisterTwoByte)
 {
     constexpr auto reg = makeRegister<std::uint16_t>(0xabcd);
-    constexpr std::uint16_t data = 0x0011;
+    constexpr std::uint16_t data{0x0011};
     expectWrite(0xabcd, data);
 
     device->write(reg, data);
@@ -175,7 +175,7 @@ TEST(W5100DeviceTest, writeRegisterTwoByte)
 
 TEST(W5100DeviceTest, writeSpan)
 {
-    constexpr std::uint16_t size = 10;
+    constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
     auto span = gsl::make_span(data);
     const auto reg = asRegister(0xa1b2, span);
@@ -186,7 +186,7 @@ TEST(W5100DeviceTest, writeSpan)
 
 TEST(W5100DeviceTest, writeBuffer)
 {
-    constexpr std::uint16_t size = 10;
+    constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
     const auto reg = asRegister(0xa1b2, data);
 
@@ -197,7 +197,7 @@ TEST(W5100DeviceTest, writeBuffer)
 
 TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 {
-    constexpr std::uint16_t size = 10;
+    constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
     auto span = gsl::make_span(data);
     auto reg = asRegister(0xa1b2, span);
@@ -210,7 +210,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 TEST(W5100DeviceTest, readRegisterByte)
 {
     constexpr auto reg = makeRegister<std::uint8_t>(0xddee);
-    constexpr std::uint8_t data = 0xef;
+    constexpr std::uint8_t data{0xef};
     expectRead(0xddee, data);
 
     const std::uint8_t result = device->read(reg);
@@ -220,7 +220,7 @@ TEST(W5100DeviceTest, readRegisterByte)
 TEST(W5100DeviceTest, readRegisterTwoByte)
 {
     constexpr auto reg = makeRegister<std::uint16_t>(0xddee);
-    constexpr std::uint16_t data = 0xef01;
+    constexpr std::uint16_t data{0xef01};
     expectRead(0xddee, data);
 
     const std::uint16_t result = device->read(reg);
@@ -229,7 +229,7 @@ TEST(W5100DeviceTest, readRegisterTwoByte)
 
 TEST(W5100DeviceTest, readRegisterSpan)
 {
-    constexpr std::uint16_t size = 10;
+    constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
     expectRead(0xddee, data);
 
@@ -244,7 +244,7 @@ TEST(W5100DeviceTest, readRegisterSpan)
 TEST(W5100DeviceTest, writeSocketModeRegister)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0000);
-    constexpr std::uint8_t value = 0x17;
+    constexpr std::uint8_t value{0x17};
     expectWrite(address, value);
 
     device->writeSocketModeRegister(socketHandle, value);
@@ -253,7 +253,7 @@ TEST(W5100DeviceTest, writeSocketModeRegister)
 TEST(W5100DeviceTest, writeSocketSourcePort)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0004);
-    constexpr std::uint16_t value = 0x1388;
+    constexpr std::uint16_t value{0x1388};
     expectWrite(address, value);
 
     device->writeSocketSourcePort(socketHandle, value);
@@ -262,7 +262,7 @@ TEST(W5100DeviceTest, writeSocketSourcePort)
 TEST(W5100DeviceTest, writeSocketInterruptRegister)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0002);
-    constexpr std::uint8_t value = 0x45;
+    constexpr std::uint8_t value{0x45};
     expectWrite(address, value);
 
     device->writeSocketInterruptRegister(socketHandle, SocketInterrupt(value));
@@ -271,7 +271,7 @@ TEST(W5100DeviceTest, writeSocketInterruptRegister)
 TEST(W5100DeviceTest, readSocketInterruptRegister)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0002);
-    constexpr std::uint8_t value = 0xb8;
+    constexpr std::uint8_t value{0xb8};
     expectRead(address, value);
 
     const auto rtn = device->readSocketInterruptRegister(socketHandle);
@@ -300,7 +300,7 @@ TEST(W5100DeviceTest, readSocketCommandRegister)
 TEST(W5100DeviceTest, executeSocketCommand)
 {
     constexpr SocketCommand cmd = SocketCommand::connect;
-    constexpr std::uint8_t registerCleared = 0x00;
+    constexpr std::uint8_t registerCleared{0x00};
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0001);
     expectWrite(address, static_cast<std::uint8_t>(cmd));
     expectRead(address, static_cast<std::uint8_t>(0x01));
@@ -323,7 +323,7 @@ TEST(W5100DeviceTest, readSocketStatusRegister)
 TEST(W5100DeviceTest, getTransmitFreeSize)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0020);
-    constexpr std::uint16_t value = 0x1234;
+    constexpr std::uint16_t value{0x1234};
     expectRead(address, static_cast<std::uint16_t>(0xaaaa));
     expectRead(address, static_cast<std::uint16_t>(0xbbbb));
     expectRead(address, static_cast<std::uint16_t>(0x1234));
@@ -336,7 +336,7 @@ TEST(W5100DeviceTest, getTransmitFreeSize)
 TEST(W5100DeviceTest, getReceiveFreeSize)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0026);
-    constexpr std::uint16_t value = 0x1234;
+    constexpr std::uint16_t value{0x1234};
     expectRead(address, static_cast<std::uint16_t>(0xaaaa));
     expectRead(address, static_cast<std::uint16_t>(0xbbbb));
     expectRead(address, static_cast<std::uint16_t>(0x1234));
@@ -349,11 +349,11 @@ TEST(W5100DeviceTest, getReceiveFreeSize)
 TEST(W5100DeviceTest, sendData)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0024);
-    constexpr std::uint16_t value = 0x3355;
+    constexpr std::uint16_t value{0x3355};
     expectRead(address, value);
 
-    constexpr std::uint16_t destAddress = 0x4355;
-    constexpr std::uint16_t size = 5;
+    constexpr std::uint16_t destAddress{0x4355};
+    constexpr std::uint16_t size{5};
     auto buffer = createBuffer(size);
     expectWrite(destAddress, buffer);
     expectWrite(address, static_cast<std::uint16_t>(value + size));
@@ -375,11 +375,11 @@ TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 TEST(W5100DeviceTest, receiveData)
 {
     constexpr std::uint16_t address = toAddress(socketHandle, 0x0028);
-    constexpr std::uint16_t value = 0x3355;
+    constexpr std::uint16_t value{0x3355};
     expectRead(address, value);
 
-    constexpr std::uint16_t destAddress = 0x6355;
-    constexpr std::uint16_t size = 4;
+    constexpr std::uint16_t destAddress{0x6355};
+    constexpr std::uint16_t size{4};
     auto buffer = createBuffer(size);
     expectRead(destAddress, buffer);
     expectWrite(address, static_cast<std::uint16_t>(value + size));
@@ -405,7 +405,7 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
 
 TEST(W5100DeviceTest, writeModeRegister)
 {
-    constexpr std::uint16_t address = 0x0000;
+    constexpr std::uint16_t address{0x0000};
     constexpr Mode mode = Mode::autoIncrement;
     expectWrite(address, static_cast<std::uint8_t>(mode));
 
@@ -416,8 +416,8 @@ TEST(W5100DeviceTest, setDestAddress)
 {
     constexpr std::uint16_t addressIp = toAddress(socketHandle, 0x000c);
     constexpr std::uint16_t addressPort = toAddress(socketHandle, 0x0010);
-    eth::NetAddress<4> ip = {{ 192, 168, 1, 4 }};
-    constexpr std::uint16_t port = 1234;
+    eth::NetAddress<4> ip{{192, 168, 1, 4}};
+    constexpr std::uint16_t port{1234};
     expectWrite(addressIp, ip);
     expectWrite(addressPort, port);
 
@@ -433,10 +433,10 @@ TEST(W5100DeviceTest, configureNetConfiguration)
         {{0x00, 0x08, 0xdc, 0x01, 0x02, 0x03}}
     };
 
-    constexpr std::uint16_t addrIp = 0x000f;
-    constexpr std::uint16_t addrNetmask = 0x0005;
-    constexpr std::uint16_t addrGateway = 0x0001;
-    constexpr std::uint16_t addrMac = 0x0009;
+    constexpr std::uint16_t addrIp{0x000f};
+    constexpr std::uint16_t addrNetmask{0x0005};
+    constexpr std::uint16_t addrGateway{0x0001};
+    constexpr std::uint16_t addrMac{0x0009};
 
     expectWrite(addrIp, std::get<0>(config));
     expectWrite(addrNetmask, std::get<1>(config));
