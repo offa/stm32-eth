@@ -137,7 +137,7 @@ TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
 {
     constexpr std::uint16_t addressModeReg{0x0000};
     constexpr std::uint8_t resetBit{7};
-    constexpr std::uint8_t valueReset{1 << resetBit};
+    constexpr std::uint8_t valueReset{1u << resetBit};
     expectWrite(addressModeReg, valueReset);
 
     constexpr std::uint16_t addressRxSize{0x001a};
