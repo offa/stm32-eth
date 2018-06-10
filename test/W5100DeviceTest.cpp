@@ -110,8 +110,8 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectRead(std::uint16_t addr, std::uint16_t data) const
     {
-        expectRead(addr, static_cast<std::uint8_t>(data >> 8));
-        expectRead(addr + 1, static_cast<std::uint8_t>(data & 0xff));
+        expectRead(addr, eth::byte::get<1>(data));
+        expectRead(addr + 1, eth::byte::get<0>(data));
     }
 
     template<class Container>
