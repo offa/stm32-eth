@@ -34,7 +34,7 @@ namespace eth::w5100
         using value_type = T;
 
 
-        constexpr Register(std::uint16_t address) : m_address(address)
+        constexpr explicit Register(std::uint16_t address) noexcept : m_address(address)
         {
         }
 

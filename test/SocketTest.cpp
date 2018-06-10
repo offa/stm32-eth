@@ -414,7 +414,7 @@ TEST(SocketTest, receiveReturnsBytesReceived)
         .andReturnValue(static_cast<std::uint16_t>(buffer.size()));
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
 }
@@ -429,7 +429,7 @@ TEST(SocketTest, receiveIgnoresEmptyBuffer)
 TEST(SocketTest, receiveLimitsBuffer)
 {
     constexpr std::uint16_t maxReceiveSize = 2048;
-    std::array<std::uint8_t, maxReceiveSize + 1> data;
+    std::array<std::uint8_t, maxReceiveSize + 1> data{};
     expectWaitForFreeRxTx(Mode::receive, socketHandle, maxReceiveSize);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
@@ -443,7 +443,7 @@ TEST(SocketTest, receiveLimitsBuffer)
 TEST(SocketTest, receiveLimitsBufferToReceiveFreeSize)
 {
     constexpr std::uint16_t size = defaultSize - 2;
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     expectWaitForFreeRxTx(Mode::receive, socketHandle, size);
     mock("Device").expectOneCall("receiveData")
         .ignoreOtherParameters()
@@ -463,7 +463,7 @@ TEST(SocketTest, receiveChecksStatusFlagIfEstablished)
         .andReturnValue(defaultSize);
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
 }
@@ -477,7 +477,7 @@ TEST(SocketTest, receiveChecksStatusFlagIfCloseWait)
         .andReturnValue(defaultSize);
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
 }
@@ -487,7 +487,7 @@ TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
     auto buffer = createBuffer(defaultSize);
     expectSocketStatusRead(socketHandle, SocketStatus::init);
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(0, result);
 }
@@ -504,7 +504,7 @@ TEST(SocketTest, receiveReceivesData)
         .andReturnValue(defaultSize);
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
 }
@@ -519,7 +519,7 @@ TEST(SocketTest, receiveSendsCommandAfterReceive)
         .andReturnValue(defaultSize);
     expectSocketCommand(socketHandle, SocketCommand::receive);
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
 }
@@ -534,7 +534,7 @@ TEST(SocketTest, receiveWaitsForStatusFlagAfterSend)
     mock("Device").expectOneCall("executeSocketCommand")
         .ignoreOtherParameters();
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
 }
@@ -552,7 +552,7 @@ TEST(SocketTest, receiveWaitsForDataAvailable)
         .andReturnValue(defaultSize);
     expectSocketCommand(socketHandle, SocketCommand::receive);
 
-    std::array<std::uint8_t, defaultSize> data;
+    std::array<std::uint8_t, defaultSize> data{};
     const auto result = socket->receive(data);
     CHECK_EQUAL(buffer.size(), result);
 
@@ -567,7 +567,7 @@ TEST(SocketTest, getStatus)
 
 TEST(SocketTest, connect)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
     constexpr std::uint16_t portValue{4567};
 
     mock("Device").expectOneCall("setDestAddress")
@@ -583,7 +583,7 @@ TEST(SocketTest, connect)
 
 TEST(SocketTest, connectWaitsForEstablishedStatus)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
 
     mock("Device").expectOneCall("setDestAddress").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -601,7 +601,7 @@ TEST(SocketTest, connectWaitsForEstablishedStatus)
 
 TEST(SocketTest, connectErrorOnClosedConnection)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
 
     mock("Device").expectOneCall("setDestAddress").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
@@ -614,7 +614,7 @@ TEST(SocketTest, connectErrorOnClosedConnection)
 
 TEST(SocketTest, connectErrorOnTimeout)
 {
-    NetAddress<4> addr = {{127, 0, 0, 1}};
+    NetAddress<4> addr{{127, 0, 0, 1}};
 
     mock("Device").expectOneCall("setDestAddress").ignoreOtherParameters();
     mock("Device").expectOneCall("executeSocketCommand").ignoreOtherParameters();
