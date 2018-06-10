@@ -59,6 +59,7 @@ namespace eth::spi
             m_writer.setSlaveSelect(PinState::set);
         }
 
+        SlaveSelect(SlaveSelect&&) = delete;
         SlaveSelect(const SlaveSelect&) = delete;
 
         ~SlaveSelect()
@@ -67,6 +68,7 @@ namespace eth::spi
         }
 
 
+        SlaveSelect& operator=(SlaveSelect&&) = delete;
         SlaveSelect& operator=(const SlaveSelect&) = delete;
 
 
