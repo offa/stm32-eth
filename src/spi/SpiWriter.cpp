@@ -56,9 +56,9 @@ namespace spi
     {
     public:
 
-        explicit SlaveSelect(SpiWriter& writer) : m_writer(writer)
+        explicit SlaveSelect(SpiWriter* writer) : m_writer(writer)
         {
-            m_writer.setSlaveSelect(PinState::set);
+            m_writer->setSlaveSelect(PinState::set);
         }
 
         SlaveSelect(SlaveSelect&&) = delete;
@@ -66,7 +66,7 @@ namespace spi
 
         ~SlaveSelect()
         {
-            m_writer.setSlaveSelect(PinState::reset);
+            m_writer->setSlaveSelect(PinState::reset);
         }
 
 
@@ -76,7 +76,7 @@ namespace spi
 
     private:
 
-        SpiWriter& m_writer;
+        SpiWriter* m_writer;
     };
 
 
@@ -104,7 +104,7 @@ namespace spi
     {
         auto packet = makePacket<OpCode::write>(address, data);
 
-        SlaveSelect ss{*this};
+        SlaveSelect ss{this};
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
     }
 
@@ -112,7 +112,7 @@ namespace spi
     {
         auto packet = makePacket<OpCode::read>(address);
 
-        SlaveSelect ss{*this};
+        SlaveSelect ss{this};
         HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
 
         std::array<std::uint8_t, 1> buffer{{0}};
