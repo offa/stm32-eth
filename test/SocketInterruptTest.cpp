@@ -36,7 +36,7 @@ TEST_GROUP(SocketInterruptTest)
 
 TEST(SocketInterruptTest, defaultNothingSet)
 {
-    SocketInterrupt si;
+    SocketInterrupt si{};
     CHECK_EQUAL(0xff, si.value());
 }
 
