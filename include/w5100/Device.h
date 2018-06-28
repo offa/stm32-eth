@@ -33,15 +33,12 @@
 #include <cstdint>
 #include <gsl/span>
 
-namespace eth
-{
-namespace spi
+namespace eth::spi
 {
     class SpiWriter;
 }
 
-
-namespace w5100
+namespace eth::w5100
 {
 
     class Device
@@ -73,7 +70,7 @@ namespace w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         void write(Register<T> reg, T data)
         {
             constexpr auto pos{n - 1};
@@ -83,7 +80,7 @@ namespace w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         void write(Register<T> reg, T data)
         {
             write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
@@ -103,7 +100,7 @@ namespace w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
             constexpr auto pos{sizeof(T) - n};
@@ -114,7 +111,7 @@ namespace w5100
 
         template<class T, std::size_t n = sizeof(T),
                 std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral<T>::value, int> = 0>
+                std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
             return read(reg.address(), sizeof(T) - n);
@@ -162,13 +159,12 @@ namespace w5100
 
 
         spi::SpiWriter& m_writer;
-        static constexpr std::uint16_t transmitBufferSize{2048};
-        static constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
+        static inline constexpr std::uint16_t transmitBufferSize{2048};
+        static inline constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
     };
 
 
     void setupDevice(Device& dev, eth::NetConfig config);
 
-}
 }
 

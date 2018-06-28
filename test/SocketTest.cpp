@@ -43,7 +43,7 @@ using eth::spi::SpiWriter;
 
 namespace
 {
-    constexpr SocketHandle socketHandle = eth::makeHandle<0>();
+    inline constexpr SocketHandle socketHandle = eth::makeHandle<0>();
 }
 
 
@@ -122,11 +122,11 @@ TEST_GROUP(SocketTest)
     std::unique_ptr<Socket> socket;
     SpiWriter spi{eth::spi::spi2};
     std::unique_ptr<Device> device;
-    static constexpr std::uint16_t port{1234};
-    static constexpr Protocol protocol = Protocol::tcp;
-    static constexpr std::uint8_t flag{0};
-    static constexpr auto statusSendOk = static_cast<std::uint8_t>(SocketInterrupt::Mask::send);
-    static constexpr std::uint16_t defaultSize{10};
+    static inline constexpr std::uint16_t port{1234};
+    static inline constexpr Protocol protocol = Protocol::tcp;
+    static inline constexpr std::uint8_t flag{0};
+    static inline constexpr auto statusSendOk = static_cast<std::uint8_t>(SocketInterrupt::Mask::send);
+    static inline constexpr std::uint16_t defaultSize{10};
 };
 
 TEST(SocketTest, openReturnsErrorOnUnsupportedProtocol)

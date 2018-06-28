@@ -15,15 +15,12 @@ matrix:
     include:
     - env: COMPILER=gcc-8 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=gcc-7 BUILD_OPTS="-asan -ubsan"
-    - env: COMPILER=gcc-6 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=clang-6 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=clang-5 BUILD_OPTS="-asan -ubsan"
-    - env: COMPILER=clang-4 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Debug
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Release
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel LTO_ENABLED=ON
-
 
 before_install:
   - docker pull ${DOCKER_IMG}/${COMPILER}:latest

@@ -22,9 +22,7 @@
 
 #include "spi/SpiConfig.h"
 
-namespace eth
-{
-namespace spi
+namespace eth::spi
 {
 
     class SpiWriter
@@ -63,6 +61,5 @@ namespace spi
         SpiConfig m_config;
     };
 
-}
 }
 

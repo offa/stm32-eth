@@ -41,7 +41,7 @@ using eth::w5100::makeRegister;
 
 namespace
 {
-    constexpr SocketHandle socketHandle = eth::makeHandle<0>();
+    constexpr inline SocketHandle socketHandle = eth::makeHandle<0>();
 }
 
 
@@ -427,15 +427,17 @@ TEST(W5100DeviceTest, configureNetConfiguration)
         {{0x00, 0x08, 0xdc, 0x01, 0x02, 0x03}}
     };
 
+    const auto[ip, netmask, gateway, mac] = config;
+
     constexpr std::uint16_t addrIp{0x000f};
     constexpr std::uint16_t addrNetmask{0x0005};
     constexpr std::uint16_t addrGateway{0x0001};
     constexpr std::uint16_t addrMac{0x0009};
 
-    expectWrite(addrIp, std::get<0>(config));
-    expectWrite(addrNetmask, std::get<1>(config));
-    expectWrite(addrGateway, std::get<2>(config));
-    expectWrite(addrMac, std::get<3>(config));
+    expectWrite(addrIp, ip);
+    expectWrite(addrNetmask, netmask);
+    expectWrite(addrGateway, gateway);
+    expectWrite(addrMac, mac);
 
     setupDevice(*device, config);
 }

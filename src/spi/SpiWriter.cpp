@@ -22,9 +22,7 @@
 #include "Byte.h"
 #include <array>
 
-namespace eth
-{
-namespace spi
+namespace eth::spi
 {
     namespace
     {
@@ -82,13 +80,7 @@ namespace spi
 
     SpiWriter::SpiWriter(const SpiConfig& config) : m_config(config)
     {
-        Assign spi;
-        PinBlock block;
-        GPIO_InitTypeDef gpio;
-        GPIO_InitTypeDef gpioSS;
-        SPI_InitTypeDef settings;
-        std::tie(spi, block, gpio, gpioSS, settings) = m_config;
-
+        auto[spi, block, gpio, gpioSS, settings] = m_config;
         const auto blockRef = pinBlocks[static_cast<std::size_t>(block)];
 
         HAL_GPIO_Init(blockRef, &gpio);
@@ -134,5 +126,3 @@ namespace spi
     }
 
 }
-}
-
