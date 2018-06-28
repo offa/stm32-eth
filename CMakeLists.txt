@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(stm32-eth VERSION 0.8.0)
+project(stm32-eth VERSION 0.9.0)
 message(STATUS "~~~ ${PROJECT_NAME} v${PROJECT_VERSION} ~~~")
 
 message(STATUS "Target: ${CMAKE_SYSTEM_PROCESSOR} (${CMAKE_SYSTEM_NAME})")
