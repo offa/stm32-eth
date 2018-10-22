@@ -138,7 +138,7 @@ namespace eth::w5100
 
         static constexpr std::uint16_t getRxTxBufferSize() noexcept
         {
-            return transmitBufferSize;
+            return rxTxBufferSize;
         };
 
 
@@ -154,8 +154,7 @@ namespace eth::w5100
 
 
         spi::SpiWriter& m_writer;
-        static inline constexpr std::uint16_t transmitBufferSize{2048};
-        static inline constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
+        static inline constexpr std::uint16_t rxTxBufferSize{2048};
     };
 
 
