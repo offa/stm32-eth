@@ -32,13 +32,13 @@ namespace w5100
         constexpr std::uint16_t toTransmitBufferAddress(SocketHandle s)
         {
             constexpr std::uint16_t baseAddress{0x4000};
-            return baseAddress + ( Device::getTransmitBufferSize() * s.value() );
+            return baseAddress + ( Device::getRxTxBufferSize() * s.value() );
         }
 
         constexpr std::uint16_t toReceiveBufferAddress(SocketHandle s)
         {
             constexpr std::uint16_t baseAddress{0x6000};
-            return baseAddress + ( Device::getReceiveBufferSize() * s.value() );
+            return baseAddress + ( Device::getRxTxBufferSize() * s.value() );
         }
 
         template<std::size_t limit>

@@ -358,7 +358,7 @@ TEST(W5100DeviceTest, sendData)
 TEST(W5100DeviceTest, sendDataCircularBufferWrap)
 {
     constexpr auto ptrWrites = sizeof(std::uint16_t);
-    const std::uint16_t size = device->getTransmitBufferSize() + 2;
+    const std::uint16_t size = Device::getRxTxBufferSize() + 2;
     auto buffer = createBuffer(size);
     mock("SpiWriter").ignoreOtherCalls();
 
@@ -387,7 +387,7 @@ TEST(W5100DeviceTest, receiveData)
 TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
 {
     constexpr auto ptrReads = sizeof(std::uint16_t);
-    constexpr std::uint16_t size = Device::getReceiveBufferSize() + 2;
+    constexpr std::uint16_t size = Device::getRxTxBufferSize() + 2;
     auto buffer = createBuffer(size);
     mock("SpiWriter").ignoreOtherCalls();
 
