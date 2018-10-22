@@ -136,11 +136,18 @@ namespace eth::w5100
         void setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port);
 
 
+        static constexpr std::uint16_t getRxTxBufferSize() noexcept
+        {
+            return transmitBufferSize;
+        };
+
+        [[deprecated("Use getRxTxBufferSize() instead")]]
         static constexpr std::uint16_t getTransmitBufferSize() noexcept
         {
             return transmitBufferSize;
         }
 
+        [[deprecated("Use getRxTxBufferSize() instead")]]
         static constexpr std::uint16_t getReceiveBufferSize() noexcept
         {
             return receiveBufferSize;
