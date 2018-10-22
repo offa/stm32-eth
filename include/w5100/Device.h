@@ -141,18 +141,6 @@ namespace eth::w5100
             return transmitBufferSize;
         };
 
-        [[deprecated("Use getRxTxBufferSize() instead")]]
-        static constexpr std::uint16_t getTransmitBufferSize() noexcept
-        {
-            return transmitBufferSize;
-        }
-
-        [[deprecated("Use getRxTxBufferSize() instead")]]
-        static constexpr std::uint16_t getReceiveBufferSize() noexcept
-        {
-            return receiveBufferSize;
-        }
-
 
         Device& operator=(Device&&) = default;
 
