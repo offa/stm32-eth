@@ -131,15 +131,10 @@ namespace eth::w5100
         void setDestAddress(SocketHandle s, NetAddress<4> addr, std::uint16_t port);
 
 
-        static constexpr std::uint16_t getTransmitBufferSize() noexcept
+        static constexpr std::uint16_t getRxTxBufferSize() noexcept
         {
-            return transmitBufferSize;
-        }
-
-        static constexpr std::uint16_t getReceiveBufferSize() noexcept
-        {
-            return receiveBufferSize;
-        }
+            return rxTxBufferSize;
+        };
 
 
         Device& operator=(Device&&) = default;
@@ -154,8 +149,7 @@ namespace eth::w5100
 
 
         spi::SpiWriter& m_writer;
-        static inline constexpr std::uint16_t transmitBufferSize{2048};
-        static inline constexpr std::uint16_t receiveBufferSize = transmitBufferSize;
+        static inline constexpr std::uint16_t rxTxBufferSize{2048};
     };
 
 

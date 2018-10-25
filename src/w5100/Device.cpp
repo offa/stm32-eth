@@ -32,13 +32,13 @@ namespace w5100
         constexpr std::uint16_t toTransmitBufferAddress(SocketHandle s)
         {
             constexpr std::uint16_t baseAddress{0x4000};
-            return baseAddress + ( Device::getTransmitBufferSize() * s.value() );
+            return baseAddress + ( Device::getRxTxBufferSize() * s.value() );
         }
 
         constexpr std::uint16_t toReceiveBufferAddress(SocketHandle s)
         {
             constexpr std::uint16_t baseAddress{0x6000};
-            return baseAddress + ( Device::getReceiveBufferSize() * s.value() );
+            return baseAddress + ( Device::getRxTxBufferSize() * s.value() );
         }
 
         template<std::size_t limit>
@@ -142,9 +142,9 @@ namespace w5100
         const std::uint16_t offset = writePointer & transmitBufferMask;
         const std::uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
-        if( isWrapAround<transmitBufferSize>(offset, size) == true )
+        if( isWrapAround<rxTxBufferSize>(offset, size) == true )
         {
-            const auto first = transmitBufferSize - offset;
+            const auto first = rxTxBufferSize - offset;
             const auto border = std::next(buffer.cbegin(), first);
             write(makeRegister<gsl::span<const std::uint8_t>>(destAddress), buffer.cbegin(), border);
             write(makeRegister<gsl::span<const std::uint8_t>>(toTransmitBufferAddress(s)), border, buffer.cend());
@@ -166,9 +166,9 @@ namespace w5100
         const std::uint16_t destAddress = offset + toReceiveBufferAddress(s);
         const auto reg = makeRegister<gsl::span<std::uint8_t>>(destAddress);
 
-        if( isWrapAround<receiveBufferSize>(offset, size) == true )
+        if( isWrapAround<rxTxBufferSize>(offset, size) == true )
         {
-            const auto first = receiveBufferSize - offset;
+            const auto first = rxTxBufferSize - offset;
             auto border = std::next(buffer.begin(), first);
 
             read(reg, buffer.begin(), border);
