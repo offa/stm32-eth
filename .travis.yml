@@ -1,6 +1,6 @@
 language: generic
 
-dist: trusty
+dist: xenial
 sudo: required
 
 services:
@@ -25,5 +25,5 @@ before_install:
 
 script:
   - if [[ "${COMPILER}" == "arm-none-eabi-gcc" ]]; then ARGS="-e CC=arm-none-abi-gcc -e CXX=arm-none-eabi-g++ -e BUILD_TYPE -e LTO_ENABLED"; fi
-  - docker run -v ${PWD}:/mnt ${ARGS} -it ${DOCKER_IMG}/${COMPILER} /bin/bash -c "cd /mnt; script/ci_build.sh ${BUILD_OPTS}"
+  - docker run --cap-add SYS_PTRACE -v ${PWD}:/mnt ${ARGS} -it ${DOCKER_IMG}/${COMPILER} /bin/bash -c "cd /mnt; script/ci_build.sh ${BUILD_OPTS}"
 
