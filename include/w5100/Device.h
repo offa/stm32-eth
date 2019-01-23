@@ -153,7 +153,7 @@ namespace eth::w5100
         std::uint16_t readFreesize(Register<std::uint16_t> freesizeReg);
 
 
-        spi::SpiWriter& m_writer;
+        spi::SpiWriter& spiWriter;
         static inline constexpr std::uint16_t rxTxBufferSize{2048};
     };
 

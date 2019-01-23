@@ -39,7 +39,7 @@ namespace eth
         };
 
 
-        constexpr explicit SocketInterrupt(std::uint8_t value) : m_value(value)
+        constexpr explicit SocketInterrupt(std::uint8_t value) : interruptMask(value)
         {
         }
 
@@ -54,23 +54,23 @@ namespace eth
 
         constexpr std::uint8_t value() const noexcept
         {
-            return m_value;
+            return interruptMask;
         }
 
         constexpr bool test(Mask mask) const noexcept
         {
-            return m_value & static_cast<std::uint8_t>(mask);
+            return interruptMask & static_cast<std::uint8_t>(mask);
         }
 
         constexpr void set(Mask mask) noexcept
         {
-            m_value |= static_cast<std::uint8_t>(mask);
+            interruptMask |= static_cast<std::uint8_t>(mask);
         }
 
 
     private:
 
-        std::uint8_t m_value;
+        std::uint8_t interruptMask;
     };
 
 }

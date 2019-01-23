@@ -49,7 +49,7 @@ namespace eth
         };
 
 
-        Socket(SocketHandle handle, w5100::Device& device);
+        Socket(SocketHandle socketHandle, w5100::Device& dev);
         Socket(Socket&&) = default;
         ~Socket();
 
@@ -78,8 +78,8 @@ namespace eth
         void closeImpl();
 
 
-        const SocketHandle m_handle;
-        w5100::Device& m_device;
+        const SocketHandle handle;
+        w5100::Device& device;
     };
 
 }

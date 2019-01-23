@@ -51,7 +51,7 @@ namespace w5100
 
 
 
-    Device::Device(spi::SpiWriter& writer) : m_writer(writer)
+    Device::Device(spi::SpiWriter& writer) : spiWriter(writer)
     {
         writeModeRegister(Mode::reset);
 
@@ -186,12 +186,12 @@ namespace w5100
 
     void Device::write(std::uint16_t addr, std::uint16_t offset, std::uint8_t data)
     {
-        m_writer.write(addr + offset, data);
+        spiWriter.write(addr + offset, data);
     }
 
     std::uint8_t Device::read(std::uint16_t addr, std::uint16_t offset)
     {
-        return m_writer.read(addr + offset);
+        return spiWriter.read(addr + offset);
     }
 
     void Device::writeModeRegister(Mode value)
