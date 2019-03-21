@@ -46,7 +46,7 @@ namespace eth::w5100
     public:
 
         explicit Device(spi::SpiWriter& writer);
-        Device(Device&&) = default;
+        Device(const Device&) = delete;
 
 
         void executeSocketCommand(SocketHandle s, SocketCommand cmd);
@@ -142,7 +142,7 @@ namespace eth::w5100
         };
 
 
-        Device& operator=(Device&&) = default;
+        Device& operator=(const Device&) = delete;
 
 
     private:

@@ -50,7 +50,7 @@ namespace eth
 
 
         Socket(SocketHandle socketHandle, w5100::Device& dev);
-        Socket(Socket&&) = default;
+        Socket(const Socket&) = delete;
         ~Socket();
 
 
@@ -69,7 +69,7 @@ namespace eth
         SocketStatus getStatus() const;
 
 
-        Socket& operator=(Socket&&) = default;
+        Socket& operator=(const Socket&) = delete;
 
 
     private:
