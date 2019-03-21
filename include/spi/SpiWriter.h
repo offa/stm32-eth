@@ -32,7 +32,7 @@ namespace eth::spi
         using Handle = SPI_HandleTypeDef;
 
 
-        explicit SpiWriter(const SpiConfig& config);
+        explicit SpiWriter(const SpiConfig& cfg);
         SpiWriter(const SpiWriter&) = delete;
 
 
@@ -57,8 +57,8 @@ namespace eth::spi
 
         class SlaveSelect;
 
-        Handle m_handle{};
-        SpiConfig m_config;
+        Handle handle{};
+        SpiConfig config;
     };
 
 }

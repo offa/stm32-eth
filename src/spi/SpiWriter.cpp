@@ -78,18 +78,18 @@ namespace eth::spi
     };
 
 
-    SpiWriter::SpiWriter(const SpiConfig& config) : m_config(config)
+    SpiWriter::SpiWriter(const SpiConfig& cfg) : config(cfg)
     {
-        auto[spi, block, gpio, gpioSS, settings] = m_config;
+        auto[spi, block, gpio, gpioSS, settings] = config;
         const auto blockRef = pinBlocks[static_cast<std::size_t>(block)];
 
         HAL_GPIO_Init(blockRef, &gpio);
         HAL_GPIO_Init(blockRef, &gpioSS);
 
-        m_handle.Instance = spiInstances[static_cast<std::size_t>(spi)];
-        m_handle.Init = settings;
+        handle.Instance = spiInstances[static_cast<std::size_t>(spi)];
+        handle.Init = settings;
 
-        HAL_SPI_Init(&m_handle);
+        HAL_SPI_Init(&handle);
     }
 
     void SpiWriter::write(std::uint16_t address, std::uint8_t data)
@@ -97,7 +97,7 @@ namespace eth::spi
         auto packet = makePacket<OpCode::write>(address, data);
 
         SlaveSelect ss{this};
-        HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
+        HAL_SPI_Transmit(&handle, packet.data(), packet.size(), timeout);
     }
 
     std::uint8_t SpiWriter::read(std::uint16_t address)
@@ -105,10 +105,10 @@ namespace eth::spi
         auto packet = makePacket<OpCode::read>(address);
 
         SlaveSelect ss{this};
-        HAL_SPI_Transmit(&m_handle, packet.data(), packet.size(), timeout);
+        HAL_SPI_Transmit(&handle, packet.data(), packet.size(), timeout);
 
         std::array<std::uint8_t, 1> buffer{{0}};
-        HAL_SPI_Receive(&m_handle, buffer.data(), buffer.size(), timeout);
+        HAL_SPI_Receive(&handle, buffer.data(), buffer.size(), timeout);
 
         return buffer[0];
     }
@@ -116,13 +116,13 @@ namespace eth::spi
     void SpiWriter::setSlaveSelect(PinState state)
     {
         const auto value = ( state == PinState::set ? GPIO_PIN_RESET : GPIO_PIN_SET );
-        const auto blockRef = pinBlocks[static_cast<std::size_t>(std::get<1>(m_config))];
-        HAL_GPIO_WritePin(blockRef, std::get<3>(m_config).Pin, value);
+        const auto blockRef = pinBlocks[static_cast<std::size_t>(std::get<1>(config))];
+        HAL_GPIO_WritePin(blockRef, std::get<3>(config).Pin, value);
     }
 
     SpiWriter::Handle& SpiWriter::nativeHandle() noexcept
     {
-        return m_handle;
+        return handle;
     }
 
 }

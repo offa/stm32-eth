@@ -56,7 +56,7 @@ namespace eth
 
 
 
-    Socket::Socket(SocketHandle handle, w5100::Device& device) : m_handle(handle), m_device(device)
+    Socket::Socket(SocketHandle socketHandle, w5100::Device& dev) : handle(socketHandle), device(dev)
     {
     }
 
@@ -70,10 +70,10 @@ namespace eth
         if( protocol == Protocol::tcp )
         {
             close();
-            m_device.writeSocketModeRegister(m_handle, static_cast<std::uint8_t>(protocol) | flag);
+            device.writeSocketModeRegister(handle, static_cast<std::uint8_t>(protocol) | flag);
 
-            m_device.writeSocketSourcePort(m_handle, port);
-            m_device.executeSocketCommand(m_handle, SocketCommand::open);
+            device.writeSocketSourcePort(handle, port);
+            device.executeSocketCommand(handle, SocketCommand::open);
 
             while( getStatus() == SocketStatus::closed )
             {
@@ -103,7 +103,7 @@ namespace eth
             return Status::closed;
         }
 
-        m_device.executeSocketCommand(m_handle, SocketCommand::listen);
+        device.executeSocketCommand(handle, SocketCommand::listen);
 
         return Status::ok;
     }
@@ -125,7 +125,7 @@ namespace eth
         }
 
         const std::uint16_t sendSize = std::min<std::uint16_t>(w5100::Device::getRxTxBufferSize(), buffer.size());
-        const auto freeSize = waitFor([this] { return m_device.getTransmitFreeSize(m_handle); },
+        const auto freeSize = waitFor([this] { return device.getTransmitFreeSize(handle); },
                                         [this] { return connectionReady(getStatus()); },
                                         sendSize);
 
@@ -134,8 +134,8 @@ namespace eth
             return 0;
         }
 
-        m_device.sendData(m_handle, buffer);
-        m_device.executeSocketCommand(m_handle, SocketCommand::send);
+        device.sendData(handle, buffer);
+        device.executeSocketCommand(handle, SocketCommand::send);
 
         return sendSize;
     }
@@ -147,7 +147,7 @@ namespace eth
             return 0;
         }
 
-        const std::uint16_t available = waitFor([this] { return m_device.getReceiveFreeSize(m_handle); },
+        const std::uint16_t available = waitFor([this] { return device.getReceiveFreeSize(handle); },
                                             [this] { return connectionReady(getStatus()); },
                                             1);
 
@@ -160,16 +160,16 @@ namespace eth
         const std::uint16_t sizeLimited = std::min<std::uint16_t>(w5100::Device::getRxTxBufferSize(), buffer.size());
         const std::uint16_t receiveSize = std::min(available, sizeLimited);
         auto shrinkedBuffer = buffer.first(receiveSize);
-        m_device.receiveData(m_handle, shrinkedBuffer);
-        m_device.executeSocketCommand(m_handle, SocketCommand::receive);
+        device.receiveData(handle, shrinkedBuffer);
+        device.executeSocketCommand(handle, SocketCommand::receive);
 
         return receiveSize;
     }
 
     Socket::Status Socket::connect(NetAddress<4> address, std::uint16_t port)
     {
-        m_device.setDestAddress(m_handle, address, port);
-        m_device.executeSocketCommand(m_handle, SocketCommand::connect);
+        device.setDestAddress(handle, address, port);
+        device.executeSocketCommand(handle, SocketCommand::connect);
 
         while( getStatus() != SocketStatus::established )
         {
@@ -189,7 +189,7 @@ namespace eth
 
     Socket::Status Socket::disconnect()
     {
-        m_device.executeSocketCommand(m_handle, SocketCommand::disconnect);
+        device.executeSocketCommand(handle, SocketCommand::disconnect);
 
         while( getStatus() != SocketStatus::closed )
         {
@@ -204,19 +204,19 @@ namespace eth
 
     SocketStatus Socket::getStatus() const
     {
-        return m_device.readSocketStatusRegister(m_handle);
+        return device.readSocketStatusRegister(handle);
     }
 
     bool Socket::isTimeouted() const
     {
-        const auto value = m_device.readSocketInterruptRegister(m_handle);
+        const auto value = device.readSocketInterruptRegister(handle);
         return value.test(SocketInterrupt::Mask::timeout);
     }
 
     void Socket::closeImpl()
     {
-        m_device.executeSocketCommand(m_handle, SocketCommand::close);
-        m_device.writeSocketInterruptRegister(m_handle, SocketInterrupt(0xff));
+        device.executeSocketCommand(handle, SocketCommand::close);
+        device.writeSocketInterruptRegister(handle, SocketInterrupt(0xff));
     }
 
 }

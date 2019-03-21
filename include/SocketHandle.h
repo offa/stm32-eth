@@ -36,20 +36,20 @@ namespace eth
         using value_type = std::uint8_t;
 
 
-        constexpr explicit SocketHandle(value_type id) : m_id(id)
+        constexpr explicit SocketHandle(value_type id) : socketId(id)
         {
         }
 
 
         constexpr value_type value() const noexcept
         {
-            return m_id;
+            return socketId;
         }
 
 
     private:
 
-        value_type m_id;
+        value_type socketId;
 
     };
 

@@ -49,8 +49,8 @@ namespace eth
         };
 
 
-        Socket(SocketHandle handle, w5100::Device& device);
-        Socket(Socket&&) = default;
+        Socket(SocketHandle socketHandle, w5100::Device& dev);
+        Socket(const Socket&) = delete;
         ~Socket();
 
 
@@ -69,7 +69,7 @@ namespace eth
         SocketStatus getStatus() const;
 
 
-        Socket& operator=(Socket&&) = default;
+        Socket& operator=(const Socket&) = delete;
 
 
     private:
@@ -78,8 +78,8 @@ namespace eth
         void closeImpl();
 
 
-        const SocketHandle m_handle;
-        w5100::Device& m_device;
+        const SocketHandle handle;
+        w5100::Device& device;
     };
 
 }

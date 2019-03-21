@@ -47,7 +47,7 @@ namespace eth::w5100
     public:
 
         explicit Device(spi::SpiWriter& writer);
-        Device(Device&&) = default;
+        Device(const Device&) = delete;
 
 
         void executeSocketCommand(SocketHandle s, SocketCommand cmd);
@@ -137,7 +137,7 @@ namespace eth::w5100
         };
 
 
-        Device& operator=(Device&&) = default;
+        Device& operator=(const Device&) = delete;
 
 
     private:
@@ -148,7 +148,7 @@ namespace eth::w5100
         std::uint16_t readFreesize(Register<std::uint16_t> freesizeReg);
 
 
-        spi::SpiWriter& m_writer;
+        spi::SpiWriter& spiWriter;
         static inline constexpr std::uint16_t rxTxBufferSize{2048};
     };
 
