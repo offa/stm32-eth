@@ -15,7 +15,6 @@ matrix:
     include:
     - env: COMPILER=gcc-8 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=gcc-7 BUILD_OPTS="-asan -ubsan"
-    - env: COMPILER=clang-8 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Debug
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Release
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
