@@ -38,7 +38,7 @@ mkdir -p build && cd build
 
 if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
-    cmake ${BUILD_ARGS} \
+    cmake "${BUILD_ARGS}" \
             -DUNITTEST=OFF \
             -DINTEGRATIONTEST=ON \
             -DCMAKE_TOOLCHAIN_FILE=../arm-embedded-toolchain.cmake \
@@ -52,7 +52,7 @@ then
         make stm32-eth-client-it.size
     fi
 else
-    cmake ${BUILD_ARGS} \
+    cmake "${BUILD_ARGS}" \
             -DUNITTEST_VERBOSE=ON \
             ..
     make

@@ -15,7 +15,7 @@ make coverage-clean
 make unittest
 make coverage
 
-python ${LCOV_COBERTURA}/lcov_cobertura.py coverage/stm32-eth.info --base-dir .. --output coverage/coverage.xml --demangle
+python "${LCOV_COBERTURA}/lcov_cobertura.py" coverage/stm32-eth.info --base-dir .. --output coverage/coverage.xml --demangle
 cd -
 
 
