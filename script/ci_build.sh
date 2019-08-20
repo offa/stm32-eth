@@ -5,16 +5,16 @@ set -ex
 LTO_ENABLED=${LTO_ENABLED:=OFF}
 BUILD_TYPE=${BUILD_TYPE:=Debug}
 
-BUILD_ARGS="-DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DLTO=${LTO_ENABLED}"
+BUILD_ARGS=("-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DLTO=${LTO_ENABLED}")
 
 for arg in "$@"
 do
     case "${arg}" in
         -asan)
-            BUILD_ARGS="${BUILD_ARGS} -DSANITIZER_ASAN=ON"
+            BUILD_ARGS+=("-DSANITIZER_ASAN=ON")
             ;;
         -ubsan)
-            BUILD_ARGS="${BUILD_ARGS} -DSANITIZER_UBSAN=ON"
+            BUILD_ARGS+=("-DSANITIZER_UBSAN=ON")
             ;;
     esac
 done
@@ -36,9 +36,10 @@ fi
 
 mkdir -p build && cd build
 
+
 if [[ "${CXX}" == "arm-none-eabi-g++" ]]
 then
-    cmake ${BUILD_ARGS} \
+    cmake "${BUILD_ARGS[@]}" \
             -DUNITTEST=OFF \
             -DINTEGRATIONTEST=ON \
             -DCMAKE_TOOLCHAIN_FILE=../arm-embedded-toolchain.cmake \
@@ -52,7 +53,7 @@ then
         make stm32-eth-client-it.size
     fi
 else
-    cmake ${BUILD_ARGS} \
+    cmake "${BUILD_ARGS[@]}" \
             -DUNITTEST_VERBOSE=ON \
             ..
     make

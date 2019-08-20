@@ -14,9 +14,7 @@ fi
 load() {
     SUBDIR=${3:+/$3}
 
-    wget -nv "$1${SUBDIR}/$2" -O $2
-
-    if [[ "$?" -ne 0 ]]
+    if ! wget -nv "$1${SUBDIR}/$2" -O "$2"
     then
         echo "Unable to update $2"
         exit 1
