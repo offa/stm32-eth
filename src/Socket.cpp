@@ -216,7 +216,7 @@ namespace eth
     void Socket::closeImpl()
     {
         device.executeSocketCommand(handle, SocketCommand::close);
-        device.writeSocketInterruptRegister(handle, SocketInterrupt(0xff));
+        device.writeSocketInterruptRegister(handle, SocketInterrupt{0xff});
     }
 
 }

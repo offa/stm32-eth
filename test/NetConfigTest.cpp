@@ -34,6 +34,7 @@ TEST_GROUP(NetConfigTest)
     }
 
     template<std::size_t n>
+    [[nodiscard]]
     bool checkValue(NetAddress<n> e, NetAddress<n> a) const
     {
         return std::equal(std::cbegin(e), std::cend(e), std::cbegin(a));
