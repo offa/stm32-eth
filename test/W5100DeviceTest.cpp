@@ -388,7 +388,6 @@ TEST(W5100DeviceTest, receiveDataCircularBufferWrap)
 {
     constexpr auto ptrReads = sizeof(std::uint16_t);
     constexpr std::uint16_t size = Device::getRxTxBufferSize() + 2;
-    auto buffer = createBuffer(size);
     mock("SpiWriter").ignoreOtherCalls();
 
     std::array<std::uint8_t, size> data{};

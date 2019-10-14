@@ -22,9 +22,7 @@
 #include "w5100/Registers.h"
 #include "spi/SpiWriter.h"
 
-namespace eth
-{
-namespace w5100
+namespace eth::w5100
 {
 
     namespace
@@ -215,5 +213,4 @@ namespace w5100
         dev.write(registers::sourceMacAddress, mac.cbegin(), mac.cend());
     }
 
-}
 }
