@@ -27,50 +27,41 @@
 namespace eth::byte
 {
 
-    template<class T>
-    inline constexpr bool is_byte_compatible_v = std::is_convertible_v<std::remove_cv_t<T>, std::uint8_t>
-                                        && std::is_integral_v<T>;
+    template <class T>
+    inline constexpr bool is_byte_compatible_v = std::is_convertible_v<std::remove_cv_t<T>, std::uint8_t>&& std::is_integral_v<T>;
 
-    template<class Itr>
+    template <class Itr>
     inline constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
 
 
-    template<std::size_t pos, class T,
-        std::enable_if_t<std::is_integral<T>::value
-                            && ( pos < sizeof(T) ), int> = 0>
+    template <std::size_t pos, class T, std::enable_if_t<std::is_integral<T>::value && (pos < sizeof(T)), int> = 0>
     constexpr std::uint8_t get(T value) noexcept
     {
         constexpr auto shift{pos * 8};
         constexpr auto mask{0xff << shift};
-        return ( value & mask ) >> shift;
+        return (value & mask) >> shift;
     }
 
 
-    template<class T, class U,
-        std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
+    template <class T, class U, std::enable_if_t<!is_byte_compatible_v<U>, int> = 0>
     constexpr void to(U) noexcept
     {
         static_assert(is_byte_compatible_v<U>, "Invalid type for 'U'");
     }
 
-    template<class T, class U,
-        std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
-        std::enable_if_t<std::is_integral_v<T>
-                            && ( sizeof(T) >= sizeof(std::uint8_t) ), int> = 0>
+    template <class T, class U, std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
+              std::enable_if_t<std::is_integral_v<T> && (sizeof(T) >= sizeof(std::uint8_t)), int> = 0>
     constexpr T to(U value) noexcept
     {
         return value;
     }
 
-    template<class T, class U, class... Us,
-        std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
-        std::enable_if_t<std::is_integral_v<T>
-                            && ( sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t)) ), int> = 0>
+    template <class T, class U, class... Us, std::enable_if_t<is_byte_compatible_v<U>, int> = 0,
+              std::enable_if_t<std::is_integral_v<T> && (sizeof(T) >= (sizeof...(Us) + sizeof(std::uint8_t))), int> = 0>
     constexpr T to(U valueN, Us... values) noexcept
     {
         constexpr auto shift{sizeof...(values) * 8};
-        return ( valueN << shift ) | to<T>(values...);
+        return (valueN << shift) | to<T>(values...);
     }
 
 }
-

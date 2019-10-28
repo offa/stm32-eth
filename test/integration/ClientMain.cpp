@@ -36,12 +36,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     HAL_Init();
     spiClockEnable();
 
-    constexpr auto config = eth::NetConfig{
-        {{192, 168, 1, 1}},
-        {{192, 168, 1, 8}},
-        {{255, 255, 255, 0}},
-        {{0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef}}
-    };
+    constexpr auto config =
+        eth::NetConfig{{{192, 168, 1, 1}}, {{192, 168, 1, 8}}, {{255, 255, 255, 0}}, {{0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef}}};
 
     eth::spi::SpiWriter writer(eth::spi::spi2);
     eth::w5100::Device device(writer);
@@ -50,9 +46,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     eth::Socket socket(eth::makeHandle<0>(), device);
     constexpr std::uint16_t port{5000};
 
-    while(true)
+    while (true)
     {
-        if( socket.connect({{192, 168, 1, 6}}, port) != eth::Socket::Status::ok )
+        if (socket.connect({{192, 168, 1, 6}}, port) != eth::Socket::Status::ok)
         {
             trace_puts("connect() failed");
         }
@@ -61,14 +57,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
             trace_puts("connect() ok");
         }
 
-        while(true)
+        while (true)
         {
-            if( socket.getStatus() == eth::SocketStatus::established )
+            if (socket.getStatus() == eth::SocketStatus::established)
             {
                 const std::array<std::uint8_t, 6> msg{{'a', 'b', 'c', 'd', '\n', '\r'}};
                 const auto n = socket.send(msg);
 
-                if( n != msg.size() )
+                if (n != msg.size())
                 {
                     trace_puts("send() failed");
                 }
@@ -78,7 +74,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
                 }
             }
         }
-
     }
 
     return 0;
@@ -89,5 +84,3 @@ extern "C" void SysTick_Handler()
 {
     HAL_IncTick();
 }
-
-

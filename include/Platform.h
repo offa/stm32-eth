@@ -27,4 +27,3 @@ namespace platform
 {
     void wait(std::chrono::milliseconds t) noexcept;
 }
-

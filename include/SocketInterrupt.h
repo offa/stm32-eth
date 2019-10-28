@@ -28,7 +28,6 @@ namespace eth
     class SocketInterrupt
     {
     public:
-
         enum class Mask : std::uint8_t
         {
             connect = 0x01,
@@ -69,9 +68,7 @@ namespace eth
 
 
     private:
-
         std::uint8_t interruptMask;
     };
 
 }
-

@@ -44,7 +44,6 @@ namespace eth::w5100
     class Device
     {
     public:
-
         explicit Device(spi::SpiWriter& writer);
         Device(const Device&) = delete;
 
@@ -68,9 +67,8 @@ namespace eth::w5100
         void sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer);
         std::uint16_t receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer);
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+        template <class T, std::size_t n = sizeof(T), std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
+                  std::enable_if_t<std::is_integral_v<T>, int> = 0>
         void write(Register<T> reg, T data)
         {
             constexpr auto pos{n - 1};
@@ -78,29 +76,24 @@ namespace eth::w5100
             write<T, pos>(reg, data);
         }
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+        template <class T, std::size_t n = sizeof(T), std::enable_if_t<(n <= 1), int> = 0,
+                  std::enable_if_t<std::is_integral_v<T>, int> = 0>
         void write(Register<T> reg, T data)
         {
             write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
         }
 
-        template<class T, class Iterator>
+        template <class T, class Iterator>
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
             static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
 
             std::uint16_t offset{0};
-            std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
-            {
-                write(reg.address(), offset++, data);
-            });
+            std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data) { write(reg.address(), offset++, data); });
         }
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+        template <class T, std::size_t n = sizeof(T), std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
+                  std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
             constexpr auto pos{sizeof(T) - n};
@@ -109,24 +102,20 @@ namespace eth::w5100
             return byte::to<T>(byte0, byte1);
         }
 
-        template<class T, std::size_t n = sizeof(T),
-                std::enable_if_t<(n <= 1), int> = 0,
-                std::enable_if_t<std::is_integral_v<T>, int> = 0>
+        template <class T, std::size_t n = sizeof(T), std::enable_if_t<(n <= 1), int> = 0,
+                  std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
             return read(reg.address(), sizeof(T) - n);
         }
 
-        template<class T, class Iterator>
+        template <class T, class Iterator>
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
             static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
 
             std::size_t offset{0};
-            std::generate(begin, end, [this, &reg, &offset]
-            {
-                return read(reg.address(), offset++);
-            });
+            std::generate(begin, end, [this, &reg, &offset] { return read(reg.address(), offset++); });
 
             return offset;
         }
@@ -146,7 +135,6 @@ namespace eth::w5100
 
 
     private:
-
         void write(std::uint16_t addr, std::uint16_t offset, std::uint8_t data);
         std::uint8_t read(std::uint16_t addr, std::uint16_t offset);
 
@@ -161,4 +149,3 @@ namespace eth::w5100
     void setupDevice(Device& dev, eth::NetConfig config);
 
 }
-

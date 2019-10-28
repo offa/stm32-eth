@@ -32,18 +32,17 @@ namespace eth
 
         constexpr bool connectionReady(SocketStatus status)
         {
-            return ( status == SocketStatus::established )
-                    || ( status == SocketStatus::closeWait );
+            return (status == SocketStatus::established) || (status == SocketStatus::closeWait);
         }
 
-        template<class DataFn, class StatusFn>
+        template <class DataFn, class StatusFn>
         std::uint16_t waitFor(DataFn getDataFn, StatusFn statusCheckFn, std::uint16_t size)
         {
-            while( statusCheckFn() == true )
+            while (statusCheckFn() == true)
             {
                 const auto actual = getDataFn();
 
-                if( actual >= size )
+                if (actual >= size)
                 {
                     return actual;
                 }
@@ -53,7 +52,6 @@ namespace eth
         }
 
     }
-
 
 
     Socket::Socket(SocketHandle socketHandle, w5100::Device& dev) : handle(socketHandle), device(dev)
@@ -67,7 +65,7 @@ namespace eth
 
     Socket::Status Socket::open(Protocol protocol, std::uint16_t port, std::uint8_t flag)
     {
-        if( protocol == Protocol::tcp )
+        if (protocol == Protocol::tcp)
         {
             close();
             device.writeSocketModeRegister(handle, static_cast<std::uint8_t>(protocol) | flag);
@@ -75,7 +73,7 @@ namespace eth
             device.writeSocketSourcePort(handle, port);
             device.executeSocketCommand(handle, SocketCommand::open);
 
-            while( getStatus() == SocketStatus::closed )
+            while (getStatus() == SocketStatus::closed)
             {
                 // Wait for completion
             }
@@ -90,7 +88,7 @@ namespace eth
     {
         closeImpl();
 
-        while( getStatus() != SocketStatus::closed )
+        while (getStatus() != SocketStatus::closed)
         {
             // Wait for completion
         }
@@ -98,7 +96,7 @@ namespace eth
 
     Socket::Status Socket::listen()
     {
-        if( getStatus() != SocketStatus::init )
+        if (getStatus() != SocketStatus::init)
         {
             return Status::closed;
         }
@@ -110,7 +108,7 @@ namespace eth
 
     void Socket::accept()
     {
-        while( getStatus() == SocketStatus::listen )
+        while (getStatus() == SocketStatus::listen)
         {
             using namespace std::chrono_literals;
             platform::wait(100ms);
@@ -119,17 +117,16 @@ namespace eth
 
     std::uint16_t Socket::send(const gsl::span<const std::uint8_t> buffer)
     {
-        if( buffer.empty() == true )
+        if (buffer.empty() == true)
         {
             return 0;
         }
 
         const std::uint16_t sendSize = std::min<std::uint16_t>(w5100::Device::getRxTxBufferSize(), buffer.size());
         const auto freeSize = waitFor([this] { return device.getTransmitFreeSize(handle); },
-                                        [this] { return connectionReady(getStatus()); },
-                                        sendSize);
+                                      [this] { return connectionReady(getStatus()); }, sendSize);
 
-        if( freeSize == 0 )
+        if (freeSize == 0)
         {
             return 0;
         }
@@ -142,17 +139,16 @@ namespace eth
 
     std::uint16_t Socket::receive(gsl::span<std::uint8_t> buffer)
     {
-        if( buffer.empty() == true )
+        if (buffer.empty() == true)
         {
             return 0;
         }
 
-        const std::uint16_t available = waitFor([this] { return device.getReceiveFreeSize(handle); },
-                                            [this] { return connectionReady(getStatus()); },
-                                            1);
+        const std::uint16_t available =
+            waitFor([this] { return device.getReceiveFreeSize(handle); }, [this] { return connectionReady(getStatus()); }, 1);
 
 
-        if( available == 0 )
+        if (available == 0)
         {
             return 0;
         }
@@ -171,14 +167,14 @@ namespace eth
         device.setDestAddress(handle, address, port);
         device.executeSocketCommand(handle, SocketCommand::connect);
 
-        while( getStatus() != SocketStatus::established )
+        while (getStatus() != SocketStatus::established)
         {
-            if( getStatus() == SocketStatus::closed )
+            if (getStatus() == SocketStatus::closed)
             {
                 return Status::closed;
             }
 
-            if( isTimeouted() == true )
+            if (isTimeouted() == true)
             {
                 return Status::timeout;
             }
@@ -191,9 +187,9 @@ namespace eth
     {
         device.executeSocketCommand(handle, SocketCommand::disconnect);
 
-        while( getStatus() != SocketStatus::closed )
+        while (getStatus() != SocketStatus::closed)
         {
-            if( isTimeouted() == true )
+            if (isTimeouted() == true)
             {
                 return Status::timeout;
             }

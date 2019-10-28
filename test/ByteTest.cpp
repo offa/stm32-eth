@@ -21,16 +21,9 @@
 #include "Byte.h"
 #include <CppUTest/TestHarness.h>
 
-TEST_GROUP(ByteTest)
-{
-    void setup() override
-    {
-    }
+TEST_GROUP(ByteTest){void setup() override{}
 
-    void teardown() override
-    {
-    }
-};
+                     void teardown() override{}};
 
 TEST(ByteTest, getByteUint8)
 {
@@ -86,4 +79,3 @@ TEST(ByteTest, toByteWithLessThanSize)
     constexpr std::uint8_t b1{0x02};
     CHECK_EQUAL(0x0201, eth::byte::to<std::uint32_t>(b1, b0));
 }
-

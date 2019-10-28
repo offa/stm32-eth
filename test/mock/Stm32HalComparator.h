@@ -31,8 +31,8 @@ struct GpioInitComparator : public MockNamedValueComparator
         const auto* value1 = static_cast<const GPIO_InitTypeDef*>(object1);
         const auto* value2 = static_cast<const GPIO_InitTypeDef*>(object2);
 
-        return ( std::tie(value1->Pin, value1->Mode, value1->Pull, value1->Speed, value1->Alternate)
-                == std::tie(value2->Pin, value2->Mode, value2->Pull, value2->Speed, value2->Alternate) );
+        return (std::tie(value1->Pin, value1->Mode, value1->Pull, value1->Speed, value1->Alternate) ==
+                std::tie(value2->Pin, value2->Mode, value2->Pull, value2->Speed, value2->Alternate));
     }
 
     SimpleString valueToString(const void* object) override
@@ -41,12 +41,8 @@ struct GpioInitComparator : public MockNamedValueComparator
 
         std::stringstream ss;
         ss << "SPI_InitTypeDef { "
-            << "Pin: " << value->Pin
-            << ", Mode: " << value->Mode
-            << ", Pull: " << value->Pull
-            << ", Speed: " << value->Speed
-            << ", Alternate: " << value->Alternate
-            << " }";
+           << "Pin: " << value->Pin << ", Mode: " << value->Mode << ", Pull: " << value->Pull << ", Speed: " << value->Speed
+           << ", Alternate: " << value->Alternate << " }";
 
         return StringFrom(ss.str());
     }
@@ -60,14 +56,12 @@ struct SpiHandleComparator : public MockNamedValueComparator
         const auto* value1 = static_cast<const SPI_InitTypeDef*>(object1);
         const auto* value2 = static_cast<const SPI_InitTypeDef*>(object2);
 
-        return ( std::tie(value1->Mode, value1->Direction, value1->DataSize, value1->CLKPolarity,
-                    value1->CLKPhase, value1->NSS, value1->BaudRatePrescaler, value1->FirstBit,
-                    value1->TIMode, value1->CRCCalculation, value1->CRCPolynomial)
-                == std::tie(value2->Mode, value2->Direction, value2->DataSize, value2->CLKPolarity,
-                    value2->CLKPhase, value2->NSS, value2->BaudRatePrescaler, value2->FirstBit,
-                    value2->TIMode, value2->CRCCalculation, value2->CRCPolynomial) );
-
-
+        return (std::tie(value1->Mode, value1->Direction, value1->DataSize, value1->CLKPolarity, value1->CLKPhase, value1->NSS,
+                         value1->BaudRatePrescaler, value1->FirstBit, value1->TIMode, value1->CRCCalculation,
+                         value1->CRCPolynomial) == std::tie(value2->Mode, value2->Direction, value2->DataSize,
+                                                            value2->CLKPolarity, value2->CLKPhase, value2->NSS,
+                                                            value2->BaudRatePrescaler, value2->FirstBit, value2->TIMode,
+                                                            value2->CRCCalculation, value2->CRCPolynomial));
     }
 
     SimpleString valueToString(const void* object) override
@@ -76,20 +70,12 @@ struct SpiHandleComparator : public MockNamedValueComparator
 
         std::stringstream ss;
         ss << "SPI_InitTypeDef { "
-            << "Mode: " << value->Mode
-            << ", Direction: " << value->Direction
-            << ", DataSize: " << value->DataSize
-            << ", CLKPolarity: " << value->CLKPolarity
-            << ", CLKPhase: " << value->CLKPhase
-            << ", NSS: " << value->NSS
-            << ", BaudRatePrescaler: " << value->BaudRatePrescaler
-            << ", FirstBit: " << value->FirstBit
-            << ", TIMode: " << value->TIMode
-            << ", CRCCalculation: " << value->CRCCalculation
-            << ", CRCPolynomial: " << value->CRCPolynomial
-            << " }";
+           << "Mode: " << value->Mode << ", Direction: " << value->Direction << ", DataSize: " << value->DataSize
+           << ", CLKPolarity: " << value->CLKPolarity << ", CLKPhase: " << value->CLKPhase << ", NSS: " << value->NSS
+           << ", BaudRatePrescaler: " << value->BaudRatePrescaler << ", FirstBit: " << value->FirstBit
+           << ", TIMode: " << value->TIMode << ", CRCCalculation: " << value->CRCCalculation
+           << ", CRCPolynomial: " << value->CRCPolynomial << " }";
 
         return StringFrom(ss.str());
     }
 };
-
