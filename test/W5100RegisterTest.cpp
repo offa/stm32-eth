@@ -27,9 +27,9 @@
 using eth::w5100::makeRegister;
 using eth::w5100::Register;
 
-TEST_GROUP(W5100RegisterTest){void setup() override{}
-
-                              void teardown() override{}};
+TEST_GROUP(W5100RegisterTest)
+{
+};
 
 TEST(W5100RegisterTest, address)
 {

@@ -34,7 +34,8 @@ namespace eth
         using value_type = std::uint8_t;
 
 
-        constexpr explicit SocketHandle(value_type id) : socketId(id)
+        constexpr explicit SocketHandle(value_type id)
+            : socketId(id)
         {
         }
 

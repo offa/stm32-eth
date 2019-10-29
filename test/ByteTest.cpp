@@ -21,9 +21,9 @@
 #include "Byte.h"
 #include <CppUTest/TestHarness.h>
 
-TEST_GROUP(ByteTest){void setup() override{}
-
-                     void teardown() override{}};
+TEST_GROUP(ByteTest)
+{
+};
 
 TEST(ByteTest, getByteUint8)
 {

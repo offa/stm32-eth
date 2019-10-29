@@ -23,9 +23,9 @@
 
 using eth::SocketInterrupt;
 
-TEST_GROUP(SocketInterruptTest){void setup() override{}
-
-                                void teardown() override{}};
+TEST_GROUP(SocketInterruptTest)
+{
+};
 
 TEST(SocketInterruptTest, defaultNothingSet)
 {

@@ -34,7 +34,8 @@ namespace eth::spi
     }
 
 
-    SpiWriter::SpiWriter(const SpiConfig& cfg) : config(cfg)
+    SpiWriter::SpiWriter(const SpiConfig& cfg)
+        : config(cfg)
     {
     }
 

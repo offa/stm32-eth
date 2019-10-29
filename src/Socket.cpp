@@ -54,7 +54,8 @@ namespace eth
     }
 
 
-    Socket::Socket(SocketHandle socketHandle, w5100::Device& dev) : handle(socketHandle), device(dev)
+    Socket::Socket(SocketHandle socketHandle, w5100::Device& dev)
+        : handle(socketHandle), device(dev)
     {
     }
 

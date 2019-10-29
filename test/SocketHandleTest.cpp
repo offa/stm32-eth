@@ -24,9 +24,9 @@
 using eth::makeHandle;
 using eth::SocketHandle;
 
-TEST_GROUP(SocketHandleTest){void setup() override{}
-
-                             void teardown() override{}};
+TEST_GROUP(SocketHandleTest)
+{
+};
 
 TEST(SocketHandleTest, creation)
 {

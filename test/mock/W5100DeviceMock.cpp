@@ -24,7 +24,8 @@
 namespace eth::w5100
 {
 
-    Device::Device(spi::SpiWriter& writer) : spiWriter(writer)
+    Device::Device(spi::SpiWriter& writer)
+        : spiWriter(writer)
     {
     }
 

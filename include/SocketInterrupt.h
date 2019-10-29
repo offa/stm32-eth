@@ -38,15 +38,18 @@ namespace eth
         };
 
 
-        constexpr explicit SocketInterrupt(std::uint8_t value) : interruptMask(value)
+        constexpr explicit SocketInterrupt(std::uint8_t value)
+            : interruptMask(value)
         {
         }
 
-        constexpr explicit SocketInterrupt(SocketInterrupt::Mask mask) : SocketInterrupt(static_cast<std::uint8_t>(mask))
+        constexpr explicit SocketInterrupt(SocketInterrupt::Mask mask)
+            : SocketInterrupt(static_cast<std::uint8_t>(mask))
         {
         }
 
-        constexpr SocketInterrupt() : SocketInterrupt(0xff)
+        constexpr SocketInterrupt()
+            : SocketInterrupt(0xff)
         {
         }
 

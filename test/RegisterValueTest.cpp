@@ -27,15 +27,14 @@
 #include <type_traits>
 #include <CppUTest/TestHarness.h>
 
-TEST_GROUP(RegisterValueTest){void setup() override{}
-
-                              void teardown() override{}
-
-                              template <class E>
-                              static constexpr auto value(E e){return static_cast<std::underlying_type_t<E>>(e);
-}
-}
-;
+TEST_GROUP(RegisterValueTest)
+{
+    template <class E>
+    constexpr auto value(E e)
+    {
+        return static_cast<std::underlying_type_t<E>>(e);
+    }
+};
 
 TEST(RegisterValueTest, protocol)
 {

@@ -50,7 +50,8 @@ namespace eth::spi
     class SpiWriter::SlaveSelect
     {
     public:
-        explicit SlaveSelect(SpiWriter* writer) : m_writer(writer)
+        explicit SlaveSelect(SpiWriter* writer)
+            : m_writer(writer)
         {
             m_writer->setSlaveSelect(PinState::set);
         }
@@ -73,7 +74,8 @@ namespace eth::spi
     };
 
 
-    SpiWriter::SpiWriter(const SpiConfig& cfg) : config(cfg)
+    SpiWriter::SpiWriter(const SpiConfig& cfg)
+        : config(cfg)
     {
         auto [spi, block, gpio, gpioSS, settings] = config;
         const auto blockRef = pinBlocks[static_cast<std::size_t>(block)];
