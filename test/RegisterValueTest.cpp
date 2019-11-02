@@ -29,20 +29,11 @@
 
 TEST_GROUP(RegisterValueTest)
 {
-    void setup() override
-    {
-    }
-
-    void teardown() override
-    {
-    }
-
-    template<class E>
-    static constexpr auto value(E e)
+    template <class E>
+    constexpr auto value(E e)
     {
         return static_cast<std::underlying_type_t<E>>(e);
     }
-
 };
 
 TEST(RegisterValueTest, protocol)
@@ -109,4 +100,3 @@ TEST(RegisterValueTest, socketStatus)
     CHECK_EQUAL(0x42, value(SocketStatus::macRaw));
     CHECK_EQUAL(0x5f, value(SocketStatus::pppoe));
 }
-

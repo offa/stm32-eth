@@ -28,7 +28,6 @@ namespace eth::spi
     class SpiWriter
     {
     public:
-
         using Handle = SPI_HandleTypeDef;
 
 
@@ -46,7 +45,6 @@ namespace eth::spi
 
 
     private:
-
         enum class PinState : std::uint8_t
         {
             set,
@@ -62,4 +60,3 @@ namespace eth::spi
     };
 
 }
-

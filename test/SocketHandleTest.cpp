@@ -21,18 +21,11 @@
 #include "SocketHandle.h"
 #include <CppUTest/TestHarness.h>
 
-using eth::SocketHandle;
 using eth::makeHandle;
+using eth::SocketHandle;
 
 TEST_GROUP(SocketHandleTest)
 {
-    void setup() override
-    {
-    }
-
-    void teardown() override
-    {
-    }
 };
 
 TEST(SocketHandleTest, creation)

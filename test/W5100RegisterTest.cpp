@@ -24,18 +24,11 @@
 #include <gsl/span>
 #include <CppUTest/TestHarness.h>
 
-using eth::w5100::Register;
 using eth::w5100::makeRegister;
+using eth::w5100::Register;
 
 TEST_GROUP(W5100RegisterTest)
 {
-    void setup() override
-    {
-    }
-
-    void teardown() override
-    {
-    }
 };
 
 TEST(W5100RegisterTest, address)
@@ -53,7 +46,7 @@ TEST(W5100RegisterTest, makeRegister)
 TEST(W5100RegisterTest, makeSocketRegister)
 {
     constexpr std::uint16_t address{0xaabb};
-    constexpr std::uint16_t expected{0x0400 + ( 1 * 0x0100 ) + address};
+    constexpr std::uint16_t expected{0x0400 + (1 * 0x0100) + address};
     constexpr auto reg = makeRegister<std::uint32_t>(eth::makeHandle<1>(), address);
     CHECK_EQUAL(expected, reg.address());
 }
@@ -69,4 +62,3 @@ TEST(W5100RegisterTest, registerOfSpan)
     const auto reg = makeRegister<gsl::span<std::uint8_t>>(0x1122);
     CHECK_EQUAL(0x1122, reg.address());
 }
-

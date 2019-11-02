@@ -13,6 +13,7 @@ include(BuildType)
 include(CompilerOptions)
 include(Compiler)
 include(UtilityTargets)
+include(ClangFormat)
 
 add_common_flags(-Wall
                 -Wextra

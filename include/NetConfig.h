@@ -26,7 +26,7 @@
 
 namespace eth
 {
-    template<std::size_t n>
+    template <std::size_t n>
     using NetAddress = std::array<std::uint8_t, n>;
 
     using NetConfig = std::tuple<NetAddress<4>, NetAddress<4>, NetAddress<4>, NetAddress<6>>;

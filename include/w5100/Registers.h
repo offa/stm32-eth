@@ -36,7 +36,6 @@ namespace eth::w5100::registers
     inline constexpr auto sourceIpAddress = makeRegister<std::array<std::uint8_t, 4>>(0x000f);
 
 
-
     constexpr auto socketMode(SocketHandle s) noexcept
     {
         return makeRegister<std::uint8_t>(s, 0x0000);

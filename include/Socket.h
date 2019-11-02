@@ -39,7 +39,6 @@ namespace eth
     class Socket
     {
     public:
-
         enum class Status : std::uint8_t
         {
             ok,
@@ -62,7 +61,6 @@ namespace eth
         std::uint16_t receive(gsl::span<std::uint8_t> buffer);
 
 
-
         Status connect(NetAddress<4> address, std::uint16_t port);
         Status disconnect();
 
@@ -73,7 +71,6 @@ namespace eth
 
 
     private:
-
         bool isTimeouted() const;
         void closeImpl();
 
@@ -83,4 +80,3 @@ namespace eth
     };
 
 }
-

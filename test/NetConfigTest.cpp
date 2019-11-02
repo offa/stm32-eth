@@ -25,17 +25,9 @@ using eth::NetAddress;
 
 TEST_GROUP(NetConfigTest)
 {
-    void setup() override
-    {
-    }
-
-    void teardown() override
-    {
-    }
-
-    template<std::size_t n>
-    [[nodiscard]]
-    bool checkValue(NetAddress<n> e, NetAddress<n> a) const
+    template <std::size_t n>
+    [[nodiscard]] bool checkValue(NetAddress<n> e, NetAddress<n> a)
+        const
     {
         return std::equal(std::cbegin(e), std::cend(e), std::cbegin(a));
     }
@@ -43,11 +35,8 @@ TEST_GROUP(NetConfigTest)
 
 TEST(NetConfigTest, getValues)
 {
-    constexpr eth::NetConfig cfg{{{0, 0, 0, 0}},
-                                {{1, 1, 1, 1}},
-                                {{2, 2, 2, 2}},
-                                {{9, 9, 9, 9, 9, 9}}};
-    const auto[ip, subnet, gateway, mac] = cfg;
+    constexpr eth::NetConfig cfg{{{0, 0, 0, 0}}, {{1, 1, 1, 1}}, {{2, 2, 2, 2}}, {{9, 9, 9, 9, 9, 9}}};
+    const auto [ip, subnet, gateway, mac] = cfg;
     CHECK_TRUE(checkValue({{0, 0, 0, 0}}, ip));
     CHECK_TRUE(checkValue({{1, 1, 1, 1}}, subnet));
     CHECK_TRUE(checkValue({{2, 2, 2, 2}}, gateway));

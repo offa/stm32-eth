@@ -28,15 +28,14 @@ namespace eth
     inline constexpr std::uint8_t supportedSockets{4};
 
 
-
     class SocketHandle
     {
     public:
-
         using value_type = std::uint8_t;
 
 
-        constexpr explicit SocketHandle(value_type id) : socketId(id)
+        constexpr explicit SocketHandle(value_type id)
+            : socketId(id)
         {
         }
 
@@ -48,14 +47,11 @@ namespace eth
 
 
     private:
-
         value_type socketId;
-
     };
 
 
-
-    template<SocketHandle::value_type id>
+    template <SocketHandle::value_type id>
     constexpr auto makeHandle() noexcept
     {
         static_assert(id < supportedSockets, "Socket-Id out of range");
@@ -63,4 +59,3 @@ namespace eth
     }
 
 }
-

@@ -36,12 +36,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     HAL_Init();
     spiClockEnable();
 
-    constexpr auto config = eth::NetConfig{
-        {{192, 168, 1, 1}},
-        {{192, 168, 1, 8}},
-        {{255, 255, 255, 0}},
-        {{0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef}}
-    };
+    constexpr auto config =
+        eth::NetConfig{{{192, 168, 1, 1}}, {{192, 168, 1, 8}}, {{255, 255, 255, 0}}, {{0x00, 0x08, 0xdc, 0xab, 0xcd, 0xef}}};
 
     eth::spi::SpiWriter writer(eth::spi::spi2);
     eth::w5100::Device device(writer);
@@ -52,9 +48,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     trace_puts("Server: 192.168.1.8:5000");
 
-    while(true)
+    while (true)
     {
-        if( socket.open(eth::Protocol::tcp, port, 0) != eth::Socket::Status::ok )
+        if (socket.open(eth::Protocol::tcp, port, 0) != eth::Socket::Status::ok)
         {
             trace_puts("socket() failed");
         }
@@ -64,7 +60,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         }
 
 
-        if( socket.listen() != eth::Socket::Status::ok )
+        if (socket.listen() != eth::Socket::Status::ok)
         {
             trace_puts("listen() failed");
         }
@@ -78,21 +74,21 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         trace_puts("accept() done");
 
 
-        while(true)
+        while (true)
         {
-            if( socket.getStatus() == eth::SocketStatus::established )
+            if (socket.getStatus() == eth::SocketStatus::established)
             {
                 std::array<std::uint8_t, 20> buffer;
 
                 const auto received = socket.receive(buffer);
                 trace_printf("receive(): %d\n", received);
 
-                if( received > 0 )
+                if (received > 0)
                 {
-                    std::array<std::uint8_t, 9> resp{{ 'r', 'e', 'c', 'e', 'i', 'v', 'e', 'd', '\n' }};
+                    std::array<std::uint8_t, 9> resp{{'r', 'e', 'c', 'e', 'i', 'v', 'e', 'd', '\n'}};
                     const auto n = socket.send(resp);
 
-                    if( n != resp.size() )
+                    if (n != resp.size())
                     {
                         trace_printf("send() failed (%d)\n", n);
                     }
@@ -102,9 +98,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
                     }
                 }
             }
-
         }
-
     }
 
     return 0;
@@ -115,5 +109,3 @@ extern "C" void SysTick_Handler(void)
 {
     HAL_IncTick();
 }
-
-

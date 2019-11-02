@@ -25,13 +25,6 @@ using eth::SocketInterrupt;
 
 TEST_GROUP(SocketInterruptTest)
 {
-    void setup() override
-    {
-    }
-
-    void teardown() override
-    {
-    }
 };
 
 TEST(SocketInterruptTest, defaultNothingSet)
@@ -75,4 +68,3 @@ TEST(SocketInterruptTest, setValue)
     si.set(Mask::timeout);
     CHECK_EQUAL(0b00001110, si.value());
 }
-
