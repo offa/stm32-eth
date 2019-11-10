@@ -40,10 +40,6 @@ Integration Test for *Stm32F4* are enabled by the `INTEGRATIONTEST` option. The 
 
 There are following *experimental* branches:
 
-###### cpp17
-
-Using the *C++17* Standard.
-
 ###### cpp17-concepts
 
 Using the *C++17* Standard and *Concepts TS*.
