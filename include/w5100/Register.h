@@ -46,7 +46,7 @@ namespace eth::w5100
 
 
     private:
-        const std::uint16_t regAddress;
+        std::uint16_t regAddress;
     };
 
 

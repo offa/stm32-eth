@@ -75,7 +75,7 @@ namespace eth
         void closeImpl();
 
 
-        const SocketHandle handle;
+        SocketHandle handle;
         w5100::Device& device;
     };
 
