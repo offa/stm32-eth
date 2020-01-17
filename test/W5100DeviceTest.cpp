@@ -183,8 +183,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 {
     constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
-    auto span = gsl::make_span(data);
-    auto reg = Register<decltype(span)>(0xa1b2);
+    auto reg = Register<decltype(gsl::make_span(data))>(0xa1b2);
 
     expectWrite(reg.address(), data);
 
