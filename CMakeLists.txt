@@ -56,5 +56,3 @@ endif()
 if( INTEGRATIONTEST )
     add_subdirectory("test/integration")
 endif()
-
-
