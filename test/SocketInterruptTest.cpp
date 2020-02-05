@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -25,13 +25,6 @@ using eth::SocketInterrupt;
 
 TEST_GROUP(SocketInterruptTest)
 {
-    void setup() override
-    {
-    }
-
-    void teardown() override
-    {
-    }
 };
 
 TEST(SocketInterruptTest, defaultNothingSet)
@@ -75,4 +68,3 @@ TEST(SocketInterruptTest, setValue)
     si.set(Mask::timeout);
     CHECK_EQUAL(0b00001110, si.value());
 }
-

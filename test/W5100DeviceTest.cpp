@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -28,15 +28,15 @@
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
-using eth::w5100::Device;
-using eth::spi::SpiWriter;
-using eth::SocketHandle;
-using eth::SocketCommand;
-using eth::SocketStatus;
 using eth::Mode;
-using eth::w5100::Register;
+using eth::SocketCommand;
+using eth::SocketHandle;
 using eth::SocketInterrupt;
+using eth::SocketStatus;
+using eth::spi::SpiWriter;
+using eth::w5100::Device;
 using eth::w5100::makeRegister;
+using eth::w5100::Register;
 
 
 namespace
@@ -69,9 +69,7 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectWrite(std::uint16_t addr, std::uint8_t data) const
     {
-        mock("SpiWriter").expectOneCall("write")
-            .withParameter("address", addr)
-            .withParameter("data", data);
+        mock("SpiWriter").expectOneCall("write").withParameter("address", addr).withParameter("data", data);
     }
 
     void expectWrite(std::uint16_t addr, std::uint16_t data) const
@@ -80,13 +78,10 @@ TEST_GROUP(W5100DeviceTest)
         expectWrite(addr + 1, eth::byte::get<0>(data));
     }
 
-    template<class Container>
+    template <class Container>
     void expectWrite(std::uint16_t addr, const Container& data) const
     {
-        std::for_each(data.begin(), data.end(), [this, &addr](std::uint8_t value)
-        {
-            expectWrite(addr++, value);
-        });
+        std::for_each(data.begin(), data.end(), [this, &addr](std::uint8_t value) { expectWrite(addr++, value); });
     }
 
     void checkWriteCalls(std::size_t expectedCalls) const
@@ -103,9 +98,7 @@ TEST_GROUP(W5100DeviceTest)
 
     void expectRead(std::uint16_t addr, std::uint8_t data) const
     {
-        mock("SpiWriter").expectOneCall("read")
-            .withParameter("address", addr)
-            .andReturnValue(data);
+        mock("SpiWriter").expectOneCall("read").withParameter("address", addr).andReturnValue(data);
     }
 
     void expectRead(std::uint16_t addr, std::uint16_t data) const
@@ -114,13 +107,10 @@ TEST_GROUP(W5100DeviceTest)
         expectRead(addr + 1, eth::byte::get<0>(data));
     }
 
-    template<class Container>
+    template <class Container>
     void expectRead(std::uint16_t addr, const Container& data) const
     {
-        std::for_each(data.begin(), data.end(), [this, &addr](std::uint8_t value)
-        {
-            expectRead(addr++, value);
-        });
+        std::for_each(data.begin(), data.end(), [this, &addr](std::uint8_t value) { expectRead(addr++, value); });
     }
 
     static constexpr std::uint16_t toAddress(eth::SocketHandle s, std::uint16_t address)
@@ -193,8 +183,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 {
     constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
-    auto span = gsl::make_span(data);
-    auto reg = Register<decltype(span)>(0xa1b2);
+    auto reg = Register<decltype(gsl::make_span(data))>(0xa1b2);
 
     expectWrite(reg.address(), data);
 
@@ -420,13 +409,9 @@ TEST(W5100DeviceTest, setDestAddress)
 TEST(W5100DeviceTest, configureNetConfiguration)
 {
     constexpr eth::NetConfig config{
-        {{192, 168, 0, 3}},
-        {{255, 255, 255, 0}},
-        {{192, 168, 0, 1}},
-        {{0x00, 0x08, 0xdc, 0x01, 0x02, 0x03}}
-    };
+        {{192, 168, 0, 3}}, {{255, 255, 255, 0}}, {{192, 168, 0, 1}}, {{0x00, 0x08, 0xdc, 0x01, 0x02, 0x03}}};
 
-    const auto[ip, netmask, gateway, mac] = config;
+    const auto [ip, netmask, gateway, mac] = config;
 
     constexpr std::uint16_t addrIp{0x000f};
     constexpr std::uint16_t addrNetmask{0x0005};
@@ -440,4 +425,3 @@ TEST(W5100DeviceTest, configureNetConfiguration)
 
     setupDevice(*device, config);
 }
-

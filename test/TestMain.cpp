@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -21,4 +21,3 @@
 #include <CppUTest/CommandLineTestRunner.h>
 
 CPPUTEST_DEFAULT_MAIN
-

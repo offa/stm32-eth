@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -33,14 +33,11 @@ namespace eth::spi
         };
 
 
-        template<OpCode opcode, class... Ts>
+        template <OpCode opcode, class... Ts>
         constexpr auto makePacket(std::uint16_t address, Ts&&... params)
         {
             using Type = std::array<std::uint8_t, 3 + sizeof...(Ts)>;
-            return Type{{ static_cast<std::uint8_t>(opcode),
-                            byte::get<1>(address),
-                            byte::get<0>(address),
-                            params... }};
+            return Type{{static_cast<std::uint8_t>(opcode), byte::get<1>(address), byte::get<0>(address), params...}};
         }
 
         constexpr auto timeout = std::numeric_limits<std::uint32_t>::max();
@@ -53,8 +50,8 @@ namespace eth::spi
     class SpiWriter::SlaveSelect
     {
     public:
-
-        explicit SlaveSelect(SpiWriter* writer) : m_writer(writer)
+        explicit SlaveSelect(SpiWriter* writer)
+            : m_writer(writer)
         {
             m_writer->setSlaveSelect(PinState::set);
         }
@@ -73,14 +70,14 @@ namespace eth::spi
 
 
     private:
-
         SpiWriter* m_writer;
     };
 
 
-    SpiWriter::SpiWriter(const SpiConfig& cfg) : config(cfg)
+    SpiWriter::SpiWriter(const SpiConfig& cfg)
+        : config(cfg)
     {
-        auto[spi, block, gpio, gpioSS, settings] = config;
+        auto [spi, block, gpio, gpioSS, settings] = config;
         const auto blockRef = pinBlocks[static_cast<std::size_t>(block)];
 
         HAL_GPIO_Init(blockRef, &gpio);
@@ -115,7 +112,7 @@ namespace eth::spi
 
     void SpiWriter::setSlaveSelect(PinState state)
     {
-        const auto value = ( state == PinState::set ? GPIO_PIN_RESET : GPIO_PIN_SET );
+        const auto value = (state == PinState::set ? GPIO_PIN_RESET : GPIO_PIN_SET);
         const auto blockRef = pinBlocks[static_cast<std::size_t>(std::get<1>(config))];
         HAL_GPIO_WritePin(blockRef, std::get<3>(config).Pin, value);
     }

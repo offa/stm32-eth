@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(stm32-eth VERSION 0.9.0)
+project(stm32-eth VERSION 0.9.1)
 message(STATUS "~~~ ${PROJECT_NAME} v${PROJECT_VERSION} ~~~")
 
 message(STATUS "Target: ${CMAKE_SYSTEM_PROCESSOR} (${CMAKE_SYSTEM_NAME})")
@@ -13,6 +13,7 @@ include(BuildType)
 include(CompilerOptions)
 include(Compiler)
 include(UtilityTargets)
+include(ClangFormat)
 
 add_common_flags(-Wall
                 -Wextra
@@ -57,5 +58,3 @@ endif()
 if( INTEGRATIONTEST )
     add_subdirectory("test/integration")
 endif()
-
-

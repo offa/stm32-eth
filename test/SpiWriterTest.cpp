@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -50,7 +50,8 @@ TEST_GROUP(SpiWriterTest)
 
     void expectWrite(gsl::span<std::uint8_t> data) const
     {
-        mock("HAL_SPI").expectOneCall("HAL_SPI_Transmit")
+        mock("HAL_SPI")
+            .expectOneCall("HAL_SPI_Transmit")
             .withPointerParameter("hspi", &spiWriter->nativeHandle())
             .withMemoryBufferParameter("pData", data.data(), data.size())
             .withParameter("Size", data.size())
@@ -60,7 +61,8 @@ TEST_GROUP(SpiWriterTest)
     void expectRead(const std::uint8_t* data) const
     {
         constexpr auto size = sizeof(std::uint8_t);
-        mock("HAL_SPI").expectOneCall("HAL_SPI_Receive")
+        mock("HAL_SPI")
+            .expectOneCall("HAL_SPI_Receive")
             .withPointerParameter("hspi", &spiWriter->nativeHandle())
             .withOutputParameterReturning("pData", data, size)
             .withParameter("Size", size)
@@ -69,7 +71,8 @@ TEST_GROUP(SpiWriterTest)
 
     void expectSlaveSelectSet() const
     {
-        mock("HAL_GPIO").expectOneCall("HAL_GPIO_WritePin")
+        mock("HAL_GPIO")
+            .expectOneCall("HAL_GPIO_WritePin")
             .withPointerParameter("GPIOx", GPIOB)
             .withParameter("GPIO_Pin", GPIO_PIN_12)
             .withParameter("PinState", GPIO_PIN_RESET);
@@ -77,7 +80,8 @@ TEST_GROUP(SpiWriterTest)
 
     void expectSlaveSelectReset() const
     {
-        mock("HAL_GPIO").expectOneCall("HAL_GPIO_WritePin")
+        mock("HAL_GPIO")
+            .expectOneCall("HAL_GPIO_WritePin")
             .withPointerParameter("GPIOx", GPIOB)
             .withParameter("GPIO_Pin", GPIO_PIN_12)
             .withParameter("PinState", GPIO_PIN_SET);
@@ -91,18 +95,17 @@ TEST_GROUP(SpiWriterTest)
 
 TEST(SpiWriterTest, initSetupsGpioPins)
 {
-    GPIO_InitTypeDef init{(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15),
-                            GPIO_MODE_AF_PP, GPIO_NOPULL,
-                            GPIO_SPEED_HIGH, GPIO_AF5_SPI2};
+    GPIO_InitTypeDef init{(GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15), GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_HIGH,
+                          GPIO_AF5_SPI2};
 
-    GPIO_InitTypeDef initSS{GPIO_PIN_12, GPIO_MODE_OUTPUT_PP,
-                            GPIO_PULLUP, GPIO_SPEED_LOW,
-                            GPIO_AF5_SPI2};
+    GPIO_InitTypeDef initSS{GPIO_PIN_12, GPIO_MODE_OUTPUT_PP, GPIO_PULLUP, GPIO_SPEED_LOW, GPIO_AF5_SPI2};
 
-    mock("HAL_GPIO").expectOneCall("HAL_GPIO_Init")
+    mock("HAL_GPIO")
+        .expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &init);
-    mock("HAL_GPIO").expectOneCall("HAL_GPIO_Init")
+    mock("HAL_GPIO")
+        .expectOneCall("HAL_GPIO_Init")
         .withPointerParameter("GPIOx", GPIOB)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &initSS);
     mock("HAL_SPI").expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
@@ -125,7 +128,8 @@ TEST(SpiWriterTest, initSetupsSpi)
                             0};
 
     mock("HAL_GPIO").expectNCalls(2, "HAL_GPIO_Init").ignoreOtherParameters();
-    mock("HAL_SPI").expectOneCall("HAL_SPI_Init")
+    mock("HAL_SPI")
+        .expectOneCall("HAL_SPI_Init")
         .withPointerParameter("hspi.instance", SPI2)
         .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit)
         .ignoreOtherParameters();
@@ -135,7 +139,7 @@ TEST(SpiWriterTest, initSetupsSpi)
 
 TEST(SpiWriterTest, writeTransmitsByte)
 {
-    std::array<std::uint8_t, 4> data{{ 0xf0, 0x22, 0x11, 0xab }};
+    std::array<std::uint8_t, 4> data{{0xf0, 0x22, 0x11, 0xab}};
     expectSlaveSelectSet();
     expectWrite(data);
     expectSlaveSelectReset();
@@ -146,7 +150,7 @@ TEST(SpiWriterTest, writeTransmitsByte)
 TEST(SpiWriterTest, readReceivesByte)
 {
     const std::uint8_t value{0xcd};
-    std::array<std::uint8_t, 3> data{{ 0x0f, 0x33, 0x55 }};
+    std::array<std::uint8_t, 3> data{{0x0f, 0x33, 0x55}};
     expectSlaveSelectSet();
     expectWrite(data);
     expectRead(&value);

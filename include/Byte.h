@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -32,7 +32,7 @@ namespace eth::byte
         requires IntegralType<T>
     inline constexpr bool is_byte_compatible_v = std::is_convertible_v<std::remove_cv_t<T>, std::uint8_t>;
 
-    template<class Itr>
+    template <class Itr>
     inline constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
 
 
@@ -50,7 +50,7 @@ namespace eth::byte
     {
         constexpr auto shift{pos * 8};
         constexpr auto mask{0xff << shift};
-        return ( value & mask ) >> shift;
+        return (value & mask) >> shift;
     }
 
 
@@ -68,7 +68,7 @@ namespace eth::byte
     constexpr T to(U valueN, Us... values) noexcept
     {
         constexpr auto shift{sizeof...(values) * 8};
-        return ( valueN << shift ) | to<T>(values...);
+        return (valueN << shift) | to<T>(values...);
     }
 
 }

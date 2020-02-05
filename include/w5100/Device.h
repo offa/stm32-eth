@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -45,7 +45,6 @@ namespace eth::w5100
     class Device
     {
     public:
-
         explicit Device(spi::SpiWriter& writer);
         Device(const Device&) = delete;
 
@@ -141,7 +140,6 @@ namespace eth::w5100
 
 
     private:
-
         void write(std::uint16_t addr, std::uint16_t offset, std::uint8_t data);
         std::uint8_t read(std::uint16_t addr, std::uint16_t offset);
 
@@ -156,4 +154,3 @@ namespace eth::w5100
     void setupDevice(Device& dev, eth::NetConfig config);
 
 }
-

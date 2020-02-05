@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -28,7 +28,6 @@ namespace eth
     class SocketInterrupt
     {
     public:
-
         enum class Mask : std::uint8_t
         {
             connect = 0x01,
@@ -39,15 +38,18 @@ namespace eth
         };
 
 
-        constexpr explicit SocketInterrupt(std::uint8_t value) : interruptMask(value)
+        constexpr explicit SocketInterrupt(std::uint8_t value)
+            : interruptMask(value)
         {
         }
 
-        constexpr explicit SocketInterrupt(SocketInterrupt::Mask mask) : SocketInterrupt(static_cast<std::uint8_t>(mask))
+        constexpr explicit SocketInterrupt(SocketInterrupt::Mask mask)
+            : SocketInterrupt(static_cast<std::uint8_t>(mask))
         {
         }
 
-        constexpr SocketInterrupt() : SocketInterrupt(0xff)
+        constexpr SocketInterrupt()
+            : SocketInterrupt(0xff)
         {
         }
 
@@ -69,9 +71,7 @@ namespace eth
 
 
     private:
-
         std::uint8_t interruptMask;
     };
 
 }
-

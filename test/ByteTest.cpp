@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -23,13 +23,6 @@
 
 TEST_GROUP(ByteTest)
 {
-    void setup() override
-    {
-    }
-
-    void teardown() override
-    {
-    }
 };
 
 TEST(ByteTest, getByteUint8)
@@ -86,4 +79,3 @@ TEST(ByteTest, toByteWithLessThanSize)
     constexpr std::uint8_t b1{0x02};
     CHECK_EQUAL(0x0201, eth::byte::to<std::uint32_t>(b1, b0));
 }
-

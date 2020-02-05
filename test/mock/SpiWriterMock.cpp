@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -34,7 +34,8 @@ namespace eth::spi
     }
 
 
-    SpiWriter::SpiWriter(const SpiConfig& cfg) : config(cfg)
+    SpiWriter::SpiWriter(const SpiConfig& cfg)
+        : config(cfg)
     {
     }
 
@@ -42,18 +43,14 @@ namespace eth::spi
     {
         mockutil::incrementCalls("write::count");
 
-        mock("SpiWriter").actualCall("write")
-                .withParameter("address", address)
-                .withParameter("data", data);
+        mock("SpiWriter").actualCall("write").withParameter("address", address).withParameter("data", data);
     }
 
     std::uint8_t SpiWriter::read(std::uint16_t address)
     {
         mockutil::incrementCalls("read::count");
 
-        return mock("SpiWriter").actualCall("read")
-                .withParameter("address", address)
-                .returnUnsignedIntValue();
+        return mock("SpiWriter").actualCall("read").withParameter("address", address).returnUnsignedIntValue();
     }
 
 }

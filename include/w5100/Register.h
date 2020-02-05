@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -26,15 +26,15 @@
 namespace eth::w5100
 {
 
-    template<class T>
+    template <class T>
     class Register
     {
     public:
-
         using value_type = T;
 
 
-        constexpr explicit Register(std::uint16_t address) noexcept : regAddress(address)
+        constexpr explicit Register(std::uint16_t address) noexcept
+            : regAddress(address)
         {
         }
 
@@ -45,25 +45,23 @@ namespace eth::w5100
         }
 
 
-
     private:
-
-        const std::uint16_t regAddress;
+        std::uint16_t regAddress;
     };
 
 
-    template<class T>
+    template <class T>
     constexpr auto makeRegister(std::uint16_t address) noexcept
     {
         return Register<T>{address};
     }
 
-    template<class T>
+    template <class T>
     constexpr auto makeRegister(SocketHandle s, std::uint16_t address) noexcept
     {
         constexpr std::uint16_t baseAddress = 0x0400;
         constexpr std::uint16_t channelRegisterMapSize = 0x0100;
-        return makeRegister<T>(baseAddress + ( s.value() * channelRegisterMapSize ) + address);
+        return makeRegister<T>(baseAddress + (s.value() * channelRegisterMapSize) + address);
     }
 
 }

@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -39,7 +39,6 @@ namespace eth
     class Socket
     {
     public:
-
         enum class Status : std::uint8_t
         {
             ok,
@@ -62,7 +61,6 @@ namespace eth
         std::uint16_t receive(gsl::span<std::uint8_t> buffer);
 
 
-
         Status connect(NetAddress<4> address, std::uint16_t port);
         Status disconnect();
 
@@ -73,14 +71,12 @@ namespace eth
 
 
     private:
-
         bool isTimeouted() const;
         void closeImpl();
 
 
-        const SocketHandle handle;
+        SocketHandle handle;
         w5100::Device& device;
     };
 
 }
-

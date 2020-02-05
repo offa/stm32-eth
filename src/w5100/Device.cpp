@@ -1,6 +1,6 @@
 /*
  * Stm32 Eth - Ethernet connectivity for Stm32
- * Copyright (C) 2016-2019  offa
+ * Copyright (C) 2016-2020  offa
  *
  * This file is part of Stm32 Eth.
  *
@@ -30,26 +30,26 @@ namespace eth::w5100
         constexpr std::uint16_t toTransmitBufferAddress(SocketHandle s)
         {
             constexpr std::uint16_t baseAddress{0x4000};
-            return baseAddress + ( Device::getRxTxBufferSize() * s.value() );
+            return baseAddress + (Device::getRxTxBufferSize() * s.value());
         }
 
         constexpr std::uint16_t toReceiveBufferAddress(SocketHandle s)
         {
             constexpr std::uint16_t baseAddress{0x6000};
-            return baseAddress + ( Device::getRxTxBufferSize() * s.value() );
+            return baseAddress + (Device::getRxTxBufferSize() * s.value());
         }
 
-        template<std::size_t limit>
+        template <std::size_t limit>
         constexpr bool isWrapAround(std::size_t offset, std::size_t size)
         {
-            return ( offset + size ) > limit;
+            return (offset + size) > limit;
         }
 
     }
 
 
-
-    Device::Device(spi::SpiWriter& writer) : spiWriter(writer)
+    Device::Device(spi::SpiWriter& writer)
+        : spiWriter(writer)
     {
         writeModeRegister(Mode::reset);
 
@@ -62,7 +62,7 @@ namespace eth::w5100
     {
         writeSocketCommandRegister(s, cmd);
 
-        while( readSocketCommandRegister(s) != SocketCommand::executed )
+        while (readSocketCommandRegister(s) != SocketCommand::executed)
         {
             // Wait for completion
         }
@@ -122,12 +122,11 @@ namespace eth::w5100
         {
             firstRead = read(freesizeReg);
 
-            if( firstRead != 0 )
+            if (firstRead != 0)
             {
                 secondRead = read(freesizeReg);
             }
-        }
-        while( secondRead != firstRead );
+        } while (secondRead != firstRead);
 
         return secondRead;
     }
@@ -140,7 +139,7 @@ namespace eth::w5100
         const std::uint16_t offset = writePointer & transmitBufferMask;
         const std::uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
-        if( isWrapAround<rxTxBufferSize>(offset, size) == true )
+        if (isWrapAround<rxTxBufferSize>(offset, size) == true)
         {
             const auto first = rxTxBufferSize - offset;
             const auto border = std::next(buffer.cbegin(), first);
@@ -164,7 +163,7 @@ namespace eth::w5100
         const std::uint16_t destAddress = offset + toReceiveBufferAddress(s);
         const auto reg = makeRegister<gsl::span<std::uint8_t>>(destAddress);
 
-        if( isWrapAround<rxTxBufferSize>(offset, size) == true )
+        if (isWrapAround<rxTxBufferSize>(offset, size) == true)
         {
             const auto first = rxTxBufferSize - offset;
             auto border = std::next(buffer.begin(), first);
@@ -206,7 +205,7 @@ namespace eth::w5100
 
     void setupDevice(Device& dev, eth::NetConfig config)
     {
-        const auto[ip, subnet, gateway, mac] = config;
+        const auto [ip, subnet, gateway, mac] = config;
         dev.write(registers::sourceIpAddress, ip.cbegin(), ip.cend());
         dev.write(registers::subnetMask, subnet.cbegin(), subnet.cend());
         dev.write(registers::gatewayAddress, gateway.cbegin(), gateway.cend());
