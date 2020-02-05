@@ -26,20 +26,19 @@ namespace eth
 {
 
     template<class T>
-    concept bool IntegralType = std::is_integral_v<T>;
+    concept IntegralType = std::is_integral_v<T>;
 
     template<class T, std::size_t minSize>
-    concept bool SizeAtLeast = (sizeof(T) >= minSize);
+    concept SizeAtLeast = (sizeof(T) >= minSize);
 
     template<class T, std::size_t index>
-    concept bool IndexWithinTypesize = (index < sizeof(T));
+    concept IndexWithinTypesize = (index < sizeof(T));
 
 
     template<class T, std::size_t n>
-    concept bool SizeSingleByte = ( n <= 1 );
+    concept SizeSingleByte = ( n <= 1 );
 
     template<class T, std::size_t n>
-    concept bool SizeMultiByte = ((n > 1) && (n <= sizeof(T)));
+    concept SizeMultiByte = ((n > 1) && (n <= sizeof(T)));
 
 }
-

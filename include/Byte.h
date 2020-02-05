@@ -37,10 +37,10 @@ namespace eth::byte
 
 
     template<class T>
-    concept bool ByteCompatible = is_byte_compatible_v<T>;
+    concept ByteCompatible = is_byte_compatible_v<T>;
 
     template<class Itr>
-    concept bool ByteCompatibleIterator = is_byte_compatible_itr_v<Itr>;
+    concept ByteCompatibleIterator = is_byte_compatible_itr_v<Itr>;
 
 
 
@@ -72,4 +72,3 @@ namespace eth::byte
     }
 
 }
-
