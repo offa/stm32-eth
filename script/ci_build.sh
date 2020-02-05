@@ -3,7 +3,7 @@
 set -ex
 
 LTO_ENABLED=${LTO_ENABLED:=OFF}
-BUILD_TYPE=${BUILD_TYPE:=Debug}
+BUILD_TYPE=${BUILD_TYPE:=Release}
 
 BUILD_ARGS=("-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DLTO=${LTO_ENABLED}")
 
@@ -59,4 +59,3 @@ else
     make
     make unittest
 fi
-
