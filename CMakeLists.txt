@@ -37,10 +37,10 @@ include(Sanitizer)
 add_subdirectory("system")
 
 
-find_package(GSL REQUIRED)
+find_package(Microsoft.GSL CONFIG REQUIRED)
 
 if( GSL_CONTRACT_UNENFORCED )
-    target_compile_definitions(GSL::GSL INTERFACE GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+    target_compile_definitions(Microsoft.GSL::GSL INTERFACE GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
 endif()
 
 

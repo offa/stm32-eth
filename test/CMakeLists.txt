@@ -65,7 +65,7 @@ add_test_suite(NAME SocketTest
                     spiwriter-mock
                     w5100device-mock
                     platform-mock
-                    GSL::GSL
+                    Microsoft.GSL::GSL
                 )
 
 
@@ -76,7 +76,7 @@ add_test_suite(NAME W5100DeviceTest
                     $<TARGET_OBJECTS:stm32-w5100device>
                 DEPENDS
                     spiwriter-mock
-                    GSL::GSL
+                    Microsoft.GSL::GSL
                 )
 
 
@@ -87,7 +87,7 @@ add_test_suite(NAME SpiWriterTest
                 DEPENDS
                     platform-mock
                     stm32hal-mock
-                    GSL::GSL
+                    Microsoft.GSL::GSL
                 )
 
 
@@ -111,4 +111,3 @@ add_custom_target(unittest CommonTest ${TEST_FLAGS}
                     COMMENT "Running unittests\n\n"
                     VERBATIM
                     )
-
