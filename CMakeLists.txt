@@ -18,6 +18,7 @@ include(ClangFormat)
 add_common_flags(-Wall
                 -Wextra
                 -pedantic
+                -pedantic-errors
                 -Werror
                 -Wshadow
                 )
