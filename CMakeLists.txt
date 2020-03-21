@@ -16,13 +16,17 @@ include(UtilityTargets)
 include(ClangFormat)
 
 add_common_flags(-Wall
-                -Wextra
-                -pedantic
-                -pedantic-errors
-                -Werror
-                -Wshadow
-                )
-add_cpp_flags(-Wold-style-cast)
+    -Wextra
+    -pedantic
+    -pedantic-errors
+    -Werror
+    -Wshadow
+    )
+add_cpp_flags(-Wold-style-cast
+    -Wnull-dereference
+    -Wnon-virtual-dtor
+    -Woverloaded-virtual
+    )
 
 
 if( COVERAGE )
