@@ -92,21 +92,21 @@ namespace eth::w5100
             std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data) { write(reg.address(), offset++, data); });
         }
 
-        template <class T, std::size_t n = sizeof(T), std::enable_if_t<(n > 1) && (n <= sizeof(T)), int> = 0,
+        template <class T, std::size_t n = sizeof(T),
                   std::enable_if_t<std::is_integral_v<T>, int> = 0>
         T read(Register<T> reg)
         {
-            constexpr auto pos{sizeof(T) - n};
-            const auto byte0 = read(reg.address(), pos);
-            const auto byte1 = read<T, (pos + 1)>(reg);
-            return byte::to<T>(byte0, byte1);
-        }
-
-        template <class T, std::size_t n = sizeof(T), std::enable_if_t<(n <= 1), int> = 0,
-                  std::enable_if_t<std::is_integral_v<T>, int> = 0>
-        T read(Register<T> reg)
-        {
-            return read(reg.address(), sizeof(T) - n);
+            if constexpr (n <= 1)
+            {
+                return read(reg.address(), sizeof(T) - n);
+            }
+            else
+            {
+                constexpr auto pos{sizeof(T) - n};
+                const auto byte0 = read(reg.address(), pos);
+                const auto byte1 = read<T, (pos + 1)>(reg);
+                return byte::to<T>(byte0, byte1);
+            }
         }
 
         template <class T, class Iterator>
