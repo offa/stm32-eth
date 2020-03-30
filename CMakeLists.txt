@@ -31,8 +31,11 @@ add_cpp_flags(-Wold-style-cast
     -Wnull-dereference
     -Wnon-virtual-dtor
     -Woverloaded-virtual
-    -fconcepts
     )
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_cpp_flags(-fconcepts)
+endif()
 
 
 if( COVERAGE )
