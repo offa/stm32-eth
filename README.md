@@ -10,7 +10,7 @@ Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
 ---------------------------
 > ### Note
 >
-> This is the ***experimental* C++17 Concepts** branch, which requires a capable compiler.
+> This is the ***experimental* C++20** branch.
 
 ---------------------------
 
@@ -20,7 +20,7 @@ Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
  - [**GSL**](https://github.com/microsoft/gsl)
  - [**CppUTest**](https://github.com/cpputest/cpputest) – *(Optional)*
  - [**GNU ARM Embedded Toolchain**](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm) (*arm-none-eabi-gcc*)
- 
+
 
 ## • Testing
 
@@ -108,4 +108,3 @@ Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 ### Third party licenses
 
 The License does ***not*** apply to files of [*system*](system/) directory. Files included in the [*system*](system/) folder are licensed under different conditions – please refer to it's files for more details.
-
