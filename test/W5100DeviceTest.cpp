@@ -25,6 +25,7 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <gsl/span_ext>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 

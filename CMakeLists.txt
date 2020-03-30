@@ -16,14 +16,18 @@ include(UtilityTargets)
 include(ClangFormat)
 
 add_common_flags(-Wall
-                -Wextra
-                -pedantic
-                -Werror
-                -Wshadow
-                )
+    -Wextra
+    -pedantic
+    -pedantic-errors
+    -Werror
+    -Wshadow
+    )
 add_cpp_flags(-Wold-style-cast
-                -fconcepts
-                )
+    -Wnull-dereference
+    -Wnon-virtual-dtor
+    -Woverloaded-virtual
+    -fconcepts
+    )
 
 
 if( COVERAGE )
@@ -39,10 +43,10 @@ include(Sanitizer)
 add_subdirectory("system")
 
 
-find_package(GSL REQUIRED)
+find_package(Microsoft.GSL CONFIG REQUIRED)
 
 if( GSL_CONTRACT_UNENFORCED )
-    target_compile_definitions(GSL::GSL INTERFACE GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+    target_compile_definitions(Microsoft.GSL::GSL INTERFACE GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
 endif()
 
 

@@ -10,7 +10,7 @@ env:
     - DOCKER_IMG="registry.gitlab.com/offa/docker-images-ci/dist-stm32"
 
 
-matrix:
+jobs:
     include:
     - env: COMPILER=gcc-9 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Debug
