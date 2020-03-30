@@ -13,6 +13,7 @@ env:
 jobs:
     include:
     - env: COMPILER=gcc-9 BUILD_OPTS="-asan -ubsan"
+    - env: COMPILER=clang-10 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Debug
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=Release
     - env: COMPILER=arm-none-eabi-gcc BUILD_TYPE=MinSizeRel
