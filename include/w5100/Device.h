@@ -68,20 +68,20 @@ namespace eth::w5100
         void sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer);
         std::uint16_t receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer);
 
-        template<class T, std::size_t n = sizeof(T)>
-            requires IntegralType<T> && SizeMultiByte<T, n>
+        template <class T, std::size_t n = sizeof(T)>
+            requires IntegralType<T>
         void write(Register<T> reg, T data)
         {
-            constexpr auto pos{n - 1};
-            write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
-            write<T, pos>(reg, data);
-        }
-
-        template<class T, std::size_t n = sizeof(T)>
-            requires IntegralType<T> && SizeSingleByte<T, n>
-        void write(Register<T> reg, T data)
-        {
-            write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
+            if constexpr (n <= 1)
+            {
+                write(reg.address(), sizeof(T) - n, byte::get<(n - 1)>(data));
+            }
+            else
+            {
+                constexpr auto pos{n - 1};
+                write(reg.address(), sizeof(T) - n, byte::get<pos>(data));
+                write<T, pos>(reg, data);
+            }
         }
 
         template<class T, class Iterator>
@@ -95,21 +95,21 @@ namespace eth::w5100
             });
         }
 
-        template<class T, std::size_t n = sizeof(T)>
-            requires IntegralType<T> && SizeMultiByte<T, n>
+        template <class T, std::size_t n = sizeof(T)>
+            requires IntegralType<T>
         T read(Register<T> reg)
         {
-            constexpr auto pos{sizeof(T) - n};
-            const auto byte0 = read(reg.address(), pos);
-            const auto byte1 = read<T, (pos + 1)>(reg);
-            return byte::to<T>(byte0, byte1);
-        }
-
-        template<class T, std::size_t n = sizeof(T)>
-            requires IntegralType<T> && SizeSingleByte<T, n>
-        T read(Register<T> reg)
-        {
-            return read(reg.address(), sizeof(T) - n);
+            if constexpr (n <= 1)
+            {
+                return read(reg.address(), sizeof(T) - n);
+            }
+            else
+            {
+                constexpr auto pos{sizeof(T) - n};
+                const auto byte0 = read(reg.address(), pos);
+                const auto byte1 = read<T, (pos + 1)>(reg);
+                return byte::to<T>(byte0, byte1);
+            }
         }
 
         template<class T, class Iterator>
