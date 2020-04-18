@@ -166,7 +166,7 @@ TEST(W5100DeviceTest, writeSpan)
     const auto reg = Register<decltype(span)>(0xa1b2);
 
     expectWrite(0xa1b2, span);
-    device->write(reg, span.cbegin(), span.cend());
+    device->write(reg, span.begin(), span.end());
 }
 
 TEST(W5100DeviceTest, writeBuffer)

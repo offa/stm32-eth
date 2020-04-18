@@ -142,13 +142,13 @@ namespace eth::w5100
         if (isWrapAround<rxTxBufferSize>(offset, size) == true)
         {
             const auto first = rxTxBufferSize - offset;
-            const auto border = std::next(buffer.cbegin(), first);
-            write(makeRegister<gsl::span<const std::uint8_t>>(destAddress), buffer.cbegin(), border);
-            write(makeRegister<gsl::span<const std::uint8_t>>(toTransmitBufferAddress(s)), border, buffer.cend());
+            const auto border = std::next(buffer.begin(), first);
+            write(makeRegister<gsl::span<const std::uint8_t>>(destAddress), buffer.begin(), border);
+            write(makeRegister<gsl::span<const std::uint8_t>>(toTransmitBufferAddress(s)), border, buffer.end());
         }
         else
         {
-            write(Register<gsl::span<const std::uint8_t>>(destAddress), buffer.cbegin(), buffer.cend());
+            write(Register<gsl::span<const std::uint8_t>>(destAddress), buffer.begin(), buffer.end());
         }
 
         write(registers::socketTransmitWritePointer(s), static_cast<std::uint16_t>(writePointer + size));
