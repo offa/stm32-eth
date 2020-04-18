@@ -12,6 +12,7 @@ env:
 
 jobs:
     include:
+    - env: COMPILER=gcc-10 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=gcc-9 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=gcc-8 BUILD_OPTS="-asan -ubsan"
     - env: COMPILER=gcc-7 BUILD_OPTS="-asan -ubsan"
