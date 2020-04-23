@@ -27,6 +27,7 @@
 #include "TestHelper.h"
 #include <vector>
 #include <memory>
+#include <gsl/gsl_util>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
