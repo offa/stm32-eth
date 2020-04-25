@@ -2,7 +2,7 @@
 find_package(CppUTest REQUIRED)
 
 if( SANITIZER_ENABLED )
-    set_target_properties(CppUTest::CppUTest PROPERTIES
+    set_target_properties(CppUTest PROPERTIES
                             INTERFACE_COMPILE_DEFINITIONS
                                 CPPUTEST_MEM_LEAK_DETECTION_DISABLED
                             )
@@ -13,8 +13,8 @@ add_subdirectory("mock")
 
 add_library(testmain TestMain.cpp)
 target_link_libraries(testmain PUBLIC
-                        CppUTest::CppUTest
-                        CppUTest::Mock
+                        CppUTest
+                        CppUTestExt
                         build-libs
                         )
 
