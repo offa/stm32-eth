@@ -33,7 +33,8 @@ add_cpp_flags(-Wold-style-cast
     -Woverloaded-virtual
     )
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10.0)
+    message(STATUS "GCC < 10.0 doesn't support Concepts with C++20, fall back to '-fconcepts'")
     add_cpp_flags(-fconcepts)
 endif()
 
