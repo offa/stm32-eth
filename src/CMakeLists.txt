@@ -17,7 +17,7 @@ add_subdirectory(spi)
 add_subdirectory(w5100)
 
 add_cpp_library(stm32-socket OBJECT Socket.cpp)
-link_to_obj(stm32-socket DEFAULT Microsoft.GSL::GSL SYSTEM stm32hal-api)
+link_to_obj(stm32-socket DEFAULT Microsoft.GSL::Microsoft.GSL SYSTEM stm32hal-api)
 
 add_cpp_library(stm32-platform OBJECT PlatformStm32.cpp)
 link_to_obj(stm32-platform SYSTEM stm32hal-api)

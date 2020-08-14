@@ -54,13 +54,14 @@ endif()
 
 add_subdirectory("system")
 
+include("${CMAKE_BINARY_DIR}/conan_paths.cmake" OPTIONAL)
 
-find_package(Microsoft.GSL CONFIG REQUIRED)
+find_package(Microsoft.GSL REQUIRED)
 
-if( GSL_CONTRACT_UNENFORCED )
-    target_compile_definitions(Microsoft.GSL::GSL INTERFACE GSL_UNENFORECED_ON_CONTRACT_VIOLATION)
+if( NOT TARGET Microsoft.GSL::Microsoft.GSL )
+    add_library(Microsoft.GSL::Microsoft.GSL INTERFACE IMPORTED)
+    target_link_libraries(Microsoft.GSL::Microsoft.GSL INTERFACE Microsoft.GSL::GSL)
 endif()
-
 
 include_directories("include")
 add_subdirectory("src")

@@ -65,7 +65,7 @@ add_test_suite(NAME SocketTest
                     spiwriter-mock
                     w5100device-mock
                     platform-mock
-                    Microsoft.GSL::GSL
+                    Microsoft.GSL::Microsoft.GSL
                 )
 
 
@@ -76,7 +76,7 @@ add_test_suite(NAME W5100DeviceTest
                     $<TARGET_OBJECTS:stm32-w5100device>
                 DEPENDS
                     spiwriter-mock
-                    Microsoft.GSL::GSL
+                    Microsoft.GSL::Microsoft.GSL
                 )
 
 
@@ -87,7 +87,7 @@ add_test_suite(NAME SpiWriterTest
                 DEPENDS
                     platform-mock
                     stm32hal-mock
-                    Microsoft.GSL::GSL
+                    Microsoft.GSL::Microsoft.GSL
                 )
 
 
