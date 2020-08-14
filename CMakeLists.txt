@@ -51,7 +51,7 @@ add_subdirectory("system")
 
 include("${CMAKE_BINARY_DIR}/conan_paths.cmake" OPTIONAL)
 
-find_package(Microsoft.GSL CONFIG REQUIRED)
+find_package(Microsoft.GSL REQUIRED)
 
 include_directories("include")
 add_subdirectory("src")
