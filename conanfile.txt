@@ -1,5 +1,5 @@
 [requires]
-ms-gsl/3.0.1
+ms-gsl/3.1.0
 
 [generators]
 cmake_find_package
