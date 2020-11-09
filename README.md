@@ -1,5 +1,6 @@
 # [Stm32 Eth](https://github.com/offa/stm32-eth)
 
+[![CI](https://github.com/offa/stm32-eth/workflows/ci/badge.svg)](https://github.com/offa/stm32-eth/actions)
 [![Build Status](https://travis-ci.org/offa/stm32-eth.svg?branch=master)](https://travis-ci.org/offa/stm32-eth)
 [![GitHub release](https://img.shields.io/github/release/offa/stm32-eth.svg)](https://github.com/offa/stm32-eth/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](LICENSE)
@@ -46,9 +47,9 @@ Integration Test for *Stm32F4* are enabled by the `INTEGRATIONTEST` option. The 
 
 There are following *experimental* branches:
 
-###### cpp17-concepts
+###### cpp20
 
-Using the *C++17* Standard and *Concepts TS*.
+Using the upcoming C++20 standard.
 
 _**Note:** Appropriate compiler support is required._
 
