@@ -44,4 +44,4 @@ jobs:
         run: |
           export BUILD_TYPE=${{ matrix.build_config.build_type }}
           export LTO_ENABLED=${{ matrix.build_config.lto }}
-          script/ci_build.sh -asan -ubsan
+          script/ci_build.sh
