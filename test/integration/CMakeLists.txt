@@ -6,8 +6,8 @@ target_link_libraries(stm32-eth-it
                             build-libs
                             system-libs
                             stm32hal-api
+                            Microsoft.GSL::Microsoft.GSL
                         )
-target_include_directories(stm32-eth-it PRIVATE $<TARGET_PROPERTY:Microsoft.GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
 
 add_cpp_executable(stm32-eth-client-it ClientMain.cpp)
 target_link_libraries(stm32-eth-client-it
@@ -16,9 +16,8 @@ target_link_libraries(stm32-eth-client-it
                             build-libs
                             system-libs
                             stm32hal-api
+                            Microsoft.GSL::Microsoft.GSL
                         )
-target_include_directories(stm32-eth-client-it PRIVATE $<TARGET_PROPERTY:Microsoft.GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>)
-
 
 add_utility_target(stm32-eth-it BIN_FILE HEX_FILE SIZE)
 add_utility_target(stm32-eth-client-it BIN_FILE HEX_FILE SIZE)
