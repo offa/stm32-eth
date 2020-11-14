@@ -78,7 +78,7 @@ namespace eth::w5100
         return mock("Device").actualCall("getReceiveFreeSize").withParameter("socket", s.value()).returnUnsignedIntValue();
     }
 
-    void Device::sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer)
+    void Device::sendData(SocketHandle s, const std::span<const std::uint8_t> buffer)
     {
         mock("Device")
             .actualCall("sendData")
@@ -87,7 +87,7 @@ namespace eth::w5100
             .withParameter("size", buffer.size());
     }
 
-    std::uint16_t Device::receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer)
+    std::uint16_t Device::receiveData(SocketHandle s, std::span<std::uint8_t> buffer)
     {
         return mock("Device")
             .actualCall("receiveData")

@@ -21,7 +21,7 @@
 #include "spi/SpiWriter.h"
 #include "mock/Stm32HalComparator.h"
 #include <memory>
-#include <gsl/span>
+#include <span>
 #include <gsl/gsl_util>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
@@ -48,7 +48,7 @@ TEST_GROUP(SpiWriterTest)
         mock().removeAllComparatorsAndCopiers();
     }
 
-    void expectWrite(gsl::span<std::uint8_t> data) const
+    void expectWrite(std::span<std::uint8_t> data) const
     {
         mock("HAL_SPI")
             .expectOneCall("HAL_SPI_Transmit")

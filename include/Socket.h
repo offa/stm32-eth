@@ -26,7 +26,7 @@
 #include "Protocol.h"
 #include "NetConfig.h"
 #include <cstdint>
-#include <gsl/span>
+#include <span>
 
 namespace eth
 {
@@ -57,8 +57,8 @@ namespace eth
         void close();
         Status listen();
         void accept();
-        std::uint16_t send(const gsl::span<const std::uint8_t> buffer);
-        std::uint16_t receive(gsl::span<std::uint8_t> buffer);
+        std::uint16_t send(const std::span<const std::uint8_t> buffer);
+        std::uint16_t receive(std::span<std::uint8_t> buffer);
 
 
         Status connect(NetAddress<4> address, std::uint16_t port);

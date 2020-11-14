@@ -488,7 +488,7 @@ TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
 TEST(SocketTest, receiveReceivesData)
 {
     auto buffer = createBuffer(defaultSize);
-    gsl::span<std::uint8_t> bufferSpan{buffer};
+    std::span<std::uint8_t> bufferSpan{buffer};
     expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device")
         .expectOneCall("receiveData")
@@ -506,7 +506,7 @@ TEST(SocketTest, receiveReceivesData)
 TEST(SocketTest, receiveSendsCommandAfterReceive)
 {
     auto buffer = createBuffer(defaultSize);
-    gsl::span<std::uint8_t> bufferSpan{buffer};
+    std::span<std::uint8_t> bufferSpan{buffer};
     expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device").expectOneCall("receiveData").ignoreOtherParameters().andReturnValue(defaultSize);
     expectSocketCommand(socketHandle, SocketCommand::receive);

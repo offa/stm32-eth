@@ -32,7 +32,7 @@
 #include <algorithm>
 #include <iterator>
 #include <cstdint>
-#include <gsl/span>
+#include <span>
 
 namespace eth::spi
 {
@@ -65,8 +65,8 @@ namespace eth::w5100
         std::uint16_t getTransmitFreeSize(SocketHandle s);
         std::uint16_t getReceiveFreeSize(SocketHandle s);
 
-        void sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer);
-        std::uint16_t receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer);
+        void sendData(SocketHandle s, const std::span<const std::uint8_t> buffer);
+        std::uint16_t receiveData(SocketHandle s, std::span<std::uint8_t> buffer);
 
         template <class T, std::size_t n = sizeof(T)>
             requires IntegralType<T>

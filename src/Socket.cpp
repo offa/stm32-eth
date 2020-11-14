@@ -116,7 +116,7 @@ namespace eth
         }
     }
 
-    std::uint16_t Socket::send(const gsl::span<const std::uint8_t> buffer)
+    std::uint16_t Socket::send(const std::span<const std::uint8_t> buffer)
     {
         if (buffer.empty() == true)
         {
@@ -138,7 +138,7 @@ namespace eth
         return sendSize;
     }
 
-    std::uint16_t Socket::receive(gsl::span<std::uint8_t> buffer)
+    std::uint16_t Socket::receive(std::span<std::uint8_t> buffer)
     {
         if (buffer.empty() == true)
         {
