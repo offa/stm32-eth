@@ -25,7 +25,6 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
-#include <gsl/gsl_util>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
@@ -51,15 +50,10 @@ TEST_GROUP(W5100DeviceTest)
     void setup() override
     {
         mock().strictOrder();
-
-        auto f = gsl::finally([] {
-            mock().enable();
-            mock("SpiWriter").setData("write::count", 0);
-        });
-
         mock().disable();
-
         device = std::make_unique<Device>(writer);
+        mock().enable();
+        mock("SpiWriter").setData("write::count", 0);
     }
 
     void teardown() override

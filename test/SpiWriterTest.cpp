@@ -22,7 +22,6 @@
 #include "mock/Stm32HalComparator.h"
 #include <memory>
 #include <span>
-#include <gsl/gsl_util>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
@@ -35,10 +34,9 @@ TEST_GROUP(SpiWriterTest)
 
         mock().strictOrder();
 
-        auto f = gsl::finally([] { mock().enable(); });
         mock().disable();
-
         spiWriter = std::make_unique<eth::spi::SpiWriter>(eth::spi::spi2);
+        mock().enable();
     }
 
     void teardown() override
