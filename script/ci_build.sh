@@ -20,17 +20,10 @@ do
 done
 
 
-
-if [[ ! -v GSL_INCLUDE_DIR ]]
-then
-    export GSL_INCLUDE_DIR=/usr/local/include
-fi
-
 if [[ "${CXX}" == clang* ]]
 then
     export CXXFLAGS="-stdlib=libc++"
 fi
-
 
 
 
