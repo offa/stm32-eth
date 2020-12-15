@@ -44,4 +44,5 @@ jobs:
         run: |
           export BUILD_TYPE=${{ matrix.build_config.build_type }}
           export LTO_ENABLED=${{ matrix.build_config.lto }}
+          export COMPILER=arm-none-eabi-gcc
           script/ci_build.sh
