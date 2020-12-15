@@ -9,7 +9,7 @@ RUN mkdir deps && cd deps && \
     cd gsl && mkdir build && cd build && \
     cmake -DGSL_TEST=OFF .. && make && make install && \
     cd ../.. && \
-    if [ "${COMPILER}" != "arm-none-eabi-gcc" ]; then \
+    if [ "${COMPILER}" = "${COMPILER#arm-none-eabi-gcc}" ]; then \
         git clone --branch=latest-passing-build --depth=1 https://github.com/cpputest/cpputest.git cpputest && \
         cd cpputest && mkdir _build && cd _build && \
         case ${CXX} in clang* ) export CXXFLAGS="-stdlib=libc++"; esac; \
