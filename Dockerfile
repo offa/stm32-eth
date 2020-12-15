@@ -5,7 +5,7 @@ FROM registry.gitlab.com/offa/docker-images/${COMPILER}:stable
 ARG COMPILER
 
 RUN mkdir deps && cd deps && \
-    if [ "${COMPILER}" != "arm-none-eabi-gcc" ]; then \
+    if [ "${COMPILER}" = "${COMPILER#arm-none-eabi-gcc}" ]; then \
         git clone --branch=latest-passing-build --depth=1 https://github.com/cpputest/cpputest.git cpputest && \
         cd cpputest && mkdir _build && cd _build && \
         case ${CXX} in clang* ) export CXXFLAGS="-stdlib=libc++"; esac; \

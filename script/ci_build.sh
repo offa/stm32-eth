@@ -30,7 +30,7 @@ fi
 mkdir -p build && cd build
 
 
-if [[ "${CXX}" == "arm-none-eabi-g++" ]]
+if [[ "${COMPILER}" == "arm-none-eabi-gcc" ]]
 then
     cmake "${BUILD_ARGS[@]}" \
             -DUNITTEST=OFF \
