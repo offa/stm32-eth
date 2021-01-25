@@ -7,12 +7,6 @@
 
 Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
 
----------------------------
-> ### Note
->
-> This is the ***experimental* C++20** branch.
-
----------------------------
 
 ## • Requirements
 
