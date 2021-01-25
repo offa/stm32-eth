@@ -15,7 +15,7 @@ include(UtilityTargets)
 include(ClangFormat)
 include(Sanitizer)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -32,6 +32,11 @@ add_cpp_flags(-Wold-style-cast
     -Wnon-virtual-dtor
     -Woverloaded-virtual
     )
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10.0)
+    message(STATUS "GCC < 10.0 doesn't support Concepts with C++20, fall back to '-fconcepts'")
+    add_cpp_flags(-fconcepts)
+endif()
 
 
 if( COVERAGE )
@@ -51,12 +56,6 @@ add_subdirectory("system")
 
 include("${CMAKE_BINARY_DIR}/conan_paths.cmake" OPTIONAL)
 
-find_package(Microsoft.GSL REQUIRED)
-
-if( NOT TARGET Microsoft.GSL::Microsoft.GSL )
-    add_library(Microsoft.GSL::Microsoft.GSL INTERFACE IMPORTED)
-    target_link_libraries(Microsoft.GSL::Microsoft.GSL INTERFACE Microsoft.GSL::GSL)
-endif()
 
 include_directories("include")
 add_subdirectory("src")

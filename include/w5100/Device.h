@@ -28,10 +28,11 @@
 #include "NetConfig.h"
 #include "w5100/Register.h"
 #include "Byte.h"
+#include "Concepts.h"
 #include <algorithm>
 #include <iterator>
 #include <cstdint>
-#include <gsl/span>
+#include <span>
 
 namespace eth::spi
 {
@@ -64,11 +65,11 @@ namespace eth::w5100
         std::uint16_t getTransmitFreeSize(SocketHandle s);
         std::uint16_t getReceiveFreeSize(SocketHandle s);
 
-        void sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer);
-        std::uint16_t receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer);
+        void sendData(SocketHandle s, const std::span<const std::uint8_t> buffer);
+        std::uint16_t receiveData(SocketHandle s, std::span<std::uint8_t> buffer);
 
-        template <class T, std::size_t n = sizeof(T),
-                  std::enable_if_t<std::is_integral_v<T>, int> = 0>
+        template <class T, std::size_t n = sizeof(T)>
+            requires IntegralType<T>
         void write(Register<T> reg, T data)
         {
             if constexpr (n <= 1)
@@ -83,17 +84,19 @@ namespace eth::w5100
             }
         }
 
-        template <class T, class Iterator>
+        template<class T, class Iterator>
+            requires byte::ByteCompatibleIterator<Iterator>
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
-            static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
-
-            std::uint16_t offset{0};
-            std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data) { write(reg.address(), offset++, data); });
+            std::uint16_t offset = 0;
+            std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
+            {
+                write(reg.address(), offset++, data);
+            });
         }
 
-        template <class T, std::size_t n = sizeof(T),
-                  std::enable_if_t<std::is_integral_v<T>, int> = 0>
+        template <class T, std::size_t n = sizeof(T)>
+            requires IntegralType<T>
         T read(Register<T> reg)
         {
             if constexpr (n <= 1)
@@ -109,13 +112,15 @@ namespace eth::w5100
             }
         }
 
-        template <class T, class Iterator>
+        template<class T, class Iterator>
+            requires byte::ByteCompatibleIterator<Iterator>
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
-            static_assert(byte::is_byte_compatible_itr_v<Iterator>, "Invalid Type");
-
-            std::size_t offset{0};
-            std::generate(begin, end, [this, &reg, &offset] { return read(reg.address(), offset++); });
+            std::size_t offset = 0;
+            std::generate(begin, end, [this, &reg, &offset]
+            {
+                return read(reg.address(), offset++);
+            });
 
             return offset;
         }

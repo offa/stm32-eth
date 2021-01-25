@@ -21,7 +21,7 @@
 #include "w5100/Register.h"
 #include "SocketHandle.h"
 #include <array>
-#include <gsl/span>
+#include <span>
 #include <CppUTest/TestHarness.h>
 
 using eth::w5100::makeRegister;
@@ -59,6 +59,6 @@ TEST(W5100RegisterTest, registerOfArray)
 
 TEST(W5100RegisterTest, registerOfSpan)
 {
-    const auto reg = makeRegister<gsl::span<std::uint8_t>>(0x1122);
+    const auto reg = makeRegister<std::span<std::uint8_t>>(0x1122);
     CHECK_EQUAL(0x1122, reg.address());
 }

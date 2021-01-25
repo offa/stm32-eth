@@ -11,7 +11,6 @@ Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
 ## • Requirements
 
  - [**CMake**](http://www.cmake.org/)
- - [**GSL**](https://github.com/microsoft/gsl)
  - [**CppUTest**](https://github.com/cpputest/cpputest) – *(Optional)*
  - [**GNU ARM Embedded Toolchain**](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm) (*arm-none-eabi-gcc*)
 

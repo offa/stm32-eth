@@ -25,7 +25,6 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
-#include <gsl/span_ext>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
@@ -51,15 +50,10 @@ TEST_GROUP(W5100DeviceTest)
     void setup() override
     {
         mock().strictOrder();
-
-        auto f = gsl::finally([] {
-            mock().enable();
-            mock("SpiWriter").setData("write::count", 0);
-        });
-
         mock().disable();
-
         device = std::make_unique<Device>(writer);
+        mock().enable();
+        mock("SpiWriter").setData("write::count", 0);
     }
 
     void teardown() override
@@ -162,7 +156,7 @@ TEST(W5100DeviceTest, writeSpan)
 {
     constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
-    auto span = gsl::make_span(data);
+    std::span span{data};
     const auto reg = Register<decltype(span)>(0xa1b2);
 
     expectWrite(0xa1b2, span);
@@ -184,7 +178,7 @@ TEST(W5100DeviceTest, writeBufferByPointerAndSize)
 {
     constexpr std::uint16_t size{10};
     const auto data = createBuffer(size);
-    auto reg = Register<decltype(gsl::make_span(data))>(0xa1b2);
+    auto reg = Register<decltype(std::span{data})>(0xa1b2);
 
     expectWrite(reg.address(), data);
 

@@ -131,7 +131,7 @@ namespace eth::w5100
         return secondRead;
     }
 
-    void Device::sendData(SocketHandle s, const gsl::span<const std::uint8_t> buffer)
+    void Device::sendData(SocketHandle s, const std::span<const std::uint8_t> buffer)
     {
         constexpr std::uint16_t transmitBufferMask{0x07ff};
         const auto size = buffer.size();
@@ -143,25 +143,25 @@ namespace eth::w5100
         {
             const auto first = rxTxBufferSize - offset;
             const auto border = std::next(buffer.begin(), first);
-            write(makeRegister<gsl::span<const std::uint8_t>>(destAddress), buffer.begin(), border);
-            write(makeRegister<gsl::span<const std::uint8_t>>(toTransmitBufferAddress(s)), border, buffer.end());
+            write(makeRegister<std::span<const std::uint8_t>>(destAddress), buffer.begin(), border);
+            write(makeRegister<std::span<const std::uint8_t>>(toTransmitBufferAddress(s)), border, buffer.end());
         }
         else
         {
-            write(Register<gsl::span<const std::uint8_t>>(destAddress), buffer.begin(), buffer.end());
+            write(Register<std::span<const std::uint8_t>>(destAddress), buffer.begin(), buffer.end());
         }
 
         write(registers::socketTransmitWritePointer(s), static_cast<std::uint16_t>(writePointer + size));
     }
 
-    std::uint16_t Device::receiveData(SocketHandle s, gsl::span<std::uint8_t> buffer)
+    std::uint16_t Device::receiveData(SocketHandle s, std::span<std::uint8_t> buffer)
     {
         constexpr std::uint16_t receiveBufferMask{0x07ff};
         const auto size = buffer.size();
         const std::uint16_t readPointer = read(registers::socketReceiveReadPointer(s));
         const std::uint16_t offset = readPointer & receiveBufferMask;
         const std::uint16_t destAddress = offset + toReceiveBufferAddress(s);
-        const auto reg = makeRegister<gsl::span<std::uint8_t>>(destAddress);
+        const auto reg = makeRegister<std::span<std::uint8_t>>(destAddress);
 
         if (isWrapAround<rxTxBufferSize>(offset, size) == true)
         {
