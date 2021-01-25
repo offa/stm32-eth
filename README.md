@@ -3,7 +3,7 @@
 [![CI](https://github.com/offa/stm32-eth/workflows/ci/badge.svg)](https://github.com/offa/stm32-eth/actions)
 [![GitHub release](https://img.shields.io/github/release/offa/stm32-eth.svg)](https://github.com/offa/stm32-eth/releases)
 [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](LICENSE)
-![C++](https://img.shields.io/badge/c++-17-green.svg)
+![C++](https://img.shields.io/badge/c++-20-green.svg)
 
 Ethernet connectivity for *Stm32F4* Boards using W5100 Ethernet controller.
 
@@ -32,18 +32,6 @@ Executing tests using CTest: `make test` or `ctest`. For `unittest` it's possibl
 ## • Integration Test
 
 Integration Test for *Stm32F4* are enabled by the `INTEGRATIONTEST` option. The target `stm32-eth-it` is available as *ELF* (default) and *HEX*.
-
-
-
-## • Experimental Branches
-
-There are following *experimental* branches:
-
-###### cpp20
-
-Using the upcoming C++20 standard.
-
-_**Note:** Appropriate compiler support is required._
 
 
 ## • Flashing (OpenOCD)
