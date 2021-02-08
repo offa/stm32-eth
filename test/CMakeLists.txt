@@ -1,6 +1,17 @@
 
 find_package(CppUTest REQUIRED)
 
+if( NOT TARGET CppUTest::CppUTest )
+    add_library(CppUTest::CppUTest INTERFACE IMPORTED)
+    target_link_libraries(CppUTest::CppUTest INTERFACE CppUTest)
+endif()
+
+if( NOT TARGET CppUTest::CppUTestExt )
+    add_library(CppUTest::CppUTestExt INTERFACE IMPORTED)
+    target_link_libraries(CppUTest::CppUTestExt INTERFACE CppUTestExt)
+endif()
+
+
 if( SANITIZER_ENABLED )
     set_target_properties(CppUTest::CppUTest PROPERTIES
                             INTERFACE_COMPILE_DEFINITIONS
