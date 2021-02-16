@@ -4,7 +4,6 @@ set -ex
 
 LTO_ENABLED=${LTO_ENABLED:=OFF}
 BUILD_TYPE=${BUILD_TYPE:=Release}
-
 BUILD_ARGS=("-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DLTO=${LTO_ENABLED}")
 
 for arg in "$@"
@@ -15,6 +14,9 @@ do
             ;;
         -ubsan)
             BUILD_ARGS+=("-DSANITIZER_UBSAN=ON")
+            ;;
+        -codeql)
+            BUILD_ARGS=("-DCMAKE_BUILD_TYPE=Debug")
             ;;
     esac
 done
