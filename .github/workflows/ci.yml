@@ -9,6 +9,7 @@ jobs:
       matrix:
         compiler:
           - gcc-10
+          - clang-12
           - clang-11
           - clang-10
     container:
