@@ -17,7 +17,7 @@ jobs:
       image: "registry.gitlab.com/offa/docker-images-ci/dist-stm32/${{ matrix.compiler }}:latest"
     name: "${{ matrix.compiler }}"
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
       - name: Build
         run: script/ci_build.sh -asan -ubsan
 
@@ -36,7 +36,7 @@ jobs:
       image: "registry.gitlab.com/offa/docker-images-ci/dist-stm32/${{ matrix.compiler }}:latest"
     name: "${{ matrix.compiler }} - ${{ matrix.build_config.build_type }} (LTO: ${{ matrix.build_config.lto }})"
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
       - name: Build
         run: |
           export BUILD_TYPE=${{ matrix.build_config.build_type }}
