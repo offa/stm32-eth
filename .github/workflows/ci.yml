@@ -10,6 +10,7 @@ jobs:
         compiler:
           - gcc-11
           - gcc-10
+          - clang-13
           - clang-12
           - clang-11
           - clang-10
