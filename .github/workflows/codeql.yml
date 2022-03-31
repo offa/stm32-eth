@@ -8,7 +8,7 @@ on:
 
 jobs:
   codeql:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: "registry.gitlab.com/offa/docker-images-ci/dist-stm32/gcc-10:latest"
     name: "CodeQL"

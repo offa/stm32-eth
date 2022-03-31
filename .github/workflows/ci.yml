@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build_linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         compiler:
@@ -23,7 +23,7 @@ jobs:
         run: script/ci_build.sh -asan -ubsan
 
   build_arm:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         compiler:
