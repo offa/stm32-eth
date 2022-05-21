@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - name: Build
-        run: script/ci_build.sh -asan -ubsan
+        run: script/ci_build.sh ${{ !startsWith(matrix.compiler, 'clang-11') && '-asan -ubsan' }}
 
   build_arm:
     runs-on: ubuntu-latest
