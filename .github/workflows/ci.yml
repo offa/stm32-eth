@@ -14,8 +14,6 @@ jobs:
           - clang-14
           - clang-13
           - clang-12
-          - clang-11
-          - clang-10
     container:
       image: "registry.gitlab.com/offa/docker-images/${{ matrix.compiler }}:stable"
     name: "${{ matrix.compiler }}"
@@ -24,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: script/ci_install_dependencies.sh
       - name: Build
-        run: script/ci_build.sh ${{ !startsWith(matrix.compiler, 'clang-11') && '-asan -ubsan' }}
+        run: script/ci_build.sh -asan -ubsan
 
   build_arm:
     runs-on: ubuntu-latest
