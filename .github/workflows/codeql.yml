@@ -10,11 +10,13 @@ jobs:
   codeql:
     runs-on: ubuntu-latest
     container:
-      image: "registry.gitlab.com/offa/docker-images-ci/dist-stm32/gcc-10:latest"
+      image: "registry.gitlab.com/offa/docker-images/gcc-12:stable"
     name: "CodeQL"
     steps:
       - name: Checkout
         uses: actions/checkout@main
+      - name: Install dependencies
+        run: script/ci_install_dependencies.sh
       - name: CodeQL Initialization
         uses: github/codeql-action/init@v2
         with:
