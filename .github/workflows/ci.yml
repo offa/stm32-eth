@@ -21,6 +21,8 @@ jobs:
     name: "${{ matrix.compiler }}"
     steps:
       - uses: actions/checkout@main
+      - name: Install dependencies
+        run: script/ci_install_dependencies.sh
       - name: Build
         run: script/ci_build.sh ${{ !startsWith(matrix.compiler, 'clang-11') && '-asan -ubsan' }}
 
