@@ -124,8 +124,11 @@ namespace eth
         }
 
         const std::uint16_t sendSize = std::min<std::uint16_t>(w5100::Device::getRxTxBufferSize(), buffer.size());
-        const auto freeSize = waitFor([this] { return device.getTransmitFreeSize(handle); },
-                                      [this] { return connectionReady(getStatus()); }, sendSize);
+        const auto freeSize = waitFor([this]
+                                      { return device.getTransmitFreeSize(handle); },
+                                      [this]
+                                      { return connectionReady(getStatus()); },
+                                      sendSize);
 
         if (freeSize == 0)
         {
@@ -146,7 +149,11 @@ namespace eth
         }
 
         const std::uint16_t available =
-            waitFor([this] { return device.getReceiveFreeSize(handle); }, [this] { return connectionReady(getStatus()); }, 1);
+            waitFor([this]
+                    { return device.getReceiveFreeSize(handle); },
+                    [this]
+                    { return connectionReady(getStatus()); },
+                    1);
 
 
         if (available == 0)

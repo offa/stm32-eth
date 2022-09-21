@@ -61,6 +61,7 @@ inline std::vector<std::uint8_t> createBuffer(std::size_t size)
 {
     std::vector<std::uint8_t> buffer(size);
     std::uint8_t value{0};
-    std::generate(buffer.begin(), buffer.end(), [&value] { return value++; });
+    std::generate(buffer.begin(), buffer.end(), [&value]
+                  { return value++; });
     return buffer;
 }

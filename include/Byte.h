@@ -28,24 +28,23 @@
 namespace eth::byte
 {
 
-    template<class T>
-        requires IntegralType<T>
+    template <class T>
+    requires IntegralType<T>
     inline constexpr bool is_byte_compatible_v = std::is_convertible_v<std::remove_cv_t<T>, std::uint8_t>;
 
     template <class Itr>
     inline constexpr bool is_byte_compatible_itr_v = is_byte_compatible_v<typename std::iterator_traits<Itr>::value_type>;
 
 
-    template<class T>
+    template <class T>
     concept ByteCompatible = is_byte_compatible_v<T>;
 
-    template<class Itr>
+    template <class Itr>
     concept ByteCompatibleIterator = is_byte_compatible_itr_v<Itr>;
 
 
-
-    template<std::size_t pos, class T>
-        requires IntegralType<T> && IndexWithinTypesize<T, pos>
+    template <std::size_t pos, class T>
+    requires IntegralType<T> && IndexWithinTypesize<T, pos>
     constexpr std::uint8_t get(T value) noexcept
     {
         constexpr auto shift{pos * 8};
@@ -54,17 +53,15 @@ namespace eth::byte
     }
 
 
-    template<class T, class U>
-        requires IntegralType<T> && ByteCompatible<U>
-                && SizeAtLeast<T, sizeof(std::uint8_t)>
+    template <class T, class U>
+    requires IntegralType<T> && ByteCompatible<U> && SizeAtLeast<T, sizeof(std::uint8_t)>
     constexpr T to(U value) noexcept
     {
         return value;
     }
 
-    template<class T, class U, class... Us>
-        requires IntegralType<T> && ByteCompatible<U>
-                && SizeAtLeast<T, (sizeof...(Us) + sizeof(std::uint8_t))>
+    template <class T, class U, class... Us>
+    requires IntegralType<T> && ByteCompatible<U> && SizeAtLeast<T, (sizeof...(Us) + sizeof(std::uint8_t))>
     constexpr T to(U valueN, Us... values) noexcept
     {
         constexpr auto shift{sizeof...(values) * 8};

@@ -69,7 +69,7 @@ namespace eth::w5100
         std::uint16_t receiveData(SocketHandle s, std::span<std::uint8_t> buffer);
 
         template <class T, std::size_t n = sizeof(T)>
-            requires IntegralType<T>
+        requires IntegralType<T>
         void write(Register<T> reg, T data)
         {
             if constexpr (n <= 1)
@@ -84,20 +84,18 @@ namespace eth::w5100
             }
         }
 
-        template<class T, class Iterator>
-            requires byte::ByteCompatibleIterator<Iterator>
+        template <class T, class Iterator>
+        requires byte::ByteCompatibleIterator<Iterator>
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
             std::uint16_t offset = 0;
             std::for_each(begin, end, [this, &reg, &offset](std::uint8_t data)
-            {
-                write(reg.address(), offset++, data);
-            });
+                          { write(reg.address(), offset++, data); });
         }
 
         template <class T, std::size_t n = sizeof(T)>
-            requires IntegralType<T>
-        T read(Register<T> reg)
+        requires IntegralType<T>
+            T read(Register<T> reg)
         {
             if constexpr (n <= 1)
             {
@@ -112,15 +110,13 @@ namespace eth::w5100
             }
         }
 
-        template<class T, class Iterator>
-            requires byte::ByteCompatibleIterator<Iterator>
+        template <class T, class Iterator>
+        requires byte::ByteCompatibleIterator<Iterator>
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
             std::size_t offset = 0;
             std::generate(begin, end, [this, &reg, &offset]
-            {
-                return read(reg.address(), offset++);
-            });
+                          { return read(reg.address(), offset++); });
 
             return offset;
         }

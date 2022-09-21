@@ -25,13 +25,13 @@
 namespace eth
 {
 
-    template<class T>
+    template <class T>
     concept IntegralType = std::is_integral_v<T>;
 
-    template<class T, std::size_t minSize>
+    template <class T, std::size_t minSize>
     concept SizeAtLeast = (sizeof(T) >= minSize);
 
-    template<class T, std::size_t index>
+    template <class T, std::size_t index>
     concept IndexWithinTypesize = (index < sizeof(T));
 
 }
