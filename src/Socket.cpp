@@ -38,7 +38,7 @@ namespace eth
         template <class DataFn, class StatusFn>
         std::uint16_t waitFor(DataFn getDataFn, StatusFn statusCheckFn, std::uint16_t size)
         {
-            while (statusCheckFn() == true)
+            while (statusCheckFn())
             {
                 const auto actual = getDataFn();
 
@@ -118,7 +118,7 @@ namespace eth
 
     std::uint16_t Socket::send(const std::span<const std::uint8_t> buffer)
     {
-        if (buffer.empty() == true)
+        if (buffer.empty())
         {
             return 0;
         }
@@ -143,7 +143,7 @@ namespace eth
 
     std::uint16_t Socket::receive(std::span<std::uint8_t> buffer)
     {
-        if (buffer.empty() == true)
+        if (buffer.empty())
         {
             return 0;
         }
@@ -182,7 +182,7 @@ namespace eth
                 return Status::closed;
             }
 
-            if (isTimeouted() == true)
+            if (isTimeouted())
             {
                 return Status::timeout;
             }
@@ -197,7 +197,7 @@ namespace eth
 
         while (getStatus() != SocketStatus::closed)
         {
-            if (isTimeouted() == true)
+            if (isTimeouted())
             {
                 return Status::timeout;
             }

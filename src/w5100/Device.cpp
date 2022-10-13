@@ -139,7 +139,7 @@ namespace eth::w5100
         const std::uint16_t offset = writePointer & transmitBufferMask;
         const std::uint16_t destAddress = offset + toTransmitBufferAddress(s);
 
-        if (isWrapAround<rxTxBufferSize>(offset, size) == true)
+        if (isWrapAround<rxTxBufferSize>(offset, size))
         {
             const auto first = rxTxBufferSize - offset;
             const auto border = std::next(buffer.begin(), first);
@@ -163,7 +163,7 @@ namespace eth::w5100
         const std::uint16_t destAddress = offset + toReceiveBufferAddress(s);
         const auto reg = makeRegister<std::span<std::uint8_t>>(destAddress);
 
-        if (isWrapAround<rxTxBufferSize>(offset, size) == true)
+        if (isWrapAround<rxTxBufferSize>(offset, size))
         {
             const auto first = rxTxBufferSize - offset;
             auto border = std::next(buffer.begin(), first);
