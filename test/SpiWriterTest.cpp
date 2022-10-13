@@ -108,7 +108,7 @@ TEST(SpiWriterTest, initSetupsGpioPins)
         .withParameterOfType("GPIO_InitTypeDef", "GPIO_Init", &initSS);
     mock("HAL_SPI").expectOneCall("HAL_SPI_Init").ignoreOtherParameters();
 
-    eth::spi::SpiWriter writer(eth::spi::spi2);
+    [[maybe_unused]] eth::spi::SpiWriter writer{eth::spi::spi2};
 }
 
 TEST(SpiWriterTest, initSetupsSpi)
@@ -132,7 +132,7 @@ TEST(SpiWriterTest, initSetupsSpi)
         .withParameterOfType("SPI_InitTypeDef", "hspi.init", &spiInit)
         .ignoreOtherParameters();
 
-    eth::spi::SpiWriter writer(eth::spi::spi2);
+    [[maybe_unused]] eth::spi::SpiWriter writer{eth::spi::spi2};
 }
 
 TEST(SpiWriterTest, writeTransmitsByte)

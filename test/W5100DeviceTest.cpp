@@ -133,7 +133,7 @@ TEST(W5100DeviceTest, initSetsResetBitAndMemorySize)
     expectWrite(addressTxSize, valueMemorySize);
     expectWrite(addressRxSize, valueMemorySize);
 
-    Device d(writer);
+    [[maybe_unused]] Device d{writer};
 }
 
 TEST(W5100DeviceTest, writeRegisterByte)
