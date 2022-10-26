@@ -6,7 +6,7 @@ message(STATUS "~~~ ${PROJECT_NAME} v${PROJECT_VERSION} ~~~")
 message(STATUS "Target: ${CMAKE_SYSTEM_PROCESSOR} (${CMAKE_SYSTEM_NAME})")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(CMakeParseArguments)
 include(Options)
 include(BuildType)
