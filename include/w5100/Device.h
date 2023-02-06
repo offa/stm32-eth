@@ -69,7 +69,7 @@ namespace eth::w5100
         std::uint16_t receiveData(SocketHandle s, std::span<std::uint8_t> buffer);
 
         template <class T, std::size_t n = sizeof(T)>
-        requires IntegralType<T>
+            requires IntegralType<T>
         void write(Register<T> reg, T data)
         {
             if constexpr (n <= 1)
@@ -85,7 +85,7 @@ namespace eth::w5100
         }
 
         template <class T, class Iterator>
-        requires byte::ByteCompatibleIterator<Iterator>
+            requires byte::ByteCompatibleIterator<Iterator>
         void write(Register<T> reg, Iterator begin, Iterator end)
         {
             std::uint16_t offset = 0;
@@ -94,8 +94,8 @@ namespace eth::w5100
         }
 
         template <class T, std::size_t n = sizeof(T)>
-        requires IntegralType<T>
-            T read(Register<T> reg)
+            requires IntegralType<T>
+        T read(Register<T> reg)
         {
             if constexpr (n <= 1)
             {
@@ -111,7 +111,7 @@ namespace eth::w5100
         }
 
         template <class T, class Iterator>
-        requires byte::ByteCompatibleIterator<Iterator>
+            requires byte::ByteCompatibleIterator<Iterator>
         auto read(Register<T> reg, Iterator begin, Iterator end)
         {
             std::size_t offset = 0;
