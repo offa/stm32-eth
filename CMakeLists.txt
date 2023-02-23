@@ -54,9 +54,6 @@ endif()
 
 add_subdirectory("system")
 
-include("${CMAKE_BINARY_DIR}/conan_paths.cmake" OPTIONAL)
-
-
 include_directories("include")
 add_subdirectory("src")
 
