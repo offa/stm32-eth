@@ -8,14 +8,14 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - gcc-12
-          - gcc-11
-          - gcc-10
-          - clang-16
-          - clang-15
-          - clang-14
+          - gcc:12
+          - gcc:11
+          - gcc:10
+          - clang:16
+          - clang:15
+          - clang:14
     container:
-      image: "registry.gitlab.com/offa/docker-images/${{ matrix.compiler }}:stable"
+      image: "registry.gitlab.com/offa/docker-images/${{ matrix.compiler }}"
     name: "${{ matrix.compiler }}"
     steps:
       - uses: actions/checkout@main
@@ -29,14 +29,14 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - arm-none-eabi-gcc-11
+          - arm-none-eabi-gcc:12
         build_config:
           - {build_type: Debug, lto: OFF}
           - {build_type: Release, lto: OFF}
           - {build_type: MinSizeRel, lto: OFF}
           - {build_type: MinSizeRel, lto: ON}
     container:
-      image: "registry.gitlab.com/offa/docker-images/${{ matrix.compiler }}:stable"
+      image: "registry.gitlab.com/offa/docker-images/${{ matrix.compiler }}"
     name: "${{ matrix.compiler }} - ${{ matrix.build_config.build_type }} (LTO: ${{ matrix.build_config.lto }})"
     steps:
       - uses: actions/checkout@main
