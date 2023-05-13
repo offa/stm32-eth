@@ -12,7 +12,7 @@ jobs:
           - gcc:11
           - gcc:10
           - clang:16
-          - clang:15
+          # - clang:15 # Disabled due to broken image
           - clang:14
     container:
       image: "registry.gitlab.com/offa/docker-images/${{ matrix.compiler }}"
