@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         compiler:
+          - gcc:14
           - gcc:13
-          - gcc:12
           - clang:18
           - clang:17
     container:
@@ -53,5 +53,5 @@ jobs:
     - uses: DoozyX/clang-format-lint-action@master
       name: "Verify formatting"
       with:
-        clangFormatVersion: 16
+        clangFormatVersion: 17
         exclude: './system/'
