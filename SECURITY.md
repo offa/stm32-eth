@@ -1,4 +1,3 @@
-
 # Security Policy
 
 ## Reporting a Vulnerability
@@ -8,4 +7,3 @@ To report a security issue, please use [*Report a Vulnerability*](https://github
 ## Responsible Disclosure
 
 Security vulnerabilities are taken seriously, and help in disclosing them responsibly is appreciated. Please refrain from disclosing the vulnerability publicly until it has been addressed.
-
