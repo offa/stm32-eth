@@ -1,6 +1,4 @@
 build/*
-nbproject/*
-.cproject
-.project
+.cache/*
 CMakeUserPresets.json
 
