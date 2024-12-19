@@ -98,7 +98,7 @@
   #define __STATIC_INLINE  static __inline
 
 #elif defined ( __GNUC__ )
-  #define __ASM            __asm                                      /*!< asm keyword for GNU Compiler */
+  #define __ASM            __asm__                                      /*!< asm keyword for GNU Compiler */
   #define __INLINE         inline                                     /*!< inline keyword for GNU Compiler */
   #define __STATIC_INLINE  static inline
 
