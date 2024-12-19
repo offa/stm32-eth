@@ -21,6 +21,7 @@
 #include "spi/SpiWriter.h"
 #include "Byte.h"
 #include <array>
+#include <limits>
 
 namespace eth::spi
 {

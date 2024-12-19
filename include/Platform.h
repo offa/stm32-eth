@@ -20,10 +20,10 @@
 
 #pragma once
 
-#include <chrono>
+#include <cstdint>
 #include <stm32f4xx_hal.h>
 
 namespace platform
 {
-    void wait(std::chrono::milliseconds t) noexcept;
+    void wait(std::uint32_t milliseconds) noexcept;
 }

@@ -111,8 +111,7 @@ namespace eth
     {
         while (getStatus() == SocketStatus::listen)
         {
-            using namespace std::chrono_literals;
-            platform::wait(100ms);
+            platform::wait(100);
         }
     }
 

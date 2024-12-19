@@ -22,9 +22,9 @@
 
 namespace platform
 {
-    void wait(std::chrono::milliseconds t) noexcept
+    void wait(std::uint32_t milliseconds) noexcept
     {
-        HAL_Delay(t.count());
+        HAL_Delay(milliseconds);
     }
 
 }
