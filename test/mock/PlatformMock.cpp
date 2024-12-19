@@ -24,8 +24,8 @@
 namespace platform
 {
 
-    void wait(std::chrono::milliseconds t) noexcept
+    void wait(std::uint32_t milliseconds) noexcept
     {
-        mock("platform").actualCall("wait").withParameter("timeMs", static_cast<unsigned int>(t.count()));
+        mock("platform").actualCall("wait").withParameter("timeMs", static_cast<unsigned int>(milliseconds));
     }
 }
