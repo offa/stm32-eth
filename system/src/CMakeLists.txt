@@ -7,14 +7,6 @@ add_library(cortexm cortexm/exception_handlers.c
                     cortexm/reset-hardware.c
                     )
 
-add_library(newlib newlib/assert.c
-                    newlib/_cxx.cpp
-                    newlib/_exit.c
-                    newlib/_sbrk.c
-                    newlib/_startup.c
-                    newlib/_syscalls.c
-                    )
-
 add_library(hal stm32f4-hal/stm32f4xx_hal.c
                 stm32f4-hal/stm32f4xx_hal_cortex.c
                 stm32f4-hal/stm32f4xx_hal_flash.c
@@ -52,7 +44,6 @@ endfunction()
 
 add_system_components(hal
                     cmsis
-                    newlib
                     cortexm
                     hw-init
                     trace
