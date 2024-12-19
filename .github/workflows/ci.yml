@@ -10,8 +10,8 @@ jobs:
         compiler:
           - gcc:14
           - gcc:13
+          - clang:19
           - clang:18
-          - clang:17
     container:
       image: "registry.gitlab.com/offa/docker-images/${{ matrix.compiler }}"
     name: "${{ matrix.compiler }}"
@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - arm-none-eabi-gcc:12
+          - arm-none-eabi-gcc:14
         build_config:
           - {build_type: Debug, lto: OFF}
           - {build_type: Release, lto: OFF}
