@@ -38,7 +38,7 @@ namespace eth::spi
         constexpr auto makePacket(std::uint16_t address, Ts&&... params)
         {
             using Type = std::array<std::uint8_t, 3 + sizeof...(Ts)>;
-            return Type{{static_cast<std::uint8_t>(opcode), byte::get<1>(address), byte::get<0>(address), params...}};
+            return Type{{static_cast<std::uint8_t>(opcode), byte::get<1>(address), byte::get<0>(address), std::forward<Ts>(params)...}};
         }
 
         constexpr auto timeout = std::numeric_limits<std::uint32_t>::max();
