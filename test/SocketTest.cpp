@@ -126,7 +126,6 @@ TEST_GROUP(SocketTest)
     static inline constexpr std::uint16_t port{1234};
     static inline constexpr Protocol protocol = Protocol::tcp;
     static inline constexpr std::uint8_t flag{0};
-    static inline constexpr auto statusSendOk = static_cast<std::uint8_t>(SocketInterrupt::Mask::send);
     static inline constexpr std::uint16_t defaultSize{10};
 };
 
@@ -487,7 +486,6 @@ TEST(SocketTest, receiveReturnsErrorIfStatusNotEstablished)
 TEST(SocketTest, receiveReceivesData)
 {
     auto buffer = createBuffer(defaultSize);
-    std::span<std::uint8_t> bufferSpan{buffer};
     expectWaitForFreeRxTx(Mode::receive, socketHandle, 100);
     mock("Device")
         .expectOneCall("receiveData")
