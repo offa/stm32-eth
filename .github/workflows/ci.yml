@@ -31,7 +31,7 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - arm-none-eabi-gcc:14
+          - arm-none-eabi-gcc:15
         build_config:
           - {build_type: Debug, lto: OFF}
           - {build_type: Release, lto: OFF}
