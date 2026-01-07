@@ -70,7 +70,7 @@ Connect ***Reset*** and ***3.3 V*** with **4.7 kΩ Resistor**.
 
 ## License
 
-**GNU General Public License (GPL)**
+**GNU General Public License, Version 3 (GPLv3)**
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
