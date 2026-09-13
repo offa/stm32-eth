@@ -22,6 +22,7 @@
 #include "mock/Stm32HalComparator.h"
 #include <memory>
 #include <span>
+#include <array>
 #include <CppUTest/TestHarness.h>
 #include <CppUTestExt/MockSupport.h>
 
